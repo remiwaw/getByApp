@@ -6,14 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.rwawrzyniak.getby.databinding.FragmentOnboardingBinding
 import com.synnapps.carouselview.ImageListener
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_tour.*
 
 
 class OnboardingFragment : Fragment() {
 
-    private var sampleImages = intArrayOf(
+    private val sampleImages = intArrayOf(
         R.drawable.onboarding_one,
         R.drawable.onboarding_two,
         R.drawable.onboarding_three
@@ -30,6 +32,10 @@ class OnboardingFragment : Fragment() {
         binding.carouselView.pageCount = sampleImages.size
         binding.carouselView.setImageListener { position, imageView ->
             imageView.setImageResource(sampleImages[position])
+        }
+
+        binding.skipButton.setOnClickListener {
+            nav_host.findNavController().navigate(R.id.action_onboardingFragment_to_loginFragment)
         }
 
         return binding.root

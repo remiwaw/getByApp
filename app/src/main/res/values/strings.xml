@@ -3,6 +3,14 @@
 
     <string name="tour_button_start_the_tour">Start the tour!</string>
     <string name="tour_logo_text_getby_app">GetBy App</string>
+    <string name="tour_logo_image_description">logo</string>
 
     <string name="onboarding_button_skip">Skip</string>
+
+    <string name="login_user_name_hint">User name</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_header_sign_in">Sign in</string>
+    <string name="login_button_sign_in">Sign in</string>
+    <string name="login_sign_up_hint">Don\'t have an account?</string>
+    <string name="login_sign_up_link"><u>Sign up</u></string>
 </resources>

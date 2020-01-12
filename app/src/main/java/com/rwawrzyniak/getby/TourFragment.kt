@@ -23,7 +23,6 @@ class TourFragment : Fragment() {
             nav_host.findNavController().navigate(R.id.action_tourFragment_to_onboardingFragment)
         }
 
-        // Inflate the layout for this fragment
         return binding.root
     }
 }
