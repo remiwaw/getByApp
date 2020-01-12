@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "964841435231",
+    "firebase_url": "https://getby-app.firebaseio.com",
+    "project_id": "getby-app",
+    "storage_bucket": "getby-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:964841435231:android:27c3ede2e7d2e1e06babea",
+        "android_client_info": {
+          "package_name": "com.rwawrzyniak.getby"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "964841435231-bj0dh6r9rughk5fhs0rikbihdot47te6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPmNFVTW1d8E6fSMmp3tioY86eZW0FCLg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "964841435231-bj0dh6r9rughk5fhs0rikbihdot47te6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
