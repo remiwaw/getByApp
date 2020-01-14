@@ -1,6 +1,7 @@
 package com.rwawrzyniak.getby.dagger
 
 import android.content.Context
+import com.rwawrzyniak.getby.LoginViewModel
 import dagger.BindsInstance
 import dagger.Component
 
@@ -14,4 +15,7 @@ interface ApplicationComponent {
             @BindsInstance applicationContext: Context
         ) : ApplicationComponent
     }
+
+    val loginViewModel : LoginViewModel
 }
+

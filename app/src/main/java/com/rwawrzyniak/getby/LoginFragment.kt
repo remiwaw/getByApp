@@ -7,12 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.rwawrzyniak.getby.dagger.injector
+import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.databinding.FragmentLoginBinding
-import com.rwawrzyniak.getby.databinding.FragmentTourBinding
 import kotlinx.android.synthetic.main.activity_main.*
 
 class LoginFragment : Fragment() {
 	private lateinit var binding: FragmentLoginBinding
+
+	 private val loginViewModel by fragmentScopedViewModel { injector.loginViewModel }
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
