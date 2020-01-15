@@ -6,7 +6,7 @@ import dagger.BindsInstance
 import dagger.Component
 
 // https://proandroiddev.com/dagger-2-on-android-the-simple-way-f706a2c597e9
-@Component
+@Component(modules = [FirebaseAuthModule::class])
 interface ApplicationComponent {
 
     @Component.Factory

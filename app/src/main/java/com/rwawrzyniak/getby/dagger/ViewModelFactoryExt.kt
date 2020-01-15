@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
 // https://proandroiddev.com/dagger-2-on-android-the-simple-way-f706a2c597e9
-
+// https://github.com/tfcporciuncula/dagger-journey/
 
 @Suppress("UNCHECKED_CAST")
 inline fun <reified T : ViewModel> Fragment.fragmentScopedViewModel(crossinline factory: () -> T) =
