@@ -35,15 +35,26 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     //Firebase
-    implementation "com.google.firebase:firebase-analytics:$rootProject.firebaseAnalytics"
+    // firebase-auth
+    implementation "com.androidhuman.rxfirebase2:firebase-auth-kotlin:$rootProject.firebaseAuthRxVersion"
+    implementation "com.androidhuman.rxfirebase2:firebase-auth:$rootProject.firebaseAuthRxVersion"
     implementation "com.google.firebase:firebase-auth:$rootProject.firebaseAuth"
 
+    // required dependency: firebase-core
+    implementation "com.androidhuman.rxfirebase2:firebase-core:$rootProject.firebaseCoreRxVersion"
+    implementation "com.google.firebase:firebase-core:$rootProject.firebaseCoreVersion"
+
     // Dagger
-    implementation "com.google.dagger:dagger:$rootProject.dagger"
-    kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
+    implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
 
     // Timber
-    implementation "com.jakewharton.timber:timber:$rootProject.timber"
+    implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
+
+    // RxJava
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rxKotlinVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxAndroidVersion"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin_version"
     implementation "androidx.appcompat:appcompat:$rootProject.appCompatVersion"
