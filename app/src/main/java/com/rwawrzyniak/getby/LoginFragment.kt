@@ -11,7 +11,10 @@ import androidx.navigation.fragment.findNavController
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentLoginBinding
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import timber.log.Timber
 
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
@@ -34,20 +37,23 @@ class LoginFragment : Fragment() {
         binding.loginSignInButton.setOnClickListener {  viewModel.login(
             username,
             password
-        ) }
+        ).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { Timber.i("lol") }
+        }
 
-        viewModel.loginResult.observe(viewLifecycleOwner){
-            when(it){
+        viewModel.loginResultLiveData.observe(viewLifecycleOwner){ loginResult ->
+            when(loginResult){
                 is LoginResult.Success -> navigateToDashboard()
-                is LoginResult.Fail -> handleFailedLoginAttempt()
+                is LoginResult.Fail -> handleFailedLoginAttempt(loginResult)
             }
         }
 
         return binding.root
     }
 
-    private fun handleFailedLoginAttempt() {
-        binding.loginInputLayout.error = "Incorrect login or password"
+    private fun handleFailedLoginAttempt(loginResult: LoginResult.Fail) {
+        binding.loginInputLayout.error = loginResult.error
         binding.passwordInputField.setText("")
         binding.passwordInputLayout.isErrorEnabled = true
     }
