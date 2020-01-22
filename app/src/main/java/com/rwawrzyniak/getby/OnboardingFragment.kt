@@ -4,13 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.rwawrzyniak.getby.databinding.FragmentOnboardingBinding
-import com.synnapps.carouselview.ImageListener
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_tour.*
 
 
 class OnboardingFragment : Fragment() {

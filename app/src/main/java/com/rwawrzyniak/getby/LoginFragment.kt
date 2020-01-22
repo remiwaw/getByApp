@@ -11,8 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentLoginBinding
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.rwawrzyniak.getby.rxjava.SchedulerProvider
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
@@ -20,6 +19,7 @@ class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
 
     private val viewModel by fragmentScopedViewModel { injector.loginViewModel }
+    private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,8 +37,8 @@ class LoginFragment : Fragment() {
         binding.loginSignInButton.setOnClickListener {  viewModel.login(
             username,
             password
-        ).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        ).subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.main())
             .subscribe { Timber.i("lol") }
         }
 

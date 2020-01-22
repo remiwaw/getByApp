@@ -3,7 +3,6 @@ package com.rwawrzyniak.getby.rxjava
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import javax.inject.Singleton
 
 /**
  * This class collects schedulers for easy consumption and mockability
@@ -30,8 +29,7 @@ interface SchedulerProvider {
     fun newThread(): Scheduler
 }
 
-@Singleton
-class DefaultSchedulerProvider : SchedulerProvider {
+object DefaultSchedulerProvider : SchedulerProvider {
     /**
      * Returns a scheduler for work that should be executed on Android's main thread
      */

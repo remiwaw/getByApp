@@ -10,7 +10,6 @@ object TestSchedulerProvider {
         io: Scheduler = Schedulers.trampoline(),
         main: Scheduler = Schedulers.trampoline(),
         computation: Scheduler = Schedulers.trampoline(),
-        newLooper: Scheduler = Schedulers.trampoline(),
         newThread: Scheduler = Schedulers.trampoline()
     ): SchedulerProvider = object : SchedulerProvider {
         override fun main(): Scheduler = main

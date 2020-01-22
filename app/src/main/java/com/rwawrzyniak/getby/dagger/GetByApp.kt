@@ -4,7 +4,7 @@ import android.app.Application
 import com.rwawrzyniak.getby.BuildConfig
 import timber.log.Timber
 
-class DaggerApp : Application(), DaggerComponentProvider {
+class GetByApp : Application(), DaggerComponentProvider {
 
     override val component: ApplicationComponent by lazy {
         DaggerApplicationComponent
