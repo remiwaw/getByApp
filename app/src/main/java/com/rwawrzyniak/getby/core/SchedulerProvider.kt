@@ -1,4 +1,4 @@
-package com.rwawrzyniak.getby.rxjava
+package com.rwawrzyniak.getby.core
 
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers

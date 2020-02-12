@@ -1,8 +1,8 @@
 package com.rwawrzyniak.getby.dagger
 
-import com.rwawrzyniak.getby.rxjava.DefaultSchedulerProvider
-import com.rwawrzyniak.getby.rxjava.SchedulerProvider
-import com.rwawrzyniak.getby.rxjava.TestSchedulerProvider
+import com.rwawrzyniak.getby.core.DefaultSchedulerProvider
+import com.rwawrzyniak.getby.core.SchedulerProvider
+import com.rwawrzyniak.getby.core.TestSchedulerProvider
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named

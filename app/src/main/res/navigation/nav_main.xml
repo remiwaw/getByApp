@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/tourFragment"
-        android:name="com.rwawrzyniak.getby.TourFragment"
+        android:name="com.rwawrzyniak.getby.tour.TourFragment"
         android:label="TourFragment" >
         <action
             android:id="@+id/action_tourFragment_to_onboardingFragment"
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/onboardingFragment"
-        android:name="com.rwawrzyniak.getby.OnboardingFragment"
+        android:name="com.rwawrzyniak.getby.onboarding.OnboardingFragment"
         android:label="OnboardingFragment" >
         <action
             android:id="@+id/action_onboardingFragment_to_loginFragment"
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.rwawrzyniak.getby.LoginFragment"
+        android:name="com.rwawrzyniak.getby.login.LoginFragment"
         android:label="LoginFragment" />
     <fragment android:id="@+id/placeholder" />
 </navigation>

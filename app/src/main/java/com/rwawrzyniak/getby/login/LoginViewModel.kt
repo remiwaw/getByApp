@@ -1,4 +1,4 @@
-package com.rwawrzyniak.getby
+package com.rwawrzyniak.getby.login
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +9,9 @@ import javax.inject.Inject
 class LoginViewModel @Inject internal constructor(
     private val loginUseCase: LoginUseCase
 ) : ViewModel() {
-    val loginResultLiveData: MutableLiveData<LoginResult> = MutableLiveData(LoginResult.Default)
+    val loginResultLiveData: MutableLiveData<LoginResult> = MutableLiveData(
+        LoginResult.Default
+    )
 
     fun login(username: String, password: String): Completable {
         return loginUseCase.login(username, password).flatMapCompletable { loginResult ->

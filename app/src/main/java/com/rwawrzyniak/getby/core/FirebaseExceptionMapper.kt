@@ -1,4 +1,4 @@
-package com.rwawrzyniak.getby
+package com.rwawrzyniak.getby.core
 
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuthException

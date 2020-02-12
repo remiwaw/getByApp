@@ -1,8 +1,8 @@
 package com.rwawrzyniak.getby.dagger
 
 import android.content.Context
-import com.rwawrzyniak.getby.LoginViewModel
-import com.rwawrzyniak.getby.rxjava.SchedulerProvider
+import com.rwawrzyniak.getby.login.LoginViewModel
+import com.rwawrzyniak.getby.core.SchedulerProvider
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Named

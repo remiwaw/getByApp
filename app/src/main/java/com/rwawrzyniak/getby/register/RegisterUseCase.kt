@@ -1,6 +1,7 @@
-package com.rwawrzyniak.getby
+package com.rwawrzyniak.getby.register
 
 import com.google.firebase.auth.FirebaseUser
+import com.rwawrzyniak.getby.AuthEmailRepository
 import io.reactivex.Single
 import javax.inject.Inject
 

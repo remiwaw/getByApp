@@ -1,5 +1,7 @@
-package com.rwawrzyniak.getby
+package com.rwawrzyniak.getby.login
 
+import com.rwawrzyniak.getby.AuthEmailRepository
+import com.rwawrzyniak.getby.core.FirebaseExceptionMapper
 import io.reactivex.Single
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.rwawrzyniak.getby
+package com.rwawrzyniak.getby.login
 
 sealed class LoginResult {
     object Default : LoginResult()

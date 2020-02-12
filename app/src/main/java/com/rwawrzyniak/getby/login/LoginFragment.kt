@@ -1,4 +1,4 @@
-package com.rwawrzyniak.getby
+package com.rwawrzyniak.getby.login
 
 
 import android.graphics.Color
@@ -12,10 +12,11 @@ import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
+import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentLoginBinding
-import com.rwawrzyniak.getby.rxjava.SchedulerProvider
+import com.rwawrzyniak.getby.core.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
