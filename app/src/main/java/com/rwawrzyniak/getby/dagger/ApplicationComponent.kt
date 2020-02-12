@@ -1,8 +1,9 @@
 package com.rwawrzyniak.getby.dagger
 
 import android.content.Context
-import com.rwawrzyniak.getby.login.LoginViewModel
 import com.rwawrzyniak.getby.core.SchedulerProvider
+import com.rwawrzyniak.getby.login.LoginViewModel
+import com.rwawrzyniak.getby.register.RegisterViewModel
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Named
@@ -19,6 +20,7 @@ interface ApplicationComponent {
     }
 
     val loginViewModel : LoginViewModel
+    val registerViewModel : RegisterViewModel
     @Named("schedulerProvider") fun provideSchedulerProvider(): SchedulerProvider
 }
 

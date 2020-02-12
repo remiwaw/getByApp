@@ -1,5 +1,5 @@
 <resources>
-<!--    General-->
+    <!--    General-->
     <string name="app_name">GetBy</string>
     <string name="loading">Loading</string>
 
@@ -9,10 +9,23 @@
 
     <string name="onboarding_button_skip">Skip</string>
 
+<!--    Login-->
     <string name="login_user_name_hint">User name</string>
     <string name="login_password_hint">Password</string>
-    <string name="login_header_sign_in">Sign in</string>
-    <string name="login_button_sign_in">Sign in</string>
+    <string name="login_header">Sign in</string>
+    <string name="login_button">Sign in</string>
     <string name="login_sign_up_hint">Don\'t have an account?</string>
     <string name="login_sign_up_link"><u>Sign up</u></string>
+
+<!--    Register-->
+    <string name="register_user_name_hint">john@example.com</string>
+    <string name="register_user_password_hint">Password</string>
+    <string name="register_header">Sign up</string>
+    <string name="register_button">Sign up</string>
+    <string name="register_sign_up_hint">ALready have an account?</string>
+    <string name="register_sign_up_link"><u>Sign up</u></string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

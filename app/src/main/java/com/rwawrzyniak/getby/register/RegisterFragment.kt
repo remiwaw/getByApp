@@ -1,4 +1,4 @@
-package com.rwawrzyniak.getby.login
+package com.rwawrzyniak.getby.register
 
 
 import android.graphics.Color
@@ -16,36 +16,37 @@ import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.SchedulerProvider
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
-import com.rwawrzyniak.getby.databinding.FragmentLoginBinding
+import com.rwawrzyniak.getby.databinding.FragmentRegisterBinding
 import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
 import kotlinx.android.synthetic.main.activity_main.*
 
-class LoginFragment : Fragment() {
-    private lateinit var binding: FragmentLoginBinding
+class RegisterFragment : Fragment() {
+    private lateinit var binding: FragmentRegisterBinding
 
-    private val viewModel by fragmentScopedViewModel { injector.loginViewModel }
+    private val viewModel by fragmentScopedViewModel { injector.registerViewModel }
     private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentLoginBinding.inflate(inflater, container, false)
-        val loginSignInButton = binding.loginSignInButton
+        binding = FragmentRegisterBinding.inflate(inflater, container, false)
+        val registerButton = binding.registerSignUpButton
 
-        bindProgressButton(loginSignInButton)
+        bindProgressButton(registerButton)
 
-        binding.loginSignUpLink.setOnClickListener { navigateToRegisterFragment() }
+        binding.registerSignUpLink.setOnClickListener { navigateToLoginFragment() }
 
-        loginSignInButton.setOnClickListener {
+        registerButton.setOnClickListener {
             viewModel.login(
-                binding.loginInputField.toString(),
+                binding.registerUserInputField.toString(),
                 binding.passwordInputField.toString()
             ).subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.main())
                 .doOnSubscribe {
-                    loginSignInButton.showProgress {
+                    registerButton.showProgress {
                         buttonTextRes = R.string.loading
                         progressColor = Color.WHITE
                     }
@@ -54,23 +55,23 @@ class LoginFragment : Fragment() {
                 .subscribe()
         }
 
-        handleLoginResult()
-
+        handleRegisterResult()
         return binding.root
+
     }
 
-    private fun handleLoginResult() {
-        viewModel.loginResultLiveData.observe(viewLifecycleOwner) { loginResult ->
-            when (loginResult) {
-                is LoginResult.Success -> navigateToDashboard()
-                is LoginResult.Fail -> handleFailedLoginAttempt(loginResult)
+    private fun handleRegisterResult() {
+        viewModel.registerResultLiveData.observe(viewLifecycleOwner) { registerResult ->
+            when (registerResult) {
+                is RegisterResult.Success -> navigateToDashboard()
+                is RegisterResult.Fail -> handleFailRegistration(registerResult)
             }
-            binding.loginSignInButton.hideProgress(R.string.login_button)
+            binding.registerSignUpButton.hideProgress(R.string.register_button)
         }
     }
 
-    private fun handleFailedLoginAttempt(loginResult: LoginResult.Fail) {
-        binding.loginInputLayout.error = loginResult.error
+    private fun handleFailRegistration(registerResult: RegisterResult.Fail) {
+        binding.registerUserInputLayout.error = registerResult.error
         binding.passwordInputField.setText("")
         binding.passwordInputLayout.isErrorEnabled = true
     }
@@ -79,7 +80,7 @@ class LoginFragment : Fragment() {
         nav_host.findNavController().navigate(R.id.placeholder)
     }
 
-    private fun navigateToRegisterFragment() {
-        nav_host.findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+    private fun navigateToLoginFragment() {
+        nav_host.findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
     }
 }

@@ -46,6 +46,7 @@ dependencies {
 
     // Dagger
     implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
 
     // Timber

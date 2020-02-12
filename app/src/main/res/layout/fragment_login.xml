@@ -22,7 +22,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="32dp"
-				android:text="@string/login_header_sign_in"
+				android:text="@string/login_header"
 				android:textAppearance="@style/TextAppearance.AppCompat.Medium"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
@@ -42,33 +42,35 @@
 
 			<com.google.android.material.textfield.TextInputLayout
 				android:id="@+id/login_input_layout"
-				android:layout_width="match_parent"
+                app:startIconDrawable="@drawable/ic_usericon"
+                android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="8dp"
 				android:hint="@string/login_user_name_hint"
-				app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/logo">
 
-				<com.google.android.material.textfield.TextInputEditText
-					android:id="@+id/login_input_field"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:autofillHints="username"
-					android:background="@android:color/transparent"
-					android:inputType="textNoSuggestions"
-					tools:targetApi="o" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/login_input_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="username"
+                    android:background="@android:color/transparent"
+                    android:inputType="textNoSuggestions"
+                    tools:targetApi="o" />
 
 			</com.google.android.material.textfield.TextInputLayout>
 
 			<com.google.android.material.textfield.TextInputLayout
 				android:id="@+id/password_input_layout"
-				android:layout_width="match_parent"
+                app:startIconDrawable="@drawable/ic_keyicon"
+                android:layout_width="match_parent"
 				android:layout_height="0dp"
 				android:hint="@string/login_password_hint"
 				app:endIconMode="password_toggle"
 				app:errorIconDrawable="@null"
-				app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/login_input_layout">
 
@@ -90,7 +92,7 @@
 				android:layout_marginStart="12dp"
 				android:layout_marginTop="8dp"
 				android:layout_marginEnd="12dp"
-				android:text="@string/login_button_sign_in"
+				android:text="@string/login_button"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/password_input_layout" />
