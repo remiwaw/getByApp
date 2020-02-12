@@ -1,5 +1,7 @@
 <resources>
+<!--    General-->
     <string name="app_name">GetBy</string>
+    <string name="loading">Loading</string>
 
     <string name="tour_button_start_the_tour">Start the tour!</string>
     <string name="tour_logo_text_getby_app">GetBy App</string>
