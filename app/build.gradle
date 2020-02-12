@@ -56,6 +56,10 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.rxKotlinVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxAndroidVersion"
 
+    // 3rd party
+    implementation "com.github.razir.progressbutton:progressbutton:$rootProject.progressButtonVersion"
+
+    //Android
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin_version"
     implementation "androidx.appcompat:appcompat:$rootProject.appCompatVersion"
     implementation "androidx.core:core-ktx:$rootProject.ktxVersion"

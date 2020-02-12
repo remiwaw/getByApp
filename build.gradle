@@ -18,6 +18,7 @@ buildscript {
         rxJavaVersion = '2.1.8'
         rxKotlinVersion = '2.4.0'
         rxAndroidVersion = '2.1.1'
+        progressButtonVersion = '2.0.0'
         activityVersion = '1.1.0-rc03'
         appCompatVersion = '1.1.0'
         constraintLayoutVersion = '1.1.3'
