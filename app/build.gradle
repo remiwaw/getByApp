@@ -58,6 +58,8 @@ dependencies {
 
     // 3rd party
     implementation "com.github.razir.progressbutton:progressbutton:$rootProject.progressButtonVersion"
+    implementation "io.sellmair:disposer:$rootProject.disposerVersion"
+
 
     //Android
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin_version"

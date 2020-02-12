@@ -17,6 +17,8 @@ import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentLoginBinding
 import com.rwawrzyniak.getby.rxjava.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
+import io.sellmair.disposer.disposeBy
+import io.sellmair.disposer.onStop
 import kotlinx.android.synthetic.main.activity_main.*
 
 class LoginFragment : Fragment() {
@@ -25,11 +27,6 @@ class LoginFragment : Fragment() {
     private val compositeDisposable = CompositeDisposable()
     private val viewModel by fragmentScopedViewModel { injector.loginViewModel }
     private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
-
-    override fun onStop() {
-        compositeDisposable.clear()
-        super.onStop()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +54,7 @@ class LoginFragment : Fragment() {
                             progressColor = Color.WHITE
                         }
                     }
+                    .disposeBy(lifecycle.onStop)
                     .subscribe()
             )
         }

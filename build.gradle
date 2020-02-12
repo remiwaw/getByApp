@@ -11,6 +11,7 @@ buildscript {
         targetSdkVersion = 28
 
         // Android dependencies
+        disposerVersion = '2.0.0'
         firebaseAuthRxVersion = '16.1.0.0'
         firebaseCoreRxVersion = '16.0.5.0'
         firebaseAuth = '16.0.4'
