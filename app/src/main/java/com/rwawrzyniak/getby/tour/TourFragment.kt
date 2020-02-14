@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.rwawrzyniak.getby.R
+import com.rwawrzyniak.getby.core.BaseFragment
 import com.rwawrzyniak.getby.databinding.FragmentTourBinding
 import kotlinx.android.synthetic.main.activity_main.*
 
-class TourFragment : Fragment() {
+class TourFragment : BaseFragment() {
 
     private lateinit var binding: FragmentTourBinding
 

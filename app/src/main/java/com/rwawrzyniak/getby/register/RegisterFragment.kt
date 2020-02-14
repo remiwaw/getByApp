@@ -6,13 +6,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.rwawrzyniak.getby.R
+import com.rwawrzyniak.getby.core.BaseFragment
 import com.rwawrzyniak.getby.core.SchedulerProvider
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
@@ -21,12 +21,11 @@ import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
 import kotlinx.android.synthetic.main.activity_main.*
 
-class RegisterFragment : Fragment() {
+class RegisterFragment : BaseFragment() {
     private lateinit var binding: FragmentRegisterBinding
 
     private val viewModel by fragmentScopedViewModel { injector.registerViewModel }
     private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
