@@ -2,6 +2,9 @@
     <!--    General-->
     <string name="app_name">GetBy</string>
     <string name="loading">Loading</string>
+    <string name="bottom_navigation_card_habits">Habits</string>
+    <string name="bottom_navigation_card_feed">Feed</string>
+    <string name="bottom_navigation_card_friends">Friends</string>
 
     <string name="tour_button_start_the_tour">Start the tour!</string>
     <string name="tour_logo_text_getby_app">GetBy App</string>
@@ -9,7 +12,7 @@
 
     <string name="onboarding_button_skip">Skip</string>
 
-<!--    Login-->
+    <!--    Login-->
     <string name="login_user_name_hint">User name</string>
     <string name="login_password_hint">Password</string>
     <string name="login_header">Sign in</string>
@@ -17,7 +20,7 @@
     <string name="login_sign_up_hint">Don\'t have an account?</string>
     <string name="login_sign_up_link"><u>Sign up</u></string>
 
-<!--    Register-->
+    <!--    Register-->
     <string name="register_user_name_hint">john@example.com</string>
     <string name="register_user_password_hint">Password</string>
     <string name="register_header">Sign up</string>
