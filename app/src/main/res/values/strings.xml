@@ -28,7 +28,9 @@
     <string name="register_sign_up_hint">ALready have an account?</string>
     <string name="register_sign_up_link"><u>Sign up</u></string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- Habits -->
+    <string name="habits_action_bar_title">Habits</string>
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

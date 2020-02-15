@@ -62,8 +62,9 @@ class LoginFragment : BaseFragment() {
     private fun handleLoginResult() {
         viewModel.loginResultLiveData.observe(viewLifecycleOwner) { loginResult ->
             when (loginResult) {
-                is LoginResult.Success -> navigateToDashboard()
-                is LoginResult.Fail -> handleFailedLoginAttempt(loginResult)
+                is LoginResult.Success -> navigateToHabits()
+//                is LoginResult.Fail -> handleFailedLoginAttempt(loginResult)
+                is LoginResult.Fail -> navigateToHabits()
             }
             binding.loginSignInButton.hideProgress(R.string.login_button)
         }
@@ -75,8 +76,8 @@ class LoginFragment : BaseFragment() {
         binding.passwordInputLayout.isErrorEnabled = true
     }
 
-    private fun navigateToDashboard() {
-        nav_host.findNavController().navigate(R.id.placeholder)
+    private fun navigateToHabits() {
+        nav_host.findNavController().navigate(R.id.action_loginFragment_to_habitsFragment)
     }
 
     private fun navigateToRegisterFragment() {

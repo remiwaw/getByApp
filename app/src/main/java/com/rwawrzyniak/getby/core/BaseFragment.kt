@@ -25,7 +25,7 @@ abstract class BaseFragment : Fragment() {
     private fun configureChrome(config: ChromeConfiguration) {
         setupActionBar(config)
         updateHomeAsUpButtonState(config.showActionBarUpButton)
-        setupNavigationBar(config)
+        setupBotoomNavigationBar(config)
     }
 
     private fun setupActionBar(config: ChromeConfiguration) {
@@ -43,7 +43,7 @@ abstract class BaseFragment : Fragment() {
         actionBar.setDisplayHomeAsUpEnabled(screenStateShowingUpButton) // TODO do i need it?
     }
 
-    private fun setupNavigationBar(config: ChromeConfiguration) {
+    private fun setupBotoomNavigationBar(config: ChromeConfiguration) {
         if (config.showBottomNavigationBar) {
             bottomNavigationView.visibility = View.VISIBLE
         } else {
