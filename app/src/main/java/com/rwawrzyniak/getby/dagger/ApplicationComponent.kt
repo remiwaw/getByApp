@@ -13,14 +13,13 @@ import javax.inject.Named
 interface ApplicationComponent {
 
     @Component.Factory
-    interface Factory{
+    interface Factory {
         fun create(
             @BindsInstance applicationContext: Context
-        ) : ApplicationComponent
+        ): ApplicationComponent
     }
 
-    val loginViewModel : LoginViewModel
-    val registerViewModel : RegisterViewModel
+    val loginViewModel: LoginViewModel
+    val registerViewModel: RegisterViewModel
     @Named("schedulerProvider") fun provideSchedulerProvider(): SchedulerProvider
 }
-

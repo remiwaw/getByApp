@@ -1,6 +1,5 @@
 package com.rwawrzyniak.getby.login
 
-
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,7 +27,8 @@ class LoginFragment : BaseFragment() {
     private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentLoginBinding.inflate(inflater, container, false)

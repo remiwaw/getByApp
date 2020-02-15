@@ -8,7 +8,7 @@ import javax.inject.Inject
 class RegisterUseCase @Inject internal constructor(
     private val authRepository: AuthEmailRepository,
     private val firebaseExceptionMapper: FirebaseExceptionMapper
-){
+) {
     fun register(userName: String, password: String): Single<RegisterResult> =
         authRepository.register(userName, password).map {
                  RegisterResult.Success as RegisterResult

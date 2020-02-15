@@ -9,7 +9,7 @@ import com.rwawrzyniak.getby.core.BaseFragment
 import com.rwawrzyniak.getby.core.ChromeConfiguration
 import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
 
-class HabitsFragment : BaseFragment(){
+class HabitsFragment : BaseFragment() {
     private lateinit var binding: FragmentHabitsBinding
 
     override fun getChromeConfig(): ChromeConfiguration = ChromeConfiguration(

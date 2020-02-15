@@ -12,19 +12,19 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), ChromeExtensionsProvider {
 
-	override fun getAppActionBar(): ActionBar {
-		return requireNotNull(supportActionBar)
-	}
+    override fun getAppActionBar(): ActionBar {
+        return requireNotNull(supportActionBar)
+    }
 
-	override fun getBottomNavigation(): BottomNavigationView {
-		return requireNotNull(bottom_navigation_view)
-	}
+    override fun getBottomNavigation(): BottomNavigationView {
+        return requireNotNull(bottom_navigation_view)
+    }
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		DataBindingUtil.setContentView<ActivityMainBinding>(this,
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        DataBindingUtil.setContentView<ActivityMainBinding>(this,
             R.layout.activity_main
         )
-		setSupportActionBar(mainActionBar)
-	}
+        setSupportActionBar(mainActionBar)
+    }
 }

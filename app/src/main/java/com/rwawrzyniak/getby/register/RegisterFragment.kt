@@ -1,6 +1,5 @@
 package com.rwawrzyniak.getby.register
 
-
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,7 +27,8 @@ class RegisterFragment : BaseFragment() {
     private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentRegisterBinding.inflate(inflater, container, false)
@@ -56,7 +56,6 @@ class RegisterFragment : BaseFragment() {
 
         handleRegisterResult()
         return binding.root
-
     }
 
     private fun handleRegisterResult() {

@@ -10,7 +10,6 @@ import com.rwawrzyniak.getby.core.BaseFragment
 import com.rwawrzyniak.getby.databinding.FragmentOnboardingBinding
 import kotlinx.android.synthetic.main.activity_main.*
 
-
 class OnboardingFragment : BaseFragment() {
 
     private val sampleImages = intArrayOf(
@@ -22,7 +21,8 @@ class OnboardingFragment : BaseFragment() {
     private lateinit var binding: FragmentOnboardingBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentOnboardingBinding.inflate(inflater, container, false)

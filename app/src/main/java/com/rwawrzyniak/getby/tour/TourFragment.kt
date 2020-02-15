@@ -15,7 +15,8 @@ class TourFragment : BaseFragment() {
     private lateinit var binding: FragmentTourBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentTourBinding.inflate(inflater, container, false)

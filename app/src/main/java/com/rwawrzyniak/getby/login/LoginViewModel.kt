@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.Completable
 import javax.inject.Inject
 
-
 class LoginViewModel @Inject internal constructor(
     private val loginUseCase: LoginUseCase
 ) : ViewModel() {
