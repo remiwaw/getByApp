@@ -25,5 +25,6 @@ class MainActivity : AppCompatActivity(), ChromeExtensionsProvider {
 		DataBindingUtil.setContentView<ActivityMainBinding>(this,
             R.layout.activity_main
         )
+		setSupportActionBar(mainActionBar)
 	}
 }
