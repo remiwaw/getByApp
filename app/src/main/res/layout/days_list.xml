@@ -4,20 +4,21 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
+    <com.rwawrzyniak.getby.customview.DayHeaderView
         android:id="@+id/label_a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:text="Mon"
         app:layout_constraintEnd_toStartOf="@+id/label_b"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:dayName="Mon"
+        app:dayNumber="15"/>
 
-    <TextView
+    <com.rwawrzyniak.getby.customview.DayHeaderView
         android:id="@+id/label_b"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,9 +27,10 @@
         app:layout_constraintStart_toEndOf="@id/label_a"
         app:layout_constraintEnd_toStartOf="@+id/label_c"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="Tue" />
+        app:dayName="Tue"
+        app:dayNumber="16"/>
 
-    <TextView
+    <com.rwawrzyniak.getby.customview.DayHeaderView
         android:id="@+id/label_c"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,9 +39,10 @@
         app:layout_constraintStart_toEndOf="@id/label_b"
         app:layout_constraintEnd_toStartOf="@+id/label_d"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="Wed" />
+        app:dayName="Wed"
+        app:dayNumber="17"/>
 
-    <TextView
+    <com.rwawrzyniak.getby.customview.DayHeaderView
         android:id="@+id/label_d"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,6 +51,7 @@
         app:layout_constraintStart_toEndOf="@id/label_c"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="Thur" />
+        app:dayName="Thu"
+        app:dayNumber="18"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
