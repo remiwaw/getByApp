@@ -12,9 +12,7 @@
     <com.rwawrzyniak.getby.customview.DaysHeaderView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:firstDayName="Mon"
-        app:firstDayNumber="11"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:firstDayAsString="17-02-2020" app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
