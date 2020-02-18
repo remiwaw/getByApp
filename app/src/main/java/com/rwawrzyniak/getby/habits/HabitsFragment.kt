@@ -31,7 +31,7 @@ class HabitsFragment : BaseFragment() {
 
         habits = listOf(
             Habit("habitTitle1", "blaablablabla hgabit one"),
-            Habit("habitTitle2", "blaablablabla hgabit one")
+            Habit("habitTitle2", "blaablablabla hgabit two")
         )
 
         val habitsAdapter = HabitsAdapter(habits)

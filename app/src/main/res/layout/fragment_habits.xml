@@ -13,7 +13,8 @@
         android:id="@+id/daysHeaderView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:firstDayAsString="17-02-2020" app:layout_constraintEnd_toEndOf="parent"
+        app:firstDayAsString="17-02-2020"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
     </com.rwawrzyniak.getby.customview.DaysHeaderView>
@@ -21,8 +22,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/daysListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/daysHeaderView"/>
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/daysHeaderView"
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
