@@ -4,14 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.BaseFragment
 import com.rwawrzyniak.getby.core.ChromeConfiguration
+import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
+import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
 
 class HabitsFragment : BaseFragment() {
     private lateinit var binding: FragmentHabitsBinding
+    private val viewModel by fragmentScopedViewModel { injector.habitsViewModel }
+
     lateinit var habits: List<Habit>
 
     override fun getChromeConfig(): ChromeConfiguration = ChromeConfiguration(
@@ -27,7 +32,9 @@ class HabitsFragment : BaseFragment() {
     ): View? {
         binding = FragmentHabitsBinding.inflate(inflater, container, false)
 
-        binding.daysHeaderView
+        viewModel.habitsState.observe(viewLifecycleOwner){ state : HabitsState ->
+            binding.daysHeaderView.initializeDaysHeader(state.firstDay)
+        }
 
         habits = listOf(
             Habit("habitTitle1", "blaablablabla hgabit one"),
