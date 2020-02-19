@@ -1,16 +1,19 @@
 package com.rwawrzyniak.getby.dagger
 
+import BusModule
 import android.content.Context
+import com.rwawrzyniak.getby.core.GlobalEvent
 import com.rwawrzyniak.getby.core.SchedulerProvider
 import com.rwawrzyniak.getby.habits.HabitsViewModel
 import com.rwawrzyniak.getby.login.LoginViewModel
 import com.rwawrzyniak.getby.register.RegisterViewModel
 import dagger.BindsInstance
 import dagger.Component
+import io.reactivex.subjects.PublishSubject
 import javax.inject.Named
 
 // https://proandroiddev.com/dagger-2-on-android-the-simple-way-f706a2c597e9
-@Component(modules = [FirebaseAuthModule::class, SchedulerModule::class])
+@Component(modules = [FirebaseAuthModule::class, SchedulerModule::class, BusModule::class])
 interface ApplicationComponent {
 
     @Component.Factory
@@ -24,4 +27,5 @@ interface ApplicationComponent {
     val loginViewModel: LoginViewModel
     val registerViewModel: RegisterViewModel
     @Named("schedulerProvider") fun provideSchedulerProvider(): SchedulerProvider
+    @Named(BusModule.GLOBAL_EVENT_SUBJECT) fun getGlobalEventSubject(): PublishSubject<GlobalEvent>
 }
