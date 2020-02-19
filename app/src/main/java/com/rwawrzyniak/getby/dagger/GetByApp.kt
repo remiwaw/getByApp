@@ -5,7 +5,6 @@ import com.rwawrzyniak.getby.BuildConfig
 import timber.log.Timber
 
 class GetByApp : Application(), DaggerComponentProvider {
-
     override val component: ApplicationComponent by lazy {
         DaggerApplicationComponent
             .factory()

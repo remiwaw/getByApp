@@ -8,13 +8,16 @@ import dagger.Provides
 import javax.inject.Named
 
 @Module
-class SchedulerModule {
+object SchedulerModule {
+
+    const val SCHEDULER_PROVIDER = "schedulerProvider"
+    const val TEST_SCHEDULER_PROVIDER = "testSchedulerProvider"
 
     @Provides
-    @Named("schedulerProvider")
+    @Named(SCHEDULER_PROVIDER)
     fun provideSchedulerProvider(): SchedulerProvider = DefaultSchedulerProvider
 
     @Provides
-    @Named("testSchedulerProvider")
+    @Named(TEST_SCHEDULER_PROVIDER)
     fun provideTestSchedulerProvider(): SchedulerProvider = TestSchedulerProvider.create()
 }

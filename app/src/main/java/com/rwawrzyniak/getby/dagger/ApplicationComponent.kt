@@ -1,6 +1,5 @@
 package com.rwawrzyniak.getby.dagger
 
-import BusModule
 import android.content.Context
 import com.rwawrzyniak.getby.core.GlobalEvent
 import com.rwawrzyniak.getby.core.SchedulerProvider
@@ -11,8 +10,10 @@ import dagger.BindsInstance
 import dagger.Component
 import io.reactivex.subjects.PublishSubject
 import javax.inject.Named
+import javax.inject.Singleton
 
 // https://proandroiddev.com/dagger-2-on-android-the-simple-way-f706a2c597e9
+@Singleton
 @Component(modules = [FirebaseAuthModule::class, SchedulerModule::class, BusModule::class])
 interface ApplicationComponent {
 

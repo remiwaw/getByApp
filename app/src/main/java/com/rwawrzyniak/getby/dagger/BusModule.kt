@@ -1,3 +1,4 @@
+package com.rwawrzyniak.getby.dagger
 import com.rwawrzyniak.getby.core.GlobalEvent
 import dagger.Module
 import dagger.Provides
@@ -9,10 +10,8 @@ import javax.inject.Singleton
 object BusModule {
     const val GLOBAL_EVENT_SUBJECT = "GLOBAL_EVENT_SUBJECT"
 
-    @Provides
     @Singleton
+    @Provides
     @Named(GLOBAL_EVENT_SUBJECT)
-    fun provideTopSubject(): PublishSubject<GlobalEvent> {
-        return PublishSubject.create()
-    }
+    fun provideGlobalEventSubject(): PublishSubject<GlobalEvent> = PublishSubject.create()
 }
