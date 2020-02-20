@@ -15,19 +15,39 @@ import javax.inject.Named
 
 class HabitsViewModel @Inject internal constructor(
     @Named(GLOBAL_EVENT_SUBJECT) private val globalEventSubject: PublishSubject<GlobalEvent>,
-    @Named(SCHEDULER_PROVIDER) private val schedulerProvider: SchedulerProvider
+    @Named(SCHEDULER_PROVIDER) private val schedulerProvider: SchedulerProvider,
+    private val habitsRepository: HabitsRepository
 ) : ViewModel() {
-    private val compositeDisposable =  CompositeDisposable()
+    private val compositeDisposable = CompositeDisposable()
 
-    val habitsState: MutableLiveData<HabitsState> = MutableLiveData(
-        HabitsState(Calendar.getInstance())
-    )
+    // Private, mutable backing field - only update values internally
+    private val _isBusy: MutableLiveData<Boolean> = MutableLiveData()
+    private val _habits: MutableLiveData<List<Habit>> = MutableLiveData()
+    private val _firstDay: MutableLiveData<Calendar> = MutableLiveData(Calendar.getInstance())
+
+    // Observers will subscribe to this since it is immutable to them
+    val isBusy: MutableLiveData<Boolean>
+        get() = _isBusy
+    val habits: MutableLiveData<List<Habit>>
+        get() = _habits
+    val firstDay: MutableLiveData<Calendar>
+        get() = _firstDay
+
+    // Keep a reference to the disposable, and make sure to clear it appropriately somewhere
 
     init {
+        habitsRepository.loadHabits()
+            .doOnSubscribe { isBusy.postValue(true) }
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.main())
+            .doFinally { isBusy.postValue(false) }
+            .subscribe { habits.postValue(it) }
+            .addTo(compositeDisposable)
+
         globalEventSubject
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.main())
-            .subscribe { habitsState.postValue(HabitsState(Calendar.getInstance())) }
+            .subscribe { firstDay.postValue((Calendar.getInstance())) }
             .addTo(compositeDisposable)
     }
 
@@ -35,5 +55,4 @@ class HabitsViewModel @Inject internal constructor(
         super.onCleared()
         compositeDisposable.dispose()
     }
-
 }

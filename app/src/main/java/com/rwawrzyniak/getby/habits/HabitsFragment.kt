@@ -12,12 +12,11 @@ import com.rwawrzyniak.getby.core.ChromeConfiguration
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
+import kotlinx.android.synthetic.main.fragment_habits.*
 
 class HabitsFragment : BaseFragment() {
     private lateinit var binding: FragmentHabitsBinding
     private val viewModel by fragmentScopedViewModel { injector.habitsViewModel }
-
-    lateinit var habits: List<Habit>
 
     override fun getChromeConfig(): ChromeConfiguration = ChromeConfiguration(
         showActionBar = true,
@@ -32,18 +31,14 @@ class HabitsFragment : BaseFragment() {
     ): View? {
         binding = FragmentHabitsBinding.inflate(inflater, container, false)
 
-        viewModel.habitsState.observe(viewLifecycleOwner){ state : HabitsState ->
-            binding.daysHeaderView.initializeDaysHeader(state.firstDay)
+        viewModel.firstDay.observe(viewLifecycleOwner){
+            daysHeaderView.initializeDaysHeader(it)
         }
 
-        habits = listOf(
-            Habit("habitTitle1", "blaablablabla hgabit one"),
-            Habit("habitTitle2", "blaablablabla hgabit two")
-        )
+        viewModel.habits.observe(viewLifecycleOwner){
+            daysListView.adapter = HabitsAdapter(it)
+        }
 
-        val habitsAdapter = HabitsAdapter(habits)
-
-        binding.daysListView.adapter = habitsAdapter
         binding.daysListView.layoutManager = LinearLayoutManager(requireContext())
 
         return binding.root
