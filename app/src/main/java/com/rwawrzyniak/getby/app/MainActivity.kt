@@ -3,6 +3,7 @@ package com.rwawrzyniak.getby.app
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -46,6 +47,12 @@ class MainActivity : AppCompatActivity(), ChromeExtensionsProvider {
         DataBindingUtil.setContentView<ActivityMainBinding>(this,
             R.layout.activity_main
         )
+
         setSupportActionBar(mainActionBar)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean { // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_top_navigation, menu)
+        return true
     }
 }

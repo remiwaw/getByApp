@@ -1,9 +1,12 @@
 package com.rwawrzyniak.getby.core
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
+import com.rwawrzyniak.getby.R
 
 abstract class BaseFragment : Fragment() {
 
@@ -12,7 +15,9 @@ abstract class BaseFragment : Fragment() {
         (activity as ChromeExtensionsProvider).getBottomNavigation()
     }
 
-    open fun getChromeConfig(): ChromeConfiguration = ChromeConfiguration()
+    open fun getChromeConfig(): ChromeConfiguration = ChromeConfiguration(
+        showActionBarAddButton = true
+    )
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,5 +54,10 @@ abstract class BaseFragment : Fragment() {
         } else {
             bottomNavigationView.visibility = View.GONE
         }
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        val item: MenuItem = menu.findItem(R.id.menu_top_add)
+        item.isVisible = true
     }
 }

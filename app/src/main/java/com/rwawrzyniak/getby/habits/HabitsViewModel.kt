@@ -33,8 +33,6 @@ class HabitsViewModel @Inject internal constructor(
     val firstDay: MutableLiveData<Calendar>
         get() = _firstDay
 
-    // Keep a reference to the disposable, and make sure to clear it appropriately somewhere
-
     init {
         habitsRepository.loadHabits()
             .doOnSubscribe { isBusy.postValue(true) }
