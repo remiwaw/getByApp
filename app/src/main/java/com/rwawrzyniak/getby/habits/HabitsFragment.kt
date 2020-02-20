@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rwawrzyniak.getby.R
@@ -51,6 +52,17 @@ class HabitsFragment : BaseFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.menu_top_add -> showNewDialog()
+        }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun showNewDialog(){
+        Toast.makeText(
+            context,
+            "Create new Habit",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }
