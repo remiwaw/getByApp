@@ -2,11 +2,17 @@
     <!--    General-->
     <string name="app_name">GetBy</string>
     <string name="loading">Loading</string>
+    <string name="save">save</string>
+
     <string name="top_action_bar_plus_action">Add</string>
     <string name="bottom_navigation_card_habits">Habits</string>
     <string name="bottom_navigation_card_feed">Feed</string>
     <string name="bottom_navigation_card_friends">Friends</string>
 
+    <!--    General error handling-->
+    <string name="empty_field_error">You have to fill this field</string>
+
+    <!--    Tour-->
     <string name="tour_button_start_the_tour">Start the tour!</string>
     <string name="tour_logo_text_getby_app">GetBy App</string>
     <string name="tour_logo_image_description">logo</string>
@@ -33,5 +39,26 @@
     <string name="habits_action_bar_title">Habits</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--    Create new popup dialog-->
+    <string name="define_habit_header">Define habit</string>
+    <string name="habitNameLayoutHint">Name:</string>
+    <string name="habitDescriptionLayoutHint">Description:</string>
+
+    <string name="addFriendsButton">Add friends</string>
+    <string name="repeatLabel">Repeat</string>
+    <string name="reminderlabel">Reminder</string>
+
+    <string-array name="habits_frequency">
+        <item>Every day</item>
+        <item>Once a week</item>
+        <item>2 times per week</item>
+        <item>5 times per week</item>
+        <item>Custom</item>
+    </string-array>
+
+    <string-array name="reminder">
+        <item>off</item>
+    </string-array>
 
 </resources>

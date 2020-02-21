@@ -30,6 +30,11 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -60,6 +65,7 @@ dependencies {
     // 3rd party
     implementation "com.github.razir.progressbutton:progressbutton:$rootProject.progressButtonVersion"
     implementation "io.sellmair:disposer:$rootProject.disposerVersion"
+    implementation "com.wdullaer:materialdatetimepicker:$rootProject.materialDateTimePickerVersion"
 
     //Android
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin_version"

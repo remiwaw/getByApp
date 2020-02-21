@@ -3,6 +3,7 @@ package com.rwawrzyniak.getby.dagger
 import android.content.Context
 import com.rwawrzyniak.getby.core.GlobalEvent
 import com.rwawrzyniak.getby.core.SchedulerProvider
+import com.rwawrzyniak.getby.habits.AddNewHabitViewModel
 import com.rwawrzyniak.getby.habits.HabitsViewModel
 import com.rwawrzyniak.getby.login.LoginViewModel
 import com.rwawrzyniak.getby.register.RegisterViewModel
@@ -24,6 +25,7 @@ interface ApplicationComponent {
         ): ApplicationComponent
     }
 
+    val addNewHabitViewModel: AddNewHabitViewModel
     val habitsViewModel: HabitsViewModel
     val loginViewModel: LoginViewModel
     val registerViewModel: RegisterViewModel
