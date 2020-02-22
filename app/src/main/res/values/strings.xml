@@ -3,6 +3,7 @@
     <string name="app_name">GetBy</string>
     <string name="loading">Loading</string>
     <string name="save">save</string>
+    <string name="off">Off</string>
 
     <string name="top_action_bar_plus_action">Add</string>
     <string name="bottom_navigation_card_habits">Habits</string>
@@ -56,9 +57,4 @@
         <item>5 times per week</item>
         <item>Custom</item>
     </string-array>
-
-    <string-array name="reminder">
-        <item>off</item>
-    </string-array>
-
 </resources>

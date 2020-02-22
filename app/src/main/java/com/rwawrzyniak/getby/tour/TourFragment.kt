@@ -22,7 +22,7 @@ class TourFragment : BaseFragment() {
         binding = FragmentTourBinding.inflate(inflater, container, false)
 
         binding.goToNextScreenButton.setOnClickListener {
-            nav_host.findNavController().navigate(R.id.action_tourFragment_to_onboardingFragment)
+            nav_host.findNavController().navigate(R.id.action_tourFragment_to_habitsFragment)
         }
 
         return binding.root

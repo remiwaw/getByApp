@@ -112,12 +112,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/frequencyPicker" />
 
-        <Spinner
-            android:id="@+id/reminderPicker"
+        <TextView
+            android:id="@+id/reminder"
+            android:text="@string/off"
+            android:textSize="16sp"
             android:layout_width="wrap_content"
+            android:textStyle="bold"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@+id/reminderLabel"
-            app:layout_constraintStart_toEndOf="@+id/reminderLabel" />
+            app:layout_constraintStart_toEndOf="@+id/reminderLabel"
+            android:drawableRight="@drawable/ic_arrow_drop_down"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

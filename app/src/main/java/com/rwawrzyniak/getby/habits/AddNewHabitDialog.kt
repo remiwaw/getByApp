@@ -51,7 +51,7 @@ class AddNewHabitDialog : DialogFragment(), AdapterView.OnItemSelectedListener {
 
     private fun setupPickers() {
         setupFrequencyPicker()
-        setupReminderPicker()
+        setupReminder()
     }
 
     private fun setupTextViews() {
@@ -65,32 +65,31 @@ class AddNewHabitDialog : DialogFragment(), AdapterView.OnItemSelectedListener {
         }
     }
 
-    private fun setupReminderPicker() {
-        binding.reminderPicker.onItemSelectedListener = this
+    private fun setupReminder() {
+        binding.reminder.setOnClickListener {
+                TimePickerDialog.newInstance(
+                    { view, hourOfDay, minute, _ ->
+                        view?.dismiss()
+                        viewModel.habitBuilder.reminder(Reminder(HourMinute(hourOfDay, minute)))
+                        binding.reminder.setText("$hourOfDay:$minute")
+                    },
+                    false
+                ).show(requireFragmentManager(), TIME_PICKER_DIALOG_TAG)
+        }
+    }
 
+    private fun setupFrequencyPicker() {
         ArrayAdapter.createFromResource(
             requireContext(),
             R.array.habits_frequency,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.reminderPicker.setSelection(0, false)
             binding.frequencyPicker.adapter = adapter
-        }
-    }
-
-    private fun setupFrequencyPicker() {
-        binding.frequencyPicker.onItemSelectedListener = this
-
-        ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.reminder,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.reminderPicker.setSelection(0, false)
-            binding.reminderPicker.adapter = adapter
         }
+
+        binding.frequencyPicker.setSelection(0, false)
+        binding.frequencyPicker.onItemSelectedListener = this
     }
 
     private fun setupToolbar() {
@@ -121,16 +120,17 @@ class AddNewHabitDialog : DialogFragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun validateHabit(): Boolean {
-        if (binding.habitName.toString().isBlank()) {
+        var isValid = true
+        if (binding.habitName.text.isNullOrBlank()) {
             binding.habitNameLayout.error = getString(R.string.empty_field_error)
-            return false
+            isValid = false
         }
-        if (binding.habitDescription.toString().isBlank()) {
+        if (binding.habitDescription.text.isNullOrBlank()) {
             binding.habitDescription.error = getString(R.string.empty_field_error)
-            return false
+            isValid = false
         }
 
-        return true
+        return isValid
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
@@ -149,15 +149,6 @@ class AddNewHabitDialog : DialogFragment(), AdapterView.OnItemSelectedListener {
                     3 -> habitBuilder.frequency(Frequency(5, 7))
                     4 -> TODO("Custom not yet made")
                 }
-            }
-            R.id.reminderPicker -> {
-                TimePickerDialog.newInstance(
-                    { view, hourOfDay, minute, _ ->
-                        view?.dismiss()
-                        viewModel.habitBuilder.reminder(Reminder(HourMinute(hourOfDay, minute)))
-                    },
-                    false
-                ).show(requireFragmentManager(), TIME_PICKER_DIALOG_TAG)
             }
         }
     }
