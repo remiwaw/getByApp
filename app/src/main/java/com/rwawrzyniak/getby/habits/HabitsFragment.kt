@@ -14,6 +14,7 @@ import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
 import kotlinx.android.synthetic.main.fragment_habits.*
+import sun.jvm.hotspot.utilities.IntArray
 
 class HabitsFragment : BaseFragment() {
     private lateinit var binding: FragmentHabitsBinding
@@ -44,6 +45,9 @@ class HabitsFragment : BaseFragment() {
         viewModel.habits.observe(viewLifecycleOwner){
             daysListView.adapter = HabitsAdapter(it)
         }
+
+        // val diffResult = DiffUtil
+        //     .calculateDiff(MyDiffUtilCB(getItems(), items))
 
         binding.daysListView.layoutManager = LinearLayoutManager(requireContext())
 

@@ -10,9 +10,9 @@ class AddNewHabitViewModel @Inject internal constructor(
     @Named(SchedulerModule.SCHEDULER_PROVIDER) private val schedulerProvider: SchedulerProvider,
     private val habitsRepository: HabitsRepository
 ) : ViewModel() {
-    val habitBuilder : Habit.Builder = Habit.Builder()
+    val habitBuilder = Habit.Builder()
 
     fun saveHabit(){
-
+        habitsRepository.saveHabit(habitBuilder.build())
     }
 }

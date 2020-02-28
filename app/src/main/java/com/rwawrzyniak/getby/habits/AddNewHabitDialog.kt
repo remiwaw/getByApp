@@ -110,8 +110,8 @@ class AddNewHabitDialog : DialogFragment(), AdapterView.OnItemSelectedListener {
         val isValid = validateHabit()
 
         if(isValid){
-            viewModel.habitBuilder.name = binding.habitName.toString()
-            viewModel.habitBuilder.description = binding.habitDescription.toString()
+            viewModel.habitBuilder.name = binding.habitName.text.toString()
+            viewModel.habitBuilder.description = binding.habitDescription.text.toString()
 
             viewModel.saveHabit()
         }
@@ -121,14 +121,16 @@ class AddNewHabitDialog : DialogFragment(), AdapterView.OnItemSelectedListener {
 
     private fun validateHabit(): Boolean {
         var isValid = true
-        if (binding.habitName.text.isNullOrBlank()) {
+        if (binding.habitName.text.toString().isNullOrBlank()) {
             binding.habitNameLayout.error = getString(R.string.empty_field_error)
             isValid = false
         }
-        if (binding.habitDescription.text.isNullOrBlank()) {
+        if (binding.habitDescription.text.toString().isNullOrBlank()) {
             binding.habitDescription.error = getString(R.string.empty_field_error)
             isValid = false
         }
+
+        //TODO add frequency check
 
         return isValid
     }
