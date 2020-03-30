@@ -13,8 +13,6 @@ import com.rwawrzyniak.getby.core.ChromeConfiguration
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
-import kotlinx.android.synthetic.main.fragment_habits.*
-import sun.jvm.hotspot.utilities.IntArray
 
 class HabitsFragment : BaseFragment() {
     private lateinit var binding: FragmentHabitsBinding
@@ -38,20 +36,19 @@ class HabitsFragment : BaseFragment() {
     ): View? {
         binding = FragmentHabitsBinding.inflate(inflater, container, false)
 
-        viewModel.firstDay.observe(viewLifecycleOwner){
-            daysHeaderView.initializeDaysHeader(it)
+
+		viewModel.firstDay.observe(viewLifecycleOwner){
+			binding.daysHeaderView.initializeDaysHeader(it)
         }
 
-        viewModel.habits.observe(viewLifecycleOwner){
-            daysListView.adapter = HabitsAdapter(it)
+		viewModel.habits.observe(viewLifecycleOwner){
+			binding.daysListView.adapter = HabitsAdapter(it)
+			(binding.daysListView.adapter as HabitsAdapter).updateHabitList(it)
         }
 
-        // val diffResult = DiffUtil
-        //     .calculateDiff(MyDiffUtilCB(getItems(), items))
+		binding.daysListView.layoutManager = LinearLayoutManager(requireContext())
 
-        binding.daysListView.layoutManager = LinearLayoutManager(requireContext())
-
-        return binding.root
+		return binding.root
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

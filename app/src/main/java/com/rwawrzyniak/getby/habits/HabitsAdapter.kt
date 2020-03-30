@@ -3,10 +3,11 @@ package com.rwawrzyniak.getby.habits
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rwawrzyniak.getby.R
 
-class HabitsAdapter(var habits: List<Habit>)
+class HabitsAdapter(private val habits: List<Habit>)
     : RecyclerView.Adapter<HabitHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitHolder {
@@ -22,5 +23,11 @@ class HabitsAdapter(var habits: List<Habit>)
         val habit = habits[position]
         holder.bind(habit)
     }
+
+	fun updateHabitList(newHabits: List<Habit>){
+		val diffResult = DiffUtil
+			.calculateDiff(HabitDiffCallback(habits, newHabits))
+		diffResult.dispatchUpdatesTo(this)
+	}
 }
 

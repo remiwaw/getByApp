@@ -8,8 +8,8 @@ class HabitsRepository @Inject internal constructor() {
 
     private val habits = ObservableList(
         mutableListOf(
-            Habit("habitTitle1", "blaablablabla hgabit one"),
-            Habit("habitTitle2", "blaablablabla hgabit two")
+            Habit(name = "habitTitle1", description = "blaablablabla hgabit one"),
+            Habit(name = "habitTitle2", description = "blaablablabla hgabit two")
         )
     )
 

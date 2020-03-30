@@ -46,7 +46,7 @@ class HabitsViewModel @Inject internal constructor(
             .subscribe { habits.postValue(it) }
             .addTo(compositeDisposable)
 
-        habitsRepository.saveHabit(  Habit("habitTitle3", "blaablablabla hgabit three"))
+        habitsRepository.saveHabit(Habit(name = "habitTitle3", description = "blaablablabla hgabit three"))
 
         globalEventSubject
             .subscribeOn(schedulerProvider.io())

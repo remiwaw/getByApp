@@ -112,6 +112,7 @@ class AddNewHabitDialog : DialogFragment(), AdapterView.OnItemSelectedListener {
         if(isValid){
             viewModel.habitBuilder.name = binding.habitName.text.toString()
             viewModel.habitBuilder.description = binding.habitDescription.text.toString()
+			addFrequencyToHabit(binding.frequencyPicker.selectedItemPosition)
 
             viewModel.saveHabit()
         }
@@ -130,8 +131,6 @@ class AddNewHabitDialog : DialogFragment(), AdapterView.OnItemSelectedListener {
             isValid = false
         }
 
-        //TODO add frequency check
-
         return isValid
     }
 
@@ -141,22 +140,30 @@ class AddNewHabitDialog : DialogFragment(), AdapterView.OnItemSelectedListener {
         // <item>2 times per week</item>
         // <item>5 times per week</item>
         // <item>Custom</item>
-        val habitBuilder = viewModel.habitBuilder
         when (parent.id) {
             R.id.frequencyPicker -> {
-                when (pos) {
-                    0 -> habitBuilder.frequency(Frequency(7, 7))
-                    1 -> habitBuilder.frequency(Frequency(1, 7))
-                    2 -> habitBuilder.frequency(Frequency(2, 7))
-                    3 -> habitBuilder.frequency(Frequency(5, 7))
-                    4 -> TODO("Custom not yet made")
-                }
+				addFrequencyToHabit(pos)
             }
         }
     }
 
-    override fun onNothingSelected(parent: AdapterView<*>) {
-        // Another interface callback
+	private fun addFrequencyToHabit(
+		pos: Int
+	) {
+		when (pos) {
+			0 -> viewModel.habitBuilder.frequency(Frequency(7, 7))
+			1 -> viewModel.habitBuilder.frequency(Frequency(1, 7))
+			2 -> viewModel.habitBuilder.frequency(Frequency(2, 7))
+			3 -> viewModel.habitBuilder.frequency(Frequency(5, 7))
+			4 -> TODO("Custom not yet made")
+		}
+	}
+
+	private fun buildHabitWithDefaultFrequency() {
+		viewModel.habitBuilder.frequency(Frequency(7, 7))
+	}
+
+	override fun onNothingSelected(parent: AdapterView<*>) {
     }
 
     override fun onStart() {
