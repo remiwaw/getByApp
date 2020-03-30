@@ -9,7 +9,6 @@ import com.rwawrzyniak.getby.dagger.SchedulerModule.SCHEDULER_PROVIDER
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.PublishSubject
-import timber.log.Timber
 import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Named
@@ -39,14 +38,11 @@ class HabitsViewModel @Inject internal constructor(
             .doOnSubscribe { isBusy.postValue(true) }
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.main())
-            .doFinally {
-                Timber.d("Finally!")
-                isBusy.postValue(false)
-            }
-            .subscribe { habits.postValue(it) }
+            .subscribe {
+				habits.postValue(it)
+				isBusy.postValue(false)
+			}
             .addTo(compositeDisposable)
-
-        habitsRepository.saveHabit(Habit(name = "habitTitle3", description = "blaablablabla hgabit three"))
 
         globalEventSubject
             .subscribeOn(schedulerProvider.io())

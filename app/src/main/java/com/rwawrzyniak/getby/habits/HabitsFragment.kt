@@ -51,6 +51,10 @@ class HabitsFragment : BaseFragment() {
 		return binding.root
     }
 
+	override fun onPause() {
+		super.onPause()
+	}
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.menu_top_add -> showCreateHabitPopup()

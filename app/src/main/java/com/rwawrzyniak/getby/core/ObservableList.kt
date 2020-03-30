@@ -1,5 +1,6 @@
 package com.rwawrzyniak.getby.core
 
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
 class ObservableList<T> (
@@ -11,5 +12,5 @@ class ObservableList<T> (
         onAdd.onNext(list)
     }
 
-    fun observe() = onAdd.startWith(list).hide()
+    fun observe(): Observable<List<T>> = onAdd.startWith(list).hide()
 }
