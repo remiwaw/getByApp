@@ -36,7 +36,6 @@ class HabitsFragment : BaseFragment() {
     ): View? {
         binding = FragmentHabitsBinding.inflate(inflater, container, false)
 
-
 		viewModel.firstDay.observe(viewLifecycleOwner){
 			binding.daysHeaderView.initializeDaysHeader(it)
         }
@@ -50,10 +49,6 @@ class HabitsFragment : BaseFragment() {
 
 		return binding.root
     }
-
-	override fun onPause() {
-		super.onPause()
-	}
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){

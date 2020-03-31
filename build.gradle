@@ -22,6 +22,8 @@ buildscript {
         googleServices = '4.3.2'
 
         // Android dependencies
+		roomVersion = '2.1.0-alpha01'
+		legacySupportVersion = '1.0.0'
         materialDateTimePickerVersion = '4.2.3'
         disposerVersion = '2.0.0'
         firebaseAuthRxVersion = '16.1.0.0'

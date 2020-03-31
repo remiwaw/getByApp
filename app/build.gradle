@@ -49,9 +49,13 @@ dependencies {
     implementation "com.androidhuman.rxfirebase2:firebase-core:$rootProject.firebaseCoreRxVersion"
     implementation "com.google.firebase:firebase-core:$rootProject.firebaseCoreVersion"
 
-    // Dagger
+	// Room
+	implementation "androidx.room:room-runtime:$rootProject.roomVersion"
+	kapt "androidx.room:room-compiler:$rootProject.roomVersion"
+
+	// Dagger
     implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "androidx.legacy:legacy-support-v4:$rootProject.legacySupportVersion"
     kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
 
     // Timber
