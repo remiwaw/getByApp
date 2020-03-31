@@ -1,5 +1,6 @@
 package com.rwawrzyniak.getby.dagger
 
+import com.rwawrzyniak.getby.core.AppDatabase
 import com.rwawrzyniak.getby.habits.HabitsRepository
 import dagger.Module
 import dagger.Provides
@@ -10,5 +11,5 @@ object RepositoryModule {
 
 	@Singleton
     @Provides
-    fun providesHabitsRepository(): HabitsRepository = HabitsRepository()
+    fun providesHabitsRepository(database: AppDatabase): HabitsRepository = HabitsRepository(database)
 }

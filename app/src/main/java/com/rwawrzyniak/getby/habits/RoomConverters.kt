@@ -1,0 +1,61 @@
+package com.rwawrzyniak.getby.habits
+
+import androidx.room.TypeConverter
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
+import java.time.DayOfWeek
+import java.util.Date
+
+// TODO if this becomes to slow, consider not using gson everywhere. Just write converter code.
+class RoomConverters {
+
+	private val gson = Gson()
+
+	// Reminder converter
+	@TypeConverter
+	fun fromJsonToReminder(json: String?): Reminder? = gson.fromJson(json, Reminder::class.java)
+
+	@TypeConverter
+	fun reminderToJson(reminder: Reminder?): String? = gson.toJson(reminder)
+
+	// Day of week converter
+	@TypeConverter
+	fun fromJsonToDayOfWeek(json: String?): DayOfWeek = gson.fromJson(json, DayOfWeek::class.java)
+
+	@TypeConverter
+	fun dayOfWeekToJson(dayOfWeek: DayOfWeek?): String = gson.toJson(dayOfWeek)
+
+	// HourMinute converter
+	@TypeConverter
+	fun fromHourMinuteJson(json: String?): HourMinute = gson.fromJson(json, HourMinute::class.java)
+
+	@TypeConverter
+	fun hourMinuteToJson(hourMinute: HourMinute?): String = gson.toJson(hourMinute)
+
+	// Frequency converter
+	@TypeConverter
+	fun fromFrequencyJson(json: String?): Frequency = gson.fromJson(json, Frequency::class.java)
+
+	@TypeConverter
+	fun frequencyToJson(frequency: Frequency?): String = gson.toJson(frequency)
+
+	// Date converter
+	@TypeConverter
+	fun fromTimestamp(value: Long?): Date? = value?.let { Date(it) }
+
+	@TypeConverter
+	fun dateToTimestamp(date: Date?): Long? = date?.time
+
+	// List sting converters
+	@TypeConverter
+	open fun fromString(value: String): List<String> {
+		val listType: Type = object : TypeToken<List<String>>() {}.type
+		return Gson().fromJson(value, listType)
+	}
+
+	@TypeConverter
+	fun fromArrayList(list: List<String>): String {
+		return gson.toJson(list)
+	}
+}

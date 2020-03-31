@@ -1,21 +1,13 @@
 package com.rwawrzyniak.getby.habits
 
-import com.rwawrzyniak.getby.core.ObservableList
-import io.reactivex.Observable
+import androidx.lifecycle.LiveData
+import com.rwawrzyniak.getby.core.AppDatabase
+import io.reactivex.Completable
 import javax.inject.Inject
 
-class HabitsRepository @Inject internal constructor() {
+class HabitsRepository @Inject internal constructor(private val database: AppDatabase) {
 
-    private val habits = ObservableList(
-        mutableListOf(
-            Habit(name = "habitTitle1", description = "blaablablabla hgabit one"),
-            Habit(name = "habitTitle2", description = "blaablablabla hgabit two")
-        )
-    )
+    fun loadHabits(): LiveData<List<Habit>> = database.habitDao().getAll()
 
-    fun loadHabits(): Observable<List<Habit>> = habits.observe()
-
-    fun saveHabit(habit: Habit){
-        habits.add(habit)
-    }
+    fun saveHabit(habit: Habit): Completable = database.habitDao().insert(habit)
 }

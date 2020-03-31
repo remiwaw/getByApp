@@ -10,7 +10,7 @@ buildscript {
     ext {
         // Sdk and tools
         compileSdkVersion = 28
-        minSdkVersion = 21
+        minSdkVersion = 26
         targetSdkVersion = 28
 
         // Build dependencies
@@ -22,6 +22,7 @@ buildscript {
         googleServices = '4.3.2'
 
         // Android dependencies
+		gsonVersion = '2.8.0'
 		roomVersion = '2.1.0-alpha01'
 		legacySupportVersion = '1.0.0'
         materialDateTimePickerVersion = '4.2.3'

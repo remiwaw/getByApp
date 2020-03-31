@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 // https://proandroiddev.com/dagger-2-on-android-the-simple-way-f706a2c597e9
 @Singleton
-@Component(modules = [FirebaseAuthModule::class, SchedulerModule::class, BusModule::class, RepositoryModule::class])
+@Component(modules = [FirebaseAuthModule::class, SchedulerModule::class, BusModule::class, RepositoryModule::class, DatabaseModule::class])
 interface ApplicationComponent {
 
     @Component.Factory

@@ -1,5 +1,6 @@
 package com.rwawrzyniak.getby.habits
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.rwawrzyniak.getby.core.GlobalEvent
@@ -28,22 +29,12 @@ class HabitsViewModel @Inject internal constructor(
     // Observers will subscribe to this since it is immutable to them
     val isBusy: MutableLiveData<Boolean>
         get() = _isBusy
-    val habits: MutableLiveData<List<Habit>>
-        get() = _habits
+    val habits: LiveData<List<Habit>>
+        get() = habitsRepository.loadHabits()
     val firstDay: MutableLiveData<Calendar>
         get() = _firstDay
 
     init {
-        habitsRepository.loadHabits()
-            .doOnSubscribe { isBusy.postValue(true) }
-            .subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.main())
-            .subscribe {
-				habits.postValue(it)
-				isBusy.postValue(false)
-			}
-            .addTo(compositeDisposable)
-
         globalEventSubject
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.main())

@@ -1,15 +1,19 @@
 package com.rwawrzyniak.getby.habits
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.time.DayOfWeek
 import java.util.UUID
 
+@Entity
 data class Habit(
-    val id: String = UUID.randomUUID().toString(),
-    val name: String,
-    val description: String,
-    val frequency: Frequency? = null,
-    val reminder: Reminder? = null,
-    val history: List<String> = emptyList()
+	@PrimaryKey val id: String = UUID.randomUUID().toString(),
+	@ColumnInfo val name: String,
+	@ColumnInfo val description: String,
+	@ColumnInfo val frequency: Frequency,
+	@ColumnInfo val reminder: Reminder?,
+	@ColumnInfo val history: List<String> = emptyList()
 ) {
     data class Builder(
         var name: String? = null,
@@ -36,5 +40,5 @@ data class Habit(
 
 data class Frequency(val times: Int, val days: Int)
 data class Reminder(val time: HourMinute, val days: List<DayOfWeek> = emptyList())
-
 data class HourMinute(val hour: Int, val minutes: Int)
+
