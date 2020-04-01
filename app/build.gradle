@@ -58,6 +58,9 @@ dependencies {
     implementation "androidx.legacy:legacy-support-v4:$rootProject.legacySupportVersion"
     kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
 
+	// ViewSwipeDecorator
+	implementation "it.xabaras.android:recyclerview-swipedecorator:$rootProject.swipeDecoratorVersion"
+
 	// Gson
 	implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
 

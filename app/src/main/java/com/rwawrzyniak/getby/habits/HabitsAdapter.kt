@@ -10,7 +10,10 @@ import com.rwawrzyniak.getby.R
 class HabitsAdapter(private val habits: List<Habit>)
     : RecyclerView.Adapter<HabitHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitHolder {
+	private var recentlyDeletedItemPosition: Int = -1
+	private lateinit var recentlyDeletedItem: Habit
+
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitHolder {
         val context: Context = parent.context
         val inflater = LayoutInflater.from(context)
 
@@ -23,6 +26,17 @@ class HabitsAdapter(private val habits: List<Habit>)
         val habit = habits[position]
         holder.bind(habit)
     }
+
+	fun getItemForDelete(position: Int): Habit {
+		recentlyDeletedItem = habits[position]
+		recentlyDeletedItemPosition = position
+		notifyItemRemoved(position)
+		return recentlyDeletedItem
+	}
+
+	private fun showUndoSnackbar() {
+		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+	}
 
 	fun updateHabitList(newHabits: List<Habit>){
 		val diffResult = DiffUtil

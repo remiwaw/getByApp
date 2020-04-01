@@ -42,6 +42,14 @@ class HabitsViewModel @Inject internal constructor(
             .addTo(compositeDisposable)
     }
 
+	fun removeHabit(habit: Habit){
+		habitsRepository.removeHabit(habit)
+			.subscribeOn(schedulerProvider.io())
+			.observeOn(schedulerProvider.main())
+			.subscribe()
+			.addTo(compositeDisposable)
+	}
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()
