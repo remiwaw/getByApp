@@ -12,6 +12,7 @@ object DatabaseModule {
     fun provideDatabase(context: Context) = Room.databaseBuilder(
 		context,
 		AppDatabase::class.java, "GetBy.db"
-	).build()
+	).fallbackToDestructiveMigration()
+		.build()
 
 }

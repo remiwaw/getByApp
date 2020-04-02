@@ -7,8 +7,9 @@ import com.rwawrzyniak.getby.habits.Habit
 import com.rwawrzyniak.getby.habits.HabitDao
 import com.rwawrzyniak.getby.habits.RoomConverters
 
-@Database(entities = [Habit::class], version = 1)
+@Database(entities = [Habit::class], version = 2)
 @TypeConverters(RoomConverters::class)
 abstract class AppDatabase : RoomDatabase() {
 	abstract fun habitDao(): HabitDao
+
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<color name="archiveHabit">#8F9588</color>
 	<color name="swipeRight">#CCFF90</color>
 	<color name="swipeLeft">#FF8A80</color>
 ¡

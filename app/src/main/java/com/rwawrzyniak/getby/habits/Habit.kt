@@ -9,11 +9,12 @@ import java.util.UUID
 @Entity
 data class Habit(
 	@PrimaryKey val id: String = UUID.randomUUID().toString(),
-	@ColumnInfo val name: String,
-	@ColumnInfo val description: String,
-	@ColumnInfo val frequency: Frequency,
-	@ColumnInfo val reminder: Reminder?,
-	@ColumnInfo val history: List<String> = emptyList()
+	@ColumnInfo var name: String,
+	@ColumnInfo var description: String,
+	@ColumnInfo var frequency: Frequency,
+	@ColumnInfo var reminder: Reminder?,
+	@ColumnInfo var history: List<String> = emptyList(),
+	@ColumnInfo var isArchived: Boolean = false
 ) {
     data class Builder(
         var name: String? = null,

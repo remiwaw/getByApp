@@ -10,4 +10,5 @@ class HabitsRepository @Inject internal constructor(private val database: AppDat
     fun loadHabits(): LiveData<MutableList<Habit>> = database.habitDao().getAll()
     fun saveHabit(habit: Habit): Completable = database.habitDao().insert(habit)
     fun removeHabit(habit: Habit): Completable = database.habitDao().delete(habit)
+    fun updateHabit(habit: Habit): Completable = database.habitDao().update(habit)
 }

@@ -38,8 +38,8 @@
 
     <!-- Habits -->
     <string name="habits_action_bar_title">Habits</string>
-    <string name="habits_remove_undo_snackbar_title">Undo remove?</string>
-    <string name="habits_remove_undo_snackbar_button">Undo?</string>
+    <string name="habits_undo_snackbar_title">Undo %1$s</string>
+    <string name="habits_undo_snackbar_button">Undo?</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

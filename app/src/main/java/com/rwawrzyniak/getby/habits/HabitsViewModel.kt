@@ -7,6 +7,7 @@ import com.rwawrzyniak.getby.core.GlobalEvent
 import com.rwawrzyniak.getby.core.SchedulerProvider
 import com.rwawrzyniak.getby.dagger.BusModule.GLOBAL_EVENT_SUBJECT
 import com.rwawrzyniak.getby.dagger.SchedulerModule.SCHEDULER_PROVIDER
+import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.PublishSubject
@@ -41,8 +42,16 @@ class HabitsViewModel @Inject internal constructor(
     }
 
 	fun removeHabit(habit: Habit){
-		habitsRepository.removeHabit(habit)
-			.subscribeOn(schedulerProvider.io())
+		simplySubscribe(habitsRepository.removeHabit(habit))
+	}
+
+	fun archiveHabit(habit: Habit){
+		habit.isArchived = true
+		simplySubscribe(habitsRepository.updateHabit(habit))
+	}
+
+	private fun simplySubscribe(completable: Completable){
+		completable.subscribeOn(schedulerProvider.io())
 			.observeOn(schedulerProvider.main())
 			.subscribe(	)
 			.addTo(compositeDisposable)

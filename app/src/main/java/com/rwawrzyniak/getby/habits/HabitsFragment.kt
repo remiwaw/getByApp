@@ -71,20 +71,21 @@ class HabitsFragment : BaseFragment() {
 		AddNewHabitDialog.show(requireFragmentManager())
 	}
 
-	private fun showUndoSnackbar(habitToDelete: Habit) {
+	private fun showUndoSnackbar(swipedHabit: Habit, swipedAction: SwipedAction) {
 		val snackbar = Snackbar.make(
 			requireView(),
-			R.string.habits_remove_undo_snackbar_title,
+			resources.getString(R.string.habits_undo_snackbar_title, swipedAction.name.toLowerCase()),
 			Snackbar.LENGTH_LONG
 		)
-		snackbar.setAction(R.string.habits_remove_undo_snackbar_button) { }
+		snackbar.setAction(R.string.habits_undo_snackbar_button) { }
 
 		snackbar.addCallback(object : Snackbar.Callback() {
 			override fun onDismissed(snackbar: Snackbar, event: Int) {
 				if (event == DISMISS_EVENT_ACTION) {
-					(binding.daysListView.adapter as HabitsAdapter).undoDelete()
+					(binding.daysListView.adapter as HabitsAdapter).undo()
 				} else {
-					viewModel.removeHabit(habitToDelete)
+					if(swipedAction == SwipedAction.REMOVE) viewModel.removeHabit(swipedHabit)
+					else viewModel.archiveHabit(swipedHabit)
 				}
 			}
 
@@ -108,14 +109,13 @@ class HabitsFragment : BaseFragment() {
 			viewHolder: RecyclerView.ViewHolder,
 			direction: Int
 		) {
+			val position = viewHolder.adapterPosition
+			val swipedItem =
+				(binding.daysListView.adapter as HabitsAdapter).processSwipedItem(position)
+
 			when (direction) {
-				ItemTouchHelper.LEFT -> {
-					val position = viewHolder.adapterPosition
-					val habitToDelete =
-						(binding.daysListView.adapter as HabitsAdapter).getItemForDelete(position)
-					showUndoSnackbar(habitToDelete)
-				}
-				ItemTouchHelper.RIGHT -> { }
+				ItemTouchHelper.LEFT -> showUndoSnackbar(swipedItem, SwipedAction.REMOVE)
+				ItemTouchHelper.RIGHT -> showUndoSnackbar(swipedItem, SwipedAction.ARCHIVE)
 			}
 		}
 
@@ -140,13 +140,13 @@ class HabitsFragment : BaseFragment() {
 				.addSwipeRightBackgroundColor(
 					ContextCompat.getColor(
 						this@HabitsFragment.requireContext(),
-						R.color.swipeRight // TODO move color to styles
+						R.color.swipeRight
 					)
 				).addSwipeRightActionIcon(R.drawable.ic_archive_black)
 				.addSwipeLeftBackgroundColor(
 					ContextCompat.getColor(
 						this@HabitsFragment.requireContext(),
-						R.color.swipeLeft // TODO move color to styles
+						R.color.swipeLeft
 					)
 				)
 				.addSwipeLeftActionIcon(R.drawable.ic_delete_black)
@@ -157,6 +157,10 @@ class HabitsFragment : BaseFragment() {
 				c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive
 			)
 		}
+	}
+
+	companion object{
+		private enum class SwipedAction {ARCHIVE, REMOVE}
 	}
 }
 

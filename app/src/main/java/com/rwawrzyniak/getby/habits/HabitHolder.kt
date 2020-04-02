@@ -23,6 +23,6 @@ class HabitHolder(view: View)
         habitNameView.text = this.habit.name
     }
 
-    override fun onClick(v: View?) {
+	override fun onClick(v: View?) {
     }
 }
