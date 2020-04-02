@@ -11,7 +11,7 @@ import io.reactivex.Completable
 @Dao
 interface HabitDao {
 	@Query("SELECT * FROM habit")
-	fun getAll(): LiveData<List<Habit>>
+	fun getAll(): LiveData<MutableList<Habit>>
 
 	@Insert
 	fun insert(vararg habit: Habit) : Completable

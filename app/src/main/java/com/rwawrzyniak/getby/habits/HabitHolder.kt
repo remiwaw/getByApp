@@ -10,6 +10,7 @@ class HabitHolder(view: View)
     : RecyclerView.ViewHolder(view), View.OnClickListener {
 
     private lateinit var habit: Habit
+	private var isMarkedForRemoval: Boolean = false
 
     private val habitNameView: TextView = itemView.findViewById(R.id.habitName)
     private val firstCheckbox: CheckBox = itemView.findViewById(R.id.firstCheckbox)

@@ -23,14 +23,12 @@ class HabitsViewModel @Inject internal constructor(
 
     // Private, mutable backing field - only update values internally
     private val _isBusy: MutableLiveData<Boolean> = MutableLiveData()
-    private val _habits: MutableLiveData<List<Habit>> = MutableLiveData()
     private val _firstDay: MutableLiveData<Calendar> = MutableLiveData(Calendar.getInstance())
 
     // Observers will subscribe to this since it is immutable to them
     val isBusy: MutableLiveData<Boolean>
         get() = _isBusy
-    val habits: LiveData<List<Habit>>
-        get() = habitsRepository.loadHabits()
+    val habits: LiveData<MutableList<Habit>> = habitsRepository.loadHabits()
     val firstDay: MutableLiveData<Calendar>
         get() = _firstDay
 
@@ -46,7 +44,7 @@ class HabitsViewModel @Inject internal constructor(
 		habitsRepository.removeHabit(habit)
 			.subscribeOn(schedulerProvider.io())
 			.observeOn(schedulerProvider.main())
-			.subscribe()
+			.subscribe(	)
 			.addTo(compositeDisposable)
 	}
 

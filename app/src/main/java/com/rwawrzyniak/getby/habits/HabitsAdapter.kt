@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rwawrzyniak.getby.R
 
-class HabitsAdapter(private val habits: List<Habit>)
+class HabitsAdapter(private val habits: MutableList<Habit>)
     : RecyclerView.Adapter<HabitHolder>() {
 
 	private var recentlyDeletedItemPosition: Int = -1
@@ -30,12 +30,17 @@ class HabitsAdapter(private val habits: List<Habit>)
 	fun getItemForDelete(position: Int): Habit {
 		recentlyDeletedItem = habits[position]
 		recentlyDeletedItemPosition = position
+		habits.remove(recentlyDeletedItem)
 		notifyItemRemoved(position)
 		return recentlyDeletedItem
 	}
 
-	private fun showUndoSnackbar() {
-		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+	fun undoDelete() {
+		habits.add(
+			recentlyDeletedItemPosition,
+			recentlyDeletedItem
+		)
+		notifyItemInserted(recentlyDeletedItemPosition)
 	}
 
 	fun updateHabitList(newHabits: List<Habit>){
