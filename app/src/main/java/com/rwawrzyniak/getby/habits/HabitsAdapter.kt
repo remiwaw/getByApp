@@ -14,9 +14,10 @@ class HabitsAdapter(private var habits: MutableList<Habit>, private var filtered
 
 	private var recentlySwipedItemPosition: Int = -1
 	private lateinit var recentlySwipedItem: Habit
+	private var hideArchivedHabits = true
 
 	init {
-	    filteredHabits = habits.filter { !it.isArchived }.toMutableList()
+	    filteredHabits = if(hideArchivedHabits) habits.filter { !it.isArchived }.toMutableList() else habits
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitHolder {
@@ -50,9 +51,8 @@ class HabitsAdapter(private var habits: MutableList<Habit>, private var filtered
 			}
 
 			private fun doFilter(constraint: CharSequence?): MutableList<Habit> {
-				if (constraint.isNullOrEmpty()) {
-					filteredHabits = habits
-				} else filteredHabits = habits.filter { it.name.contains(constraint, ignoreCase = true) }.toMutableList()
+				filteredHabits = if (constraint.isNullOrEmpty()) habits
+				else habits.filter { it.name.contains(constraint, ignoreCase = true) }.toMutableList()
 
 				return filteredHabits
 			}
@@ -82,26 +82,41 @@ class HabitsAdapter(private var habits: MutableList<Habit>, private var filtered
 	}
 
 	fun showAllHabits(){
-		filteredHabits = habits
-		notifyDataSetChanged()
+		hideArchivedHabits = false
+		updateHabitListWithDiff(habits)
 	}
 
 	fun hideArchivedHabits(){
-		filteredHabits = filteredHabits.filter { !it.isArchived }.toMutableList()
-		notifyDataSetChanged()
+		hideArchivedHabits = true
+		updateHabitListWithDiff(filteredHabits.filter { !it.isArchived })
 	}
 
-	// This really changes the habits also in database
+	// This works because we do not update so many items at once time
+	// In case this should be used for huge diffs please reffer to: https://jonfhancock.com/get-threading-right-with-diffutil-423378e126d2
 	fun updateHabitListWithDiff(newHabits: List<Habit>){
-		habits = newHabits.toMutableList()
+		val oldFilteredHabits = ArrayList(filteredHabits)
+
+		if(hideArchivedHabits){
+			diffUpdate(newHabits.filter { !it.isArchived }, oldFilteredHabits)
+		} else {
+			diffUpdate(newHabits, oldFilteredHabits)
+		}
+	}
+
+	private fun diffUpdate(
+		newHabits: List<Habit>,
+		oldHabits: ArrayList<Habit>
+	) {
 		val diffResult = DiffUtil
-			.calculateDiff(HabitDiffCallback(filteredHabits, newHabits))
+			.calculateDiff(HabitDiffCallback(oldHabits, newHabits))
+
+		filteredHabits.clear()
+		filteredHabits.addAll(newHabits)
+
 		diffResult.dispatchUpdatesTo(this)
 	}
 
 	companion object{
-		enum class HabitFilter {SHOW_ALL, HIDE_ARCHIVED}
-
 		private const val ARCHIVED_HABIT = 1
 		private const val ACTIVE_HABIT = 0
 	}
