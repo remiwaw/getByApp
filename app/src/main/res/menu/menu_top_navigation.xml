@@ -9,4 +9,28 @@
         app:showAsAction="always"
         android:title="@string/top_action_bar_plus_action" />
 
+		<item
+			android:id="@+id/moreVertical"
+			android:icon="@drawable/ic_more_vert_24px"
+		android:title="@string/topToolbar_action_more_vertical"
+		app:showAsAction="ifRoom" >
+
+			<menu>
+				<item
+					android:id="@+id/hideArchived"
+					android:title="@string/topToolbar_hide_archived"
+					android:checkable="true"
+					android:checked="true"
+					/>
+
+				<item
+					android:id="@+id/action_settings"
+					android:icon="@android:drawable/ic_menu_preferences"
+					app:showAsAction="ifRoom"
+					android:title="@string/topToolbar_settings" />
+
+			</menu>
+
+		</item>
+
 </menu>

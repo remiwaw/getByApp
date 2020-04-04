@@ -16,7 +16,7 @@ class HabitsAdapter(private var habits: MutableList<Habit>, private var filtered
 	private lateinit var recentlySwipedItem: Habit
 
 	init {
-	    filteredHabits = habits
+	    filteredHabits = habits.filter { !it.isArchived }.toMutableList()
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitHolder {
@@ -50,14 +50,9 @@ class HabitsAdapter(private var habits: MutableList<Habit>, private var filtered
 			}
 
 			private fun doFilter(constraint: CharSequence?): MutableList<Habit> {
-				if (constraint.isNullOrEmpty() || HabitFilter.SHOW_ALL.name == constraint) {
+				if (constraint.isNullOrEmpty()) {
 					filteredHabits = habits
-				} else {
-					filteredHabits = when (constraint) {
-						HabitFilter.HIDE_ARCHIVED.name -> habits.filter { !it.isArchived }.toMutableList()
-						else -> habits.filter { it.name.contains(constraint, ignoreCase = true) }.toMutableList()
-					}
-				}
+				} else filteredHabits = habits.filter { it.name.contains(constraint, ignoreCase = true) }.toMutableList()
 
 				return filteredHabits
 			}
@@ -71,24 +66,36 @@ class HabitsAdapter(private var habits: MutableList<Habit>, private var filtered
 	}
 
 	fun processSwipedItem(position: Int): Habit {
-		recentlySwipedItem = habits[position]
+		recentlySwipedItem = filteredHabits[position]
 		recentlySwipedItemPosition = position
-		habits.remove(recentlySwipedItem)
+		filteredHabits.remove(recentlySwipedItem)
 		notifyItemRemoved(position)
 		return recentlySwipedItem
 	}
 
 	fun undo() {
-		habits.add(
+		filteredHabits.add(
 			recentlySwipedItemPosition,
 			recentlySwipedItem
 		)
 		notifyItemInserted(recentlySwipedItemPosition)
 	}
 
-	fun updateHabitList(newHabits: List<Habit>){
+	fun showAllHabits(){
+		filteredHabits = habits
+		notifyDataSetChanged()
+	}
+
+	fun hideArchivedHabits(){
+		filteredHabits = filteredHabits.filter { !it.isArchived }.toMutableList()
+		notifyDataSetChanged()
+	}
+
+	// This really changes the habits also in database
+	fun updateHabitListWithDiff(newHabits: List<Habit>){
+		habits = newHabits.toMutableList()
 		val diffResult = DiffUtil
-			.calculateDiff(HabitDiffCallback(habits, newHabits))
+			.calculateDiff(HabitDiffCallback(filteredHabits, newHabits))
 		diffResult.dispatchUpdatesTo(this)
 	}
 

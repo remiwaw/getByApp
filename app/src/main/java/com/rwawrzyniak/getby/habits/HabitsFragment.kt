@@ -62,8 +62,10 @@ class HabitsFragment : BaseFragment() {
 		}
 
 		viewModel.habits.observe(viewLifecycleOwner) {
-			binding.daysListView.adapter = HabitsAdapter(it)
-			(binding.daysListView.adapter as HabitsAdapter).updateHabitList(it)
+			if(binding.daysListView.adapter == null){
+				binding.daysListView.adapter = HabitsAdapter(it)
+			}
+			(binding.daysListView.adapter as HabitsAdapter).updateHabitListWithDiff(it)
 		}
 
 		binding.daysListView.layoutManager = LinearLayoutManager(requireContext())
@@ -72,8 +74,19 @@ class HabitsFragment : BaseFragment() {
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		val habitsAdapter = binding.daysListView.adapter as HabitsAdapter
 		when (item.itemId) {
 			R.id.menu_top_add -> showCreateHabitPopup()
+			R.id.hideArchived -> {
+				if (item.isChecked) {
+					item.isChecked = false;
+					habitsAdapter.showAllHabits()
+				}
+				else {
+					item.isChecked = true;
+					habitsAdapter.hideArchivedHabits()
+				}
+			}
 		}
 		return super.onOptionsItemSelected(item)
 	}

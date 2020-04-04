@@ -1,5 +1,9 @@
 <resources>
-    <!--    General-->
+    <string name="topToolbar_settings">Settings</string>
+    <string name="topToolbar_action_more_vertical">More</string>
+	<string name="topToolbar_hide_archived">Hide archived</string>
+
+	<!--    General-->
     <string name="app_name">GetBy</string>
     <string name="loading">Loading</string>
     <string name="save">save</string>
@@ -54,7 +58,7 @@
     <string name="repeatLabel">Repeat</string>
     <string name="reminderlabel">Reminder</string>
 
-    <string-array name="habits_frequency">
+	<string-array name="habits_frequency">
         <item>Every day</item>
         <item>Once a week</item>
         <item>2 times per week</item>
