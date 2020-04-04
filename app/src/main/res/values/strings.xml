@@ -37,6 +37,7 @@
     <string name="register_sign_up_link"><u>Sign up</u></string>
 
     <!-- Habits -->
+    <string name="habit_search_hint">Filter habits</string>
     <string name="habits_action_bar_title">Habits</string>
     <string name="habits_undo_snackbar_title">Undo %1$s</string>
     <string name="habits_undo_snackbar_button">Undo?</string>

@@ -2,6 +2,8 @@ package com.rwawrzyniak.getby.habits
 
 import android.graphics.Canvas
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -46,6 +48,15 @@ class HabitsFragment : BaseFragment() {
 		val itemTouchHelper = ItemTouchHelper(callback)
 		itemTouchHelper.attachToRecyclerView(binding.daysListView)
 
+		binding.habitSearch.addTextChangedListener(object : TextWatcher{
+			override fun afterTextChanged(s: Editable?) {}
+
+			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+			override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
+				(binding.daysListView.adapter as HabitsAdapter).filter.filter(text)
+			}
+		})
 		viewModel.firstDay.observe(viewLifecycleOwner) {
 			binding.daysHeaderView.initializeDaysHeader(it)
 		}
