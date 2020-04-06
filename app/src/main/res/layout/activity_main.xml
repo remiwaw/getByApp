@@ -17,7 +17,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_scrollFlags="noScroll"
-                tools:title="Some Title" />
+                tools:title="@string/app_name" />
 
         </com.google.android.material.appbar.AppBarLayout>
 

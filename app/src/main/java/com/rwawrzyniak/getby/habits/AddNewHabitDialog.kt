@@ -71,7 +71,7 @@ class AddNewHabitDialog : DialogFragment(), AdapterView.OnItemSelectedListener {
                     { view, hourOfDay, minute, _ ->
                         view?.dismiss()
                         viewModel.habitBuilder.reminder(Reminder(HourMinute(hourOfDay, minute)))
-                        binding.reminder.setText("$hourOfDay:$minute")
+						binding.reminder.text = "$hourOfDay:$minute"
                     },
                     false
                 ).show(requireFragmentManager(), TIME_PICKER_DIALOG_TAG)

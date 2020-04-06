@@ -17,6 +17,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.BaseFragment
 import com.rwawrzyniak.getby.core.ChromeConfiguration
+import com.rwawrzyniak.getby.core.RecycleOnTouchListener
+import com.rwawrzyniak.getby.core.RecycleOnTouchListener.ClickListener
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
@@ -47,6 +49,18 @@ class HabitsFragment : BaseFragment() {
 		val callback: ItemTouchHelper.SimpleCallback = HabitsSimpleCallback()
 		val itemTouchHelper = ItemTouchHelper(callback)
 		itemTouchHelper.attachToRecyclerView(binding.daysListView)
+
+		binding.daysListView.addOnItemTouchListener(
+			RecycleOnTouchListener(requireContext(), binding.daysListView, object : ClickListener {
+					override fun onClick(view: View?, position: Int) {
+					}
+
+					override fun onLongClick(view: View?, position: Int) {
+						// TODO why fires long click not onClick
+						requireNotNull(viewModel.habits.value?.get(position))
+					}
+				})
+		)
 
 		binding.habitSearch.addTextChangedListener(object : TextWatcher {
 			override fun afterTextChanged(s: Editable?) {}
@@ -126,9 +140,7 @@ class HabitsFragment : BaseFragment() {
 			recyclerView: RecyclerView,
 			viewHolder: RecyclerView.ViewHolder,
 			target: RecyclerView.ViewHolder
-		): Boolean {
-			return false
-		}
+		): Boolean = false
 
 		override fun onSwiped(
 			viewHolder: RecyclerView.ViewHolder,
