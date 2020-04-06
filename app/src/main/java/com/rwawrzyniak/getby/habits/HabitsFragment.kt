@@ -48,7 +48,7 @@ class HabitsFragment : BaseFragment() {
 		val itemTouchHelper = ItemTouchHelper(callback)
 		itemTouchHelper.attachToRecyclerView(binding.daysListView)
 
-		binding.habitSearch.addTextChangedListener(object : TextWatcher{
+		binding.habitSearch.addTextChangedListener(object : TextWatcher {
 			override fun afterTextChanged(s: Editable?) {}
 
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -57,6 +57,7 @@ class HabitsFragment : BaseFragment() {
 				(binding.daysListView.adapter as HabitsAdapter).filter.filter(text)
 			}
 		})
+
 		viewModel.firstDay.observe(viewLifecycleOwner) {
 			binding.daysHeaderView.initializeDaysHeader(it)
 		}
@@ -79,11 +80,11 @@ class HabitsFragment : BaseFragment() {
 			R.id.menu_top_add -> showCreateHabitPopup()
 			R.id.hideArchived -> {
 				if (item.isChecked) {
-					item.isChecked = false;
+					item.isChecked = false
 					habitsAdapter.showAllHabits()
 				}
 				else {
-					item.isChecked = true;
+					item.isChecked = true
 					habitsAdapter.hideArchivedHabits()
 				}
 			}
