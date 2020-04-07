@@ -57,6 +57,8 @@
     <string name="addFriendsButton">Add friends</string>
     <string name="repeatLabel">Repeat</string>
     <string name="reminderlabel">Reminder</string>
+	<string name="habitDetailsToolbarTitle">Details</string>
+	<string name="habitAddToolbarTitle">Create</string>
 
 	<string-array name="habits_frequency">
         <item>Every day</item>

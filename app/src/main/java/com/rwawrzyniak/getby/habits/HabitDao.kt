@@ -7,9 +7,14 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import io.reactivex.Completable
+import io.reactivex.Single
 
 @Dao
 interface HabitDao {
+
+	@Query("SELECT * FROM habit WHERE id=:id ")
+	fun getSingle(id: String): Single<Habit>
+
 	@Query("SELECT * FROM habit")
 	fun getAll(): LiveData<MutableList<Habit>>
 

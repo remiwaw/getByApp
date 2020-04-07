@@ -3,8 +3,8 @@ package com.rwawrzyniak.getby.dagger
 import android.content.Context
 import com.rwawrzyniak.getby.core.GlobalEvent
 import com.rwawrzyniak.getby.core.SchedulerProvider
-import com.rwawrzyniak.getby.habits.AddNewHabitViewModel
 import com.rwawrzyniak.getby.habits.HabitsViewModel
+import com.rwawrzyniak.getby.habits.details.HabitsDetailsViewModelImpl
 import com.rwawrzyniak.getby.login.LoginViewModel
 import com.rwawrzyniak.getby.register.RegisterViewModel
 import dagger.BindsInstance
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 // https://proandroiddev.com/dagger-2-on-android-the-simple-way-f706a2c597e9
 @Singleton
-@Component(modules = [FirebaseAuthModule::class, SchedulerModule::class, BusModule::class, RepositoryModule::class, DatabaseModule::class])
+@Component(modules = [FirebaseAuthModule::class, SchedulerModule::class, BusModule::class, RepositoryModule::class, DatabaseModule::class, ApplicationModule::class])
 interface ApplicationComponent {
 
     @Component.Factory
@@ -25,7 +25,7 @@ interface ApplicationComponent {
         ): ApplicationComponent
     }
 
-    val addNewHabitViewModel: AddNewHabitViewModel
+    val habitsDetailsViewModel: HabitsDetailsViewModelImpl
     val habitsViewModel: HabitsViewModel
     val loginViewModel: LoginViewModel
     val registerViewModel: RegisterViewModel

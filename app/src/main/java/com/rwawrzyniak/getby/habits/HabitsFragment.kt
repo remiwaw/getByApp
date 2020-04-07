@@ -22,6 +22,7 @@ import com.rwawrzyniak.getby.core.RecycleOnTouchListener.ClickListener
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
+import com.rwawrzyniak.getby.habits.details.HabitDetailsDialog
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 class HabitsFragment : BaseFragment() {
@@ -53,11 +54,13 @@ class HabitsFragment : BaseFragment() {
 		binding.daysListView.addOnItemTouchListener(
 			RecycleOnTouchListener(requireContext(), binding.daysListView, object : ClickListener {
 					override fun onClick(view: View?, position: Int) {
+
 					}
 
 					override fun onLongClick(view: View?, position: Int) {
 						// TODO why fires long click not onClick
-						requireNotNull(viewModel.habits.value?.get(position))
+						val habitId = requireNotNull(viewModel.habits.value?.get(position) as Habit).id
+						showCreateHabitPopup(habitId)
 					}
 				})
 		)
@@ -106,8 +109,8 @@ class HabitsFragment : BaseFragment() {
 		return super.onOptionsItemSelected(item)
 	}
 
-	private fun showCreateHabitPopup() {
-		AddNewHabitDialog.show(requireFragmentManager())
+	private fun showCreateHabitPopup(habitId: String = "") {
+		HabitDetailsDialog.show(habitId, requireFragmentManager())
 	}
 
 	private fun showUndoSnackbar(swipedHabit: Habit, swipedAction: SwipedAction) {

@@ -23,7 +23,7 @@ buildscript {
 
         // Android dependencies
 		gsonVersion = '2.8.0'
-		roomVersion = '2.1.0-alpha01'
+		roomVersion = '2.2.5'
 		swipeDecoratorVersion = '1.2.2'
 		legacySupportVersion = '1.0.0'
         materialDateTimePickerVersion = '4.2.3'
