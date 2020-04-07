@@ -50,10 +50,11 @@ dependencies {
     implementation "com.google.firebase:firebase-core:$rootProject.firebaseCoreVersion"
 
 	// Room
-	kapt "androidx.room:room-compiler:$rootProject.roomVersion"
 	implementation "androidx.room:room-runtime:$rootProject.roomVersion"
-	implementation "android.arch.persistence.room:rxjava2:$rootProject.roomVersion"
-	kapt "android.arch.persistence.room:compiler:$rootProject.roomVersion"
+	kapt "androidx.room:room-compiler:$rootProject.roomVersion"
+	implementation "androidx.room:room-rxjava2:$rootProject.roomVersion"
+
+	testImplementation "androidx.room:room-testing:$rootProject.roomVersion"
 
 	// Dagger
     implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
