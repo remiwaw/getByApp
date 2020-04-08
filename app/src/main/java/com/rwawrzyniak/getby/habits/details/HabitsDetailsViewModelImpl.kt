@@ -59,6 +59,7 @@ class HabitsDetailsViewModelImpl @Inject constructor(
 			Completable.fromAction {  effects.onNext(effect) }
 		} else {
 			habitsRepository.saveHabit(habit)
+				.andThen { effects.onNext(HabitDetailsViewEffect.DismissPopup) }
 		}
 	}
 

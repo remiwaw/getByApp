@@ -9,7 +9,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rwawrzyniak.getby.R
 
-class HabitsAdapter(private var habits: MutableList<Habit>, private var filteredHabits: MutableList<Habit> = arrayListOf())
+class HabitsAdapter(
+	private var habits: MutableList<Habit>,
+	private var filteredHabits: MutableList<Habit> = arrayListOf(),
+	private val onHabitClickListener: HabitHolder.HabitClickListener
+)
 	: RecyclerView.Adapter<HabitHolder>(), Filterable {
 
 	private var recentlySwipedItemPosition: Int = -1
@@ -24,7 +28,10 @@ class HabitsAdapter(private var habits: MutableList<Habit>, private var filtered
 		val context: Context = parent.context
 		val inflater = LayoutInflater.from(context)
 
-		return HabitHolder(inflater.inflate(R.layout.item_habit, parent, false))
+		return HabitHolder(
+			inflater.inflate(R.layout.item_habit, parent, false),
+			onHabitClickListener
+		)
 	}
 
 	override fun getItemCount(): Int = filteredHabits.size

@@ -5,24 +5,40 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.rwawrzyniak.getby.R
+import java.time.LocalDate
 
-class HabitHolder(view: View)
+class HabitHolder(view: View, private val clickListener: HabitClickListener)
     : RecyclerView.ViewHolder(view), View.OnClickListener {
 
-    private lateinit var habit: Habit
-	private var isMarkedForRemoval: Boolean = false
+	interface HabitClickListener {
+		fun onHabitClick(habit: Habit)
+	}
 
-    private val habitNameView: TextView = itemView.findViewById(R.id.habitName)
-    private val firstCheckbox: CheckBox = itemView.findViewById(R.id.firstCheckbox)
-    private val secondCheckbox: CheckBox = itemView.findViewById(R.id.firstCheckbox)
-    private val thirdCheckbox: CheckBox = itemView.findViewById(R.id.firstCheckbox)
-    private val fourthCheckbox: CheckBox = itemView.findViewById(R.id.firstCheckbox)
+	private lateinit var habit: Habit
 
-    fun bind(habit: Habit) {
-        this.habit = habit
-        habitNameView.text = this.habit.name
-    }
+	private val habitNameView: TextView = itemView.findViewById(R.id.habitName)
+	private val firstCheckbox: CheckBox = itemView.findViewById(R.id.firstCheckbox)
+	private val secondCheckbox: CheckBox = itemView.findViewById(R.id.firstCheckbox)
+	private val thirdCheckbox: CheckBox = itemView.findViewById(R.id.firstCheckbox)
+	private val fourthCheckbox: CheckBox = itemView.findViewById(R.id.firstCheckbox)
+
+	init {
+		itemView.setOnClickListener(this);
+		firstCheckbox.setOnClickListener(this)
+		secondCheckbox.setOnClickListener(this)
+		thirdCheckbox.setOnClickListener(this)
+		fourthCheckbox.setOnClickListener(this)
+	}
+
+	fun bind(habit: Habit) {
+		this.habit = habit
+		habitNameView.text = this.habit.name
+	}
 
 	override fun onClick(v: View?) {
-    }
+		if (v is CheckBox) {
+			habit.history
+		}
+		clickListener.onHabitClick(habit)
+	}
 }

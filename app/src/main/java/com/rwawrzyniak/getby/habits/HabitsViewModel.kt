@@ -11,7 +11,7 @@ import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.PublishSubject
-import java.util.Calendar
+import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -24,20 +24,20 @@ class HabitsViewModel @Inject internal constructor(
 
     // Private, mutable backing field - only update values internally
     private val _isBusy: MutableLiveData<Boolean> = MutableLiveData()
-    private val _firstDay: MutableLiveData<Calendar> = MutableLiveData(Calendar.getInstance())
+    private val _firstDay: MutableLiveData<LocalDate> = MutableLiveData(LocalDate.now())
 
     // Observers will subscribe to this since it is immutable to them
     val isBusy: MutableLiveData<Boolean>
         get() = _isBusy
     val habits: LiveData<MutableList<Habit>> = habitsRepository.loadHabits()
-    val firstDay: MutableLiveData<Calendar>
+    val firstDay: MutableLiveData<LocalDate>
         get() = _firstDay
 
     init {
         globalEventSubject
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.main())
-            .subscribe { firstDay.postValue((Calendar.getInstance())) }
+            .subscribe { firstDay.postValue((LocalDate.now())) }
             .addTo(compositeDisposable)
     }
 

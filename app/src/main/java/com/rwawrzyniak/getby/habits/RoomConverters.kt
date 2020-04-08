@@ -12,6 +12,22 @@ class RoomConverters {
 
 	private val gson = Gson()
 
+	// HabitDay list converer
+	var founderListType: Type = object : TypeToken<ArrayList<HabitDay>>() {}.type
+
+	@TypeConverter
+	fun fromJsonToHabitDayList(json: String?): List<HabitDay>? = gson.fromJson(json, founderListType)
+
+	@TypeConverter
+	fun habitDayListToJson(habitDayList: List<HabitDay>?): String? = gson.toJson(habitDayList)
+
+	// HabitDay converer
+	@TypeConverter
+	fun fromJsonToHabitDay(json: String?): HabitDay? = gson.fromJson(json, HabitDay::class.java)
+
+	@TypeConverter
+	fun habitDayToJson(habitDay: HabitDay?): String? = gson.toJson(habitDay)
+
 	// Reminder converter
 	@TypeConverter
 	fun fromJsonToReminder(json: String?): Reminder? = gson.fromJson(json, Reminder::class.java)

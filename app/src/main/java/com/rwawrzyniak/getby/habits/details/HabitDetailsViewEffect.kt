@@ -5,7 +5,9 @@ sealed class HabitDetailsViewEffect {
 		val habitNameInput: InputFieldState = InputFieldState(),
 		val habitDescriptionInput: InputFieldState = InputFieldState()
 	) : HabitDetailsViewEffect()
+	object DismissPopup : HabitDetailsViewEffect()
 }
+
 
 data class InputFieldState(
 	val isEnabled: Boolean = true,

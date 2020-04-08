@@ -17,8 +17,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.BaseFragment
 import com.rwawrzyniak.getby.core.ChromeConfiguration
-import com.rwawrzyniak.getby.core.RecycleOnTouchListener
-import com.rwawrzyniak.getby.core.RecycleOnTouchListener.ClickListener
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
@@ -28,6 +26,12 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 class HabitsFragment : BaseFragment() {
 	private lateinit var binding: FragmentHabitsBinding
 	private val viewModel by fragmentScopedViewModel { injector.habitsViewModel }
+
+	private val onHabitClickListener = object: HabitHolder.HabitClickListener{
+		override fun onHabitClick(habit: Habit) {
+			showCreateHabitPopup(habit.id)
+		}
+	}
 
 	override fun getChromeConfig(): ChromeConfiguration = ChromeConfiguration(
 		showActionBar = true,
@@ -47,23 +51,8 @@ class HabitsFragment : BaseFragment() {
 	): View? {
 		binding = FragmentHabitsBinding.inflate(inflater, container, false)
 
-		val callback: ItemTouchHelper.SimpleCallback = HabitsSimpleCallback()
-		val itemTouchHelper = ItemTouchHelper(callback)
+		val itemTouchHelper = ItemTouchHelper(HabitsSimpleCallback())
 		itemTouchHelper.attachToRecyclerView(binding.daysListView)
-
-		binding.daysListView.addOnItemTouchListener(
-			RecycleOnTouchListener(requireContext(), binding.daysListView, object : ClickListener {
-					override fun onClick(view: View?, position: Int) {
-
-					}
-
-					override fun onLongClick(view: View?, position: Int) {
-						// TODO why fires long click not onClick
-						val habitId = requireNotNull(viewModel.habits.value?.get(position) as Habit).id
-						showCreateHabitPopup(habitId)
-					}
-				})
-		)
 
 		binding.habitSearch.addTextChangedListener(object : TextWatcher {
 			override fun afterTextChanged(s: Editable?) {}
@@ -81,7 +70,10 @@ class HabitsFragment : BaseFragment() {
 
 		viewModel.habits.observe(viewLifecycleOwner) {
 			if(binding.daysListView.adapter == null){
-				binding.daysListView.adapter = HabitsAdapter(it)
+				binding.daysListView.adapter = HabitsAdapter(
+					it,
+					onHabitClickListener = onHabitClickListener
+				)
 			}
 			(binding.daysListView.adapter as HabitsAdapter).updateHabitListWithDiff(it)
 		}
@@ -139,6 +131,7 @@ class HabitsFragment : BaseFragment() {
 
 	private inner class HabitsSimpleCallback :
 		ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT) {
+
 		override fun onMove(
 			recyclerView: RecyclerView,
 			viewHolder: RecyclerView.ViewHolder,

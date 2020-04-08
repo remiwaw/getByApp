@@ -90,6 +90,7 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 	private fun executeEffect(effect: HabitDetailsViewEffect) {
 		when (effect) {
 			is HabitDetailsViewEffect.ConfigureFields -> showFieldsError(effect)
+			is HabitDetailsViewEffect.DismissPopup -> dismiss()
 		}
 	}
 
@@ -202,7 +203,7 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
     }
 
 	private fun onSaveHabitClick() {
-		return subscribeTo(
+		subscribeTo(
 			viewModel.onAction(
 				HabitDetailsViewAction.OnSaveHabitClicked(
 					Habit(
@@ -229,7 +230,10 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 
 	override fun onNothingSelected(parent: AdapterView<*>) {}
 
-	private fun getReminder(): Reminder {
+	private fun getReminder(): Reminder? {
+		if(binding.reminder.text == resources.getString(R.string.reminderDefaultValue)){
+			return null
+		}
 		val reminderText = binding.reminder.text
 		val hourOfDay = reminderText.split(":")[0].toInt()
 		val minuteOfDay  = reminderText.split(":")[1].toInt()

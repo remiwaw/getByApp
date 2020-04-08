@@ -7,7 +7,6 @@
     <string name="app_name">GetBy</string>
     <string name="loading">Loading</string>
     <string name="save">save</string>
-    <string name="off">Off</string>
 
     <string name="top_action_bar_plus_action">Add</string>
     <string name="bottom_navigation_card_habits">Habits</string>
@@ -59,6 +58,7 @@
     <string name="reminderlabel">Reminder</string>
 	<string name="habitDetailsToolbarTitle">Details</string>
 	<string name="habitAddToolbarTitle">Create</string>
+	<string name="reminderDefaultValue">Off</string>
 
 	<string-array name="habits_frequency">
         <item>Every day</item>

@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.util.UUID
 
 @Entity
@@ -13,11 +14,11 @@ data class Habit(
 	@ColumnInfo var description: String,
 	@ColumnInfo var frequency: Frequency,
 	@ColumnInfo var reminder: Reminder?,
-	@ColumnInfo var history: List<String> = emptyList(),
+	@ColumnInfo var history: List<HabitDay> = emptyList(),
 	@ColumnInfo var isArchived: Boolean = false
 )
 
 data class Frequency(val times: Int, val days: Int)
 data class Reminder(val time: HourMinute, val days: List<DayOfWeek> = emptyList())
 data class HourMinute(val hour: Int, val minutes: Int)
-
+data class HabitDay(val day: LocalDate, val checked: Boolean)
