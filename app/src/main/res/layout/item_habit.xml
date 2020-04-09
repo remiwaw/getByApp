@@ -19,6 +19,7 @@
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/firstCheckbox"
+		android:tag="1"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -31,7 +32,8 @@
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/secondCheckbox"
-        android:layout_width="wrap_content"
+		android:tag="2"
+		android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
@@ -42,6 +44,7 @@
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/thirdCheckbox"
+		android:tag="3"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -53,6 +56,7 @@
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/fourthCheckbox"
+		android:tag="4"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"

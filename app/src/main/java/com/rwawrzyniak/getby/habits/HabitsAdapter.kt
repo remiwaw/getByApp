@@ -8,11 +8,11 @@ import android.widget.Filterable
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.rwawrzyniak.getby.R
-
+// TODO move logic from adapter somwhere
 class HabitsAdapter(
 	private var habits: MutableList<Habit>,
 	private var filteredHabits: MutableList<Habit> = arrayListOf(),
-	private val onHabitClickListener: HabitHolder.HabitClickListener
+	private val onHabitListener: HabitHolder.HabitListener
 )
 	: RecyclerView.Adapter<HabitHolder>(), Filterable {
 
@@ -30,7 +30,7 @@ class HabitsAdapter(
 
 		return HabitHolder(
 			inflater.inflate(R.layout.item_habit, parent, false),
-			onHabitClickListener
+			onHabitListener
 		)
 	}
 

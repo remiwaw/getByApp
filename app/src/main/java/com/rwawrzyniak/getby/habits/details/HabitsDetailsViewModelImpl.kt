@@ -3,13 +3,16 @@ package com.rwawrzyniak.getby.habits.details
 import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import com.rwawrzyniak.getby.R
+import com.rwawrzyniak.getby.date.getLastNDaysIncludingToday
 import com.rwawrzyniak.getby.habits.Habit
+import com.rwawrzyniak.getby.habits.HabitDay
 import com.rwawrzyniak.getby.habits.HabitsRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import java.time.LocalDate
 import javax.inject.Inject
 
 // TODO add error handling
@@ -26,6 +29,11 @@ class HabitsDetailsViewModelImpl @Inject constructor(
 ) : HabitsDetailsViewModel() {
 	private val compositeDisposable = CompositeDisposable()
 	private val effects: Subject<HabitDetailsViewEffect> = PublishSubject.create<HabitDetailsViewEffect>()
+
+	override fun onCleared() {
+		super.onCleared()
+		compositeDisposable.clear()
+	}
 
 	override fun observeState(): Observable<HabitDetailsViewState> {
 		return Observable.just(HabitDetailsViewState(false))
@@ -58,8 +66,15 @@ class HabitsDetailsViewModelImpl @Inject constructor(
 		return if(effect.habitNameInput.isError || effect.habitDescriptionInput.isError){
 			Completable.fromAction {  effects.onNext(effect) }
 		} else {
+			initializeHabitHistoryIfEmpty(habit)
 			habitsRepository.saveHabit(habit)
 				.andThen { effects.onNext(HabitDetailsViewEffect.DismissPopup) }
+		}
+	}
+
+	private fun initializeHabitHistoryIfEmpty(habit: Habit) {
+		if (habit.history.isEmpty()) {
+			habit.history = initHistory()
 		}
 	}
 
@@ -74,8 +89,8 @@ class HabitsDetailsViewModelImpl @Inject constructor(
 			InputFieldState()
 		}
 
-	override fun onCleared() {
-		super.onCleared()
-		compositeDisposable.clear()
+	// TODO this could lead to problem if user has change his calendar settings. I.e manually set date
+	private fun initHistory() = LocalDate.now().getLastNDaysIncludingToday(5).mapIndexed {
+			index, localDate -> HabitDay(localDate, index)
 	}
 }

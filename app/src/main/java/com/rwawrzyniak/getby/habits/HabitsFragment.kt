@@ -27,9 +27,13 @@ class HabitsFragment : BaseFragment() {
 	private lateinit var binding: FragmentHabitsBinding
 	private val viewModel by fragmentScopedViewModel { injector.habitsViewModel }
 
-	private val onHabitClickListener = object: HabitHolder.HabitClickListener{
-		override fun onHabitClick(habit: Habit) {
+	private val onHabitListener = object: HabitHolder.HabitListener{
+		override fun onRowClicked(habit: Habit) {
 			showCreateHabitPopup(habit.id)
+		}
+
+		override fun onCheckboxClicked(habit: Habit) {
+			viewModel.updateHabit(habit)
 		}
 	}
 
@@ -72,7 +76,7 @@ class HabitsFragment : BaseFragment() {
 			if(binding.daysListView.adapter == null){
 				binding.daysListView.adapter = HabitsAdapter(
 					it,
-					onHabitClickListener = onHabitClickListener
+					onHabitListener = onHabitListener
 				)
 			}
 			(binding.daysListView.adapter as HabitsAdapter).updateHabitListWithDiff(it)

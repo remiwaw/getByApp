@@ -47,6 +47,10 @@ class HabitsViewModel @Inject internal constructor(
 
 	fun archiveHabit(habit: Habit){
 		habit.isArchived = true
+		updateHabit(habit)
+	}
+
+	fun updateHabit(habit: Habit){
 		simplySubscribe(habitsRepository.updateHabit(habit))
 	}
 

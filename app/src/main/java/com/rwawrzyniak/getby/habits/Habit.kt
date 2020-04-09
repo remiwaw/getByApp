@@ -21,4 +21,4 @@ data class Habit(
 data class Frequency(val times: Int, val days: Int)
 data class Reminder(val time: HourMinute, val days: List<DayOfWeek> = emptyList())
 data class HourMinute(val hour: Int, val minutes: Int)
-data class HabitDay(val day: LocalDate, val checked: Boolean)
+data class HabitDay(val day: LocalDate, val dayNumber: Int, var checked: Boolean = false)

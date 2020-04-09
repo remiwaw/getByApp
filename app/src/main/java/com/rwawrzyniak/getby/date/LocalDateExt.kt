@@ -12,7 +12,7 @@ val LocalDate.toDayHeaderDto: DayHeaderDto
 	)
 
 
-fun LocalDate.getLastXDays(lastDays: Long): List<LocalDate> = datesBetween(this, this.minusDays(lastDays))
+fun LocalDate.getLastNDaysIncludingToday(lastDays: Long): List<LocalDate> = datesBetween(this.minusDays(lastDays), this)
 
 private fun datesBetween(
 	start: LocalDate,
