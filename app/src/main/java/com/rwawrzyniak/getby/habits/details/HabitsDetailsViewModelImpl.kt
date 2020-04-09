@@ -3,7 +3,7 @@ package com.rwawrzyniak.getby.habits.details
 import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import com.rwawrzyniak.getby.R
-import com.rwawrzyniak.getby.date.getLastNDaysIncludingToday
+import com.rwawrzyniak.getby.date.getLastNDays
 import com.rwawrzyniak.getby.habits.Habit
 import com.rwawrzyniak.getby.habits.HabitDay
 import com.rwawrzyniak.getby.habits.HabitsRepository
@@ -90,7 +90,7 @@ class HabitsDetailsViewModelImpl @Inject constructor(
 		}
 
 	// TODO this could lead to problem if user has change his calendar settings. I.e manually set date
-	private fun initHistory() = LocalDate.now().getLastNDaysIncludingToday(5).mapIndexed {
+	private fun initHistory() = LocalDate.now().getLastNDays(5).mapIndexed {
 			index, localDate -> HabitDay(localDate, index)
 	}
 }
