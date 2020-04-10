@@ -38,9 +38,7 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.AppTheme_FullScreenDialog)
-
-		arguments?.getString(ARG_HABIT_ID)
-    }
+	}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,6 +64,9 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 	override fun onStart() {
 		super.onStart()
 		startObservers()
+		arguments?.getString(ARG_HABIT_ID)?.let {
+			subscribeTo(viewModel.onAction(HabitDetailsViewAction.LoadHabit(it)))
+		}
 		initializeFullScreen()
 	}
 
@@ -85,7 +86,14 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 			.disposeBy(lifecycle.onStop)
 	}
 
-	private fun renderState(state: HabitDetailsViewState) {}
+	private fun renderState(state: HabitDetailsViewState) {
+		if(state.isUpdateMode && state.backingHabit != null){
+			binding.habitName.setText(state.backingHabit.name)
+			binding.habitDescription.setText(state.backingHabit.description)
+			binding.frequencyPicker.setSelection(getFrequencyIndex(state.backingHabit.frequency))
+			binding.reminder.text = state.backingHabit.reminder.toString()
+		}
+	}
 
 	private fun executeEffect(effect: HabitDetailsViewEffect) {
 		when (effect) {
@@ -249,6 +257,14 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 		else -> error("Not such frequency")
 	}
 
+	private fun getFrequencyIndex(frequency: Frequency): Int = when (frequency) {
+		Frequency(7, 7) -> 0
+		Frequency(1, 7) -> 1
+		Frequency(2, 7) -> 2
+		Frequency(5, 7) -> 3
+		else -> error("Not such frequency index")
+	}
+
     private fun initializeFullScreen() {
         val width = ViewGroup.LayoutParams.MATCH_PARENT
         val height = ViewGroup.LayoutParams.MATCH_PARENT
@@ -268,7 +284,9 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
         const val ARG_HABIT_ID = "HabitIdArg"
         fun show(habitId: String = "", fragmentManager: FragmentManager): HabitDetailsDialog =
             HabitDetailsDialog().apply {
-				arguments?.putString(ARG_HABIT_ID, habitId)
+				arguments = Bundle().apply {
+					putString(ARG_HABIT_ID, habitId)
+				}
 				show(fragmentManager,
 					ADD_NEW_HABIT_DIALOG_TAG
 				)

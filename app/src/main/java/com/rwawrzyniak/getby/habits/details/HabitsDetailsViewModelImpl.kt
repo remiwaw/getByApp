@@ -11,6 +11,7 @@ import com.rwawrzyniak.getby.habits.HabitsRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -30,15 +31,14 @@ class HabitsDetailsViewModelImpl @Inject constructor(
 ) : HabitsDetailsViewModel() {
 	private val compositeDisposable = CompositeDisposable()
 	private val effects: Subject<HabitDetailsViewEffect> = PublishSubject.create<HabitDetailsViewEffect>()
+	private val state = BehaviorSubject.createDefault(HabitDetailsViewState(false))
 
 	override fun onCleared() {
 		super.onCleared()
 		compositeDisposable.clear()
 	}
 
-	override fun observeState(): Observable<HabitDetailsViewState> {
-		return Observable.just(HabitDetailsViewState(false))
-	}
+	override fun observeState(): Observable<HabitDetailsViewState> = state.hide()
 
 	override fun observeEffects(): Observable<HabitDetailsViewEffect> = effects.hide()
 
@@ -46,8 +46,23 @@ class HabitsDetailsViewModelImpl @Inject constructor(
 		return when(action){
 			is HabitDetailsViewAction.OnSaveHabitClicked -> validateAndSaveHabit(action.habit)
 			is HabitDetailsViewAction.OnInputFieldStateChanged -> onInputFieldChanged(action)
+			is HabitDetailsViewAction.LoadHabit -> loadHabit(action.habitId)
 		}
 	}
+
+	private fun loadHabit(habitId: String): Completable {
+		return habitsRepository.getSingle(habitId).flatMapCompletable {
+			Completable.fromAction { state.onNext(HabitDetailsViewState(true, it)) }
+		}
+	}
+	// // private fun updateHabitState(habit: Habit): Completable =
+	// // 	updateState { copy(configuration = config) }
+	//
+	// private fun updateState(callback: HabitDetailsViewState.() -> HabitDetailsViewState) =
+	// 	state.take(1)
+	// 		.map(callback)
+	// 		.doOnNext { state.onNext(it) }
+	// 		.ignoreElements()
 
 	private fun onInputFieldChanged(action: HabitDetailsViewAction.OnInputFieldStateChanged): Completable =
 		Completable.fromAction {

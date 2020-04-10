@@ -76,7 +76,7 @@
             app:layout_constraintTop_toBottomOf="@+id/habitDescriptionLayout" />
 
         <TextView
-            android:id="@+id/repeatLabel"
+            android:id="@+id/frequencyLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -90,8 +90,8 @@
             android:id="@+id/frequencyPicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/repeatLabel"
-            app:layout_constraintStart_toEndOf="@+id/repeatLabel" />
+            app:layout_constraintBottom_toBottomOf="@+id/frequencyLabel"
+            app:layout_constraintStart_toEndOf="@+id/frequencyLabel" />
 
         <TextView
             android:id="@+id/reminderLabel"
