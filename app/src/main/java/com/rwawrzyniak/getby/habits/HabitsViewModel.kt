@@ -3,6 +3,7 @@ package com.rwawrzyniak.getby.habits
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.rwawrzyniak.getby.core.DateTimeProvider
 import com.rwawrzyniak.getby.core.GlobalEvent
 import com.rwawrzyniak.getby.core.SchedulerProvider
 import com.rwawrzyniak.getby.dagger.BusModule.GLOBAL_EVENT_SUBJECT
@@ -18,13 +19,14 @@ import javax.inject.Named
 class HabitsViewModel @Inject internal constructor(
     @Named(GLOBAL_EVENT_SUBJECT) private val globalEventSubject: PublishSubject<GlobalEvent>,
     @Named(SCHEDULER_PROVIDER) private val schedulerProvider: SchedulerProvider,
-    private val habitsRepository: HabitsRepository
+    private val habitsRepository: HabitsRepository,
+	private val dateTimeProvider: DateTimeProvider
 ) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
     // Private, mutable backing field - only update values internally
     private val _isBusy: MutableLiveData<Boolean> = MutableLiveData()
-    private val _firstDay: MutableLiveData<LocalDate> = MutableLiveData(LocalDate.now())
+    private val _firstDay: MutableLiveData<LocalDate> = MutableLiveData(dateTimeProvider.getCurrentDate())
 
     // Observers will subscribe to this since it is immutable to them
     val isBusy: MutableLiveData<Boolean>

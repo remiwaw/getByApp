@@ -3,6 +3,7 @@ package com.rwawrzyniak.getby.habits.details
 import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import com.rwawrzyniak.getby.R
+import com.rwawrzyniak.getby.core.DateTimeProvider
 import com.rwawrzyniak.getby.date.getLastNDays
 import com.rwawrzyniak.getby.habits.Habit
 import com.rwawrzyniak.getby.habits.HabitDay
@@ -12,7 +13,6 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import java.time.LocalDate
 import javax.inject.Inject
 
 // TODO add error handling
@@ -25,7 +25,8 @@ abstract class HabitsDetailsViewModel : ViewModel() {
 
 class HabitsDetailsViewModelImpl @Inject constructor(
     private val habitsRepository: HabitsRepository,
-	private val resources: Resources
+	private val resources: Resources,
+	private val dateTimeProvider: DateTimeProvider
 ) : HabitsDetailsViewModel() {
 	private val compositeDisposable = CompositeDisposable()
 	private val effects: Subject<HabitDetailsViewEffect> = PublishSubject.create<HabitDetailsViewEffect>()
@@ -90,7 +91,7 @@ class HabitsDetailsViewModelImpl @Inject constructor(
 		}
 
 	// TODO this could lead to problem if user has change his calendar settings. I.e manually set date
-	private fun initHistory() = LocalDate.now().getLastNDays(5).mapIndexed {
+	private fun initHistory() = dateTimeProvider.getCurrentDate().getLastNDays(5).mapIndexed {
 			index, localDate -> HabitDay(localDate, index)
 	}
 }
