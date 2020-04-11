@@ -46,6 +46,7 @@ buildscript {
         lifecycleVersion = '2.2.0-alpha01'
         timberVersion = '4.7.1'
         materialVersion = '1.1.0-alpha09'
+		recurPickerVersion = '2.0.1'
 
         // 3rd party dependencies
         carouselVersion = '0.1.5'

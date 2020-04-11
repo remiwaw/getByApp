@@ -2,6 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
+	<FrameLayout
+		android:id="@+id/picker_fragment_container"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		>
+
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -24,99 +31,105 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/habitNameLayout"
-            android:hint="@string/habitNameLayoutHint"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/habitDetailsLayoutId"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/habitName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                tools:targetApi="o" />
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/habitNameLayout"
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_marginTop="8dp"
+			android:hint="@string/habitNameLayoutHint"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent">
 
-        </com.google.android.material.textfield.TextInputLayout>
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/habitName"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@android:color/transparent"
+				tools:targetApi="o" />
 
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/habitDescriptionLayout"
-            android:hint="@string/habitDescriptionLayoutHint"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/habitNameLayout">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/habitDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                tools:targetApi="o" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
-            android:id="@+id/addFriendsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/addFriendsButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/habitDescriptionLayout" />
-
-        <TextView
-            android:id="@+id/frequencyLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/repeatLabel"
-            android:textSize="16sp"
-            android:layout_marginEnd="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addFriendsButton" />
-
-        <Spinner
-            android:id="@+id/frequencyPicker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/frequencyLabel"
-            app:layout_constraintStart_toEndOf="@+id/frequencyLabel" />
-
-        <TextView
-            android:id="@+id/reminderLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/reminderlabel"
-            android:textSize="16sp"
-            android:layout_marginEnd="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frequencyPicker" />
-
-        <TextView
-            android:id="@+id/reminder"
-            android:text="@string/reminderDefaultValue"
-            android:textSize="16sp"
-            android:layout_width="wrap_content"
-            android:textStyle="bold"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/reminderLabel"
-            app:layout_constraintStart_toEndOf="@+id/reminderLabel"
-            android:drawableEnd="@drawable/ic_arrow_drop_down"/>
+		</com.google.android.material.textfield.TextInputLayout>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/habitDescriptionLayout"
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_marginTop="8dp"
+			android:hint="@string/habitDescriptionLayoutHint"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/habitNameLayout">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/habitDescription"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@android:color/transparent"
+				tools:targetApi="o" />
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<Button
+			android:id="@+id/addFriendsButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/addFriendsButton"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/habitDescriptionLayout" />
+
+		<TextView
+			android:id="@+id/frequencyLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginEnd="10dp"
+			android:text="@string/repeatLabel"
+			android:textSize="16sp"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/addFriendsButton" />
+
+		<TextView
+			android:id="@+id/frequencySummary"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:text="sddsdssd"
+			android:textSize="16sp"
+			android:layout_marginLeft="40dp"
+			app:layout_constraintStart_toEndOf="@+id/frequencyLabel"
+			app:layout_constraintBottom_toBottomOf="@+id/frequencyLabel" />
+
+		<TextView
+			android:id="@+id/reminderLabel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginEnd="10dp"
+			android:text="@string/reminderlabel"
+			android:textSize="16sp"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/frequencySummary" />
+
+		<TextView
+			android:id="@+id/reminderSummary"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="40dp"
+			android:text="@string/reminderDefaultValue"
+			android:textSize="16sp"
+			android:textStyle="bold"
+			app:layout_constraintBottom_toBottomOf="@+id/reminderLabel"
+			app:layout_constraintStart_toEndOf="@+id/reminderLabel"/>
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+	</FrameLayout>
 </layout>

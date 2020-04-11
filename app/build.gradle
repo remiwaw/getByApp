@@ -24,7 +24,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding {
+	packagingOptions {
+		exclude 'META-INF/DEPENDENCIES'
+		exclude 'META-INF/lib_release.kotlin_module'
+	}
+	dataBinding {
         enabled true
     }
     kotlinOptions {
@@ -79,8 +83,9 @@ dependencies {
     implementation "com.github.razir.progressbutton:progressbutton:$rootProject.progressButtonVersion"
     implementation "io.sellmair:disposer:$rootProject.disposerVersion"
     implementation "com.wdullaer:materialdatetimepicker:$rootProject.materialDateTimePickerVersion"
+	implementation "com.maltaisn:recurpicker:$rootProject.recurPickerVersion"
 
-    //Android
+	//Android
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin_version"
     implementation "androidx.appcompat:appcompat:$rootProject.appCompatVersion"
     implementation "androidx.core:core-ktx:$rootProject.ktxVersion"
