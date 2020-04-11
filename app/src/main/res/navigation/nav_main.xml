@@ -6,7 +6,7 @@
     <fragment
         android:id="@+id/tourFragment"
         android:name="com.rwawrzyniak.getby.tour.TourFragment"
-        android:label="TourFragment">
+        android:label="TourFragment" >
         <action
             android:id="@+id/action_tourFragment_to_habitsFragment"
             app:destination="@id/habitsFragment" />

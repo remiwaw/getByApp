@@ -7,19 +7,11 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import com.maltaisn.recurpicker.Recurrence
-import com.maltaisn.recurpicker.RecurrencePickerSettings
-import com.maltaisn.recurpicker.list.RecurrenceListCallback
-import com.maltaisn.recurpicker.list.RecurrenceListDialog
-import com.maltaisn.recurpicker.picker.RecurrencePickerCallback
-import com.maltaisn.recurpicker.picker.RecurrencePickerDialog
-import com.maltaisn.recurpicker.picker.RecurrencePickerFragment
 import com.rwawrzyniak.getby.R
-import com.rwawrzyniak.getby.core.DateTimeProvider
 import com.rwawrzyniak.getby.core.SchedulerProvider
 import com.rwawrzyniak.getby.core.ext.markRequired
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
@@ -27,6 +19,9 @@ import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitDetailsDialogBinding
 import com.rwawrzyniak.getby.habits.Frequency
 import com.rwawrzyniak.getby.habits.Habit
+import com.rwawrzyniak.getby.habits.HourMinute
+import com.rwawrzyniak.getby.habits.Reminder
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
 import io.reactivex.Completable
 import io.reactivex.rxkotlin.subscribeBy
 import io.sellmair.disposer.disposeBy
@@ -34,30 +29,13 @@ import io.sellmair.disposer.onStop
 import kotlinx.android.synthetic.main.fragment_habit_details_dialog.*
 import timber.log.Timber
 
-class HabitDetailsDialog : DialogFragment(),
-	RecurrenceListCallback, RecurrencePickerCallback {
+class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener {
     private lateinit var binding: FragmentHabitDetailsDialogBinding
     private val viewModel by fragmentScopedViewModel { injector.habitsDetailsViewModel }
 	private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
 	private var isUserInput = true // TODO make it better, change to avoid executing listener on text changed.
 
-
-	private var selectedRecurrence = Recurrence(Recurrence.Period.NONE)
-		set(value) {
-			field = value
-			Toast.makeText(requireContext(), "Recurrence selected: " +
-				settings.formatter.format(requireContext(), value, startDate), Toast.LENGTH_SHORT).show()
-		}
-
-	private val dateTimeProvider = DateTimeProvider()
-	private val settings = RecurrencePickerSettings()
-	private val startDate = dateTimeProvider.getCurrentMiliseconds()
-
-	private val listDialog by lazy { RecurrenceListDialog.newInstance(settings) }
-	private val pickerFragment by lazy { RecurrencePickerFragment.newInstance(settings) }
-	private val pickerDialog by lazy { RecurrencePickerDialog.newInstance(settings) }
-
-	override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.AppTheme_FullScreenDialog)
 	}
@@ -92,26 +70,6 @@ class HabitDetailsDialog : DialogFragment(),
 		initializeFullScreen()
 	}
 
-	override fun onRecurrenceCustomClicked() {
-		pickerFragment.selectedRecurrence = selectedRecurrence
-		pickerFragment.startDate = startDate
-
-		childFragmentManager.beginTransaction()
-			.add(R.id.picker_fragment_container, pickerFragment, "recurrence-picker-fragment")
-			.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-			.addToBackStack(null)
-			.commit()
-	}
-
-	override fun onRecurrencePresetSelected(recurrence: Recurrence) {
-		selectedRecurrence = recurrence
-	}
-
-	override fun onRecurrenceCreated(recurrence: Recurrence) {
-		// tu ladujemy po wlasciwym wyborze
-		selectedRecurrence = recurrence
-	}
-
 	private fun startObservers() {
 		wireViewModel()
 	}
@@ -132,8 +90,8 @@ class HabitDetailsDialog : DialogFragment(),
 		if(state.isUpdateMode && state.backingHabit != null){
 			binding.habitName.setText(state.backingHabit.name)
 			binding.habitDescription.setText(state.backingHabit.description)
-			// binding.frequencyPicker.setSelection(getFrequencyIndex(state.backingHabit.frequency))
-			// binding.reminder.text = state.backingHabit.reminder.toString()
+			binding.frequencyPicker.setSelection(getFrequencyIndex(state.backingHabit.frequency))
+			binding.reminder.text = state.backingHabit.reminder.toString()
 		}
 	}
 
@@ -212,22 +170,35 @@ class HabitDetailsDialog : DialogFragment(),
 		})
 	}
 
-    private fun setupFrequencyPicker() {
-		binding.frequencySummary.setOnClickListener{
-			listDialog.selectedRecurrence = selectedRecurrence
-			listDialog.startDate = startDate
-			listDialog.show(childFragmentManager, "recurrence-list-dialog")
-		}
-	}
-
 	private fun setupReminder() {
-		// binding.reminderSummary.setOnClickListener {
-		// 	recurentChoser.build().show(requireFragmentManager(), REMINDER_PICKER_DIALOG)
-		// }
-	}
+        binding.reminder.setOnClickListener {
+                TimePickerDialog.newInstance(
+                    { view, hourOfDay, minute, _ ->
+                        view?.dismiss()
+						binding.reminder.text = "$hourOfDay:$minute"
+                    },
+                    false
+                ).show(requireFragmentManager(),
+					TIME_PICKER_DIALOG_TAG
+				)
+        }
+    }
 
+    private fun setupFrequencyPicker() {
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.habits_frequency,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            binding.frequencyPicker.adapter = adapter
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
 
-	private fun setupToolbar() {
+        binding.frequencyPicker.setSelection(0, false)
+        binding.frequencyPicker.onItemSelectedListener = this
+    }
+
+    private fun setupToolbar() {
         with(toolbar) {
             setNavigationOnClickListener { dismiss() }
             title = "Some Title"
@@ -246,12 +217,52 @@ class HabitDetailsDialog : DialogFragment(),
 					Habit(
 						name = binding.habitName.text.toString(),
 						description = binding.habitDescription.text.toString(),
-						frequency = Frequency(1,1),
-						reminder = null
+						frequency = getFrequency(),
+						reminder = getReminder()
 					)
 				)
 			)
 		)
+	}
+
+    override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long){
+        // <item>Every day</item>
+        // <item>Once a week</item>
+        // <item>2 times per week</item>
+        // <item>5 times per week</item>
+        // <item>Custom</item>
+        when (parent.id) {
+            R.id.frequencyPicker -> getFrequency()
+        }
+	}
+
+	override fun onNothingSelected(parent: AdapterView<*>) {}
+
+	private fun getReminder(): Reminder? {
+		if(binding.reminder.text == resources.getString(R.string.reminderDefaultValue)){
+			return null
+		}
+		val reminderText = binding.reminder.text
+		val hourOfDay = reminderText.split(":")[0].toInt()
+		val minuteOfDay  = reminderText.split(":")[1].toInt()
+		return Reminder(HourMinute(hourOfDay, minuteOfDay), emptyList())
+	}
+
+	private fun getFrequency(): Frequency = when (binding.frequencyPicker.selectedItemPosition) {
+		0 -> Frequency(7, 7)
+		1 -> Frequency(1, 7)
+		2 -> Frequency(2, 7)
+		3 -> Frequency(5, 7)
+		4 -> TODO("Custom not yet made")
+		else -> error("Not such frequency")
+	}
+
+	private fun getFrequencyIndex(frequency: Frequency): Int = when (frequency) {
+		Frequency(7, 7) -> 0
+		Frequency(1, 7) -> 1
+		Frequency(2, 7) -> 2
+		Frequency(5, 7) -> 3
+		else -> error("Not such frequency index")
 	}
 
     private fun initializeFullScreen() {
@@ -270,7 +281,6 @@ class HabitDetailsDialog : DialogFragment(),
     companion object {
         const val ADD_NEW_HABIT_DIALOG_TAG = "AddNewHabitDialog"
         const val TIME_PICKER_DIALOG_TAG = "TimePickerDialog"
-        const val REMINDER_PICKER_DIALOG = "ReminderPickerDialog"
         const val ARG_HABIT_ID = "HabitIdArg"
         fun show(habitId: String = "", fragmentManager: FragmentManager): HabitDetailsDialog =
             HabitDetailsDialog().apply {
