@@ -19,12 +19,11 @@ data class Habit(
 )
 
 data class Frequency(val times: Int, val days: Int)
-data class Reminder(val time: HourMinute, val days: List<DayOfWeek> = emptyList()){
-	override fun toString(): String {
-		return "At $time every: $days"
-	}
-}
+data class Reminder(val time: HourMinute, val days: List<DayOfWeek> = emptyList())
 data class HourMinute(val hour: Int, val minutes: Int){
-	override fun toString(): String = "$hour:$minutes"
+	override fun toString(): String {
+		val minutesWithLeadingZeros: String = if (minutes < 10) "0$minutes" else minutes.toString()
+		return "$hour:$minutesWithLeadingZeros"
+	}
 }
 data class HabitDay(val day: LocalDate, val dayNumber: Int, var checked: Boolean = false)

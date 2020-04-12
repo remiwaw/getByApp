@@ -4,7 +4,7 @@ import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.DateTimeProvider
-import com.rwawrzyniak.getby.date.datesInRangeFromToday
+import com.rwawrzyniak.getby.core.ext.date.datesInRangeFromToday
 import com.rwawrzyniak.getby.habits.Frequency
 import com.rwawrzyniak.getby.habits.Habit
 import com.rwawrzyniak.getby.habits.HabitDay

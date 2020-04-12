@@ -67,6 +67,7 @@
 	<string name="habitDetailsToolbarTitle">Details</string>
 	<string name="habitAddToolbarTitle">Create</string>
 	<string name="reminderDefaultValue">Off</string>
+	<string name="reminderAt">Set at: %1$s</string>
 
 	<string-array name="habits_frequency">
         <item>Every day</item>

@@ -1,4 +1,4 @@
-package com.rwawrzyniak.getby.date
+package com.rwawrzyniak.getby.core.ext.date
 
 import com.rwawrzyniak.getby.habits.DayHeaderDto
 import java.time.LocalDate

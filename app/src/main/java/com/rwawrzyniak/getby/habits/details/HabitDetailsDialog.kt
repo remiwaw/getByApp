@@ -14,6 +14,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.SchedulerProvider
+import com.rwawrzyniak.getby.core.ext.date.convertWeekDaysToMaterial
+import com.rwawrzyniak.getby.core.ext.date.convertWeekDaysToStandard
 import com.rwawrzyniak.getby.core.ext.markRequired
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
@@ -88,19 +90,39 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 	}
 
 	private fun renderState(state: HabitDetailsViewState) {
+		binding.rowDayOfWeekPicker.selectAllDays()
 		if(state.isUpdateMode && state.backingHabit != null){
-			binding.habitName.setText(state.backingHabit.name)
-			binding.habitDescription.setText(state.backingHabit.description)
-			if(shouldDisplayCustomFrequency(state.backingHabit.frequency)){
-				binding.customFrequencyView.setTimes(state.backingHabit.frequency.times)
-				binding.customFrequencyView.setDays(state.backingHabit.frequency.days)
-				showCustomFrequency()
-			} else{
-				binding.frequencyPicker.setSelection(getFrequencySpinnerIndex(state.backingHabit.frequency))
-				hideCustomFrequency()
-			}
-			binding.reminder.text = state.backingHabit.reminder.toString()
+			renderTextFields(state.backingHabit)
+			renderFrequency(state.backingHabit)
+			renderReminder(state.backingHabit)
 		}
+	}
+
+	private fun renderTextFields(backingHabit: Habit) {
+		binding.habitName.setText(backingHabit.name)
+		binding.habitDescription.setText(backingHabit.description)
+	}
+
+	private fun renderFrequency(backingHabit: Habit) {
+		if (shouldDisplayCustomFrequency(backingHabit.frequency)) {
+			binding.customFrequencyView.setTimes(backingHabit.frequency.times)
+			binding.customFrequencyView.setDays(backingHabit.frequency.days)
+			showCustomFrequency()
+		} else {
+			binding.frequencyPicker.setSelection(getFrequencySpinnerIndex(backingHabit.frequency))
+			hideCustomFrequency()
+		}
+	}
+
+	private fun renderReminder(
+		backingHabit: Habit
+	) {
+		backingHabit.reminder?.let {
+			binding.rowDayOfWeekPicker.setSelectedDays(convertWeekDaysToMaterial(it.days))
+		}
+
+		showWeekDayRow(resources.getString(R.string.reminderDefaultValue) == binding.reminder.text)
+		binding.reminder.text = resources.getString(R.string.reminderAt, backingHabit.reminder?.time)
 	}
 
 	private fun executeEffect(effect: HabitDetailsViewEffect) {
@@ -185,18 +207,22 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 	}
 
 	private fun setupReminder() {
-        binding.reminder.setOnClickListener {
-                TimePickerDialog.newInstance(
-                    { view, hourOfDay, minute, _ ->
-                        view?.dismiss()
+		binding.reminder.setOnClickListener {
+                val newInstance = TimePickerDialog.newInstance(
+					{ view, hourOfDay, minute, _ ->
+						view?.dismiss()
 						binding.reminder.text = "$hourOfDay:$minute"
-                    },
-                    false
-                ).show(requireFragmentManager(),
-					TIME_PICKER_DIALOG_TAG
+						showWeekDayRow(true)
+					},
+					false
 				)
+			newInstance.setOnDismissListener {
+				showWeekDayRow(false)
+				binding.reminder.text = resources.getString(R.string.reminderDefaultValue)
+			}
+			newInstance.show(requireFragmentManager(), TIME_PICKER_DIALOG_TAG)
         }
-    }
+	}
 
     private fun setupFrequencyPicker() {
         ArrayAdapter.createFromResource(
@@ -241,9 +267,7 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long){
         when (parent.id) {
-            R.id.frequencyPicker -> when (binding.frequencyPicker.selectedItemPosition) {
-				4 -> showCustomFrequency()
-			}
+            R.id.frequencyPicker -> if (binding.frequencyPicker.selectedItemPosition == 4) showCustomFrequency()
 		}
 	}
 
@@ -253,10 +277,11 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 		if(binding.reminder.text == resources.getString(R.string.reminderDefaultValue)){
 			return null
 		}
+		val daysOfWeek = convertWeekDaysToStandard(rowDayOfWeekPicker.selectedDays)
 		val reminderText = binding.reminder.text
 		val hourOfDay = reminderText.split(":")[0].toInt()
 		val minuteOfDay  = reminderText.split(":")[1].toInt()
-		return Reminder(HourMinute(hourOfDay, minuteOfDay), emptyList())
+		return Reminder(HourMinute(hourOfDay, minuteOfDay), daysOfWeek)
 	}
 
 	private fun getFrequencyValue(): Frequency = when (binding.frequencyPicker.selectedItemPosition) {
@@ -285,6 +310,14 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 		binding.frequencyPicker.visibility = View.GONE
 	}
 
+	private fun showWeekDayRow(isShow: Boolean){
+		if(isShow){
+			binding.rowDayOfWeekPicker.visibility = View.VISIBLE
+		} else {
+			binding.rowDayOfWeekPicker.visibility = View.GONE
+		}
+	}
+
     private fun initializeFullScreen() {
         val width = ViewGroup.LayoutParams.MATCH_PARENT
         val height = ViewGroup.LayoutParams.MATCH_PARENT
@@ -302,6 +335,7 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
         const val ADD_NEW_HABIT_DIALOG_TAG = "AddNewHabitDialog"
         const val TIME_PICKER_DIALOG_TAG = "TimePickerDialog"
         const val ARG_HABIT_ID = "HabitIdArg"
+
         private const val CUSTOM_FREQUENCY_USED =  -1
         fun show(habitId: String = "", fragmentManager: FragmentManager): HabitDetailsDialog =
             HabitDetailsDialog().apply {

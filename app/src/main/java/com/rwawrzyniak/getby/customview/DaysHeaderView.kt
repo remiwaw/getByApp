@@ -6,7 +6,7 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import com.rwawrzyniak.getby.R
-import com.rwawrzyniak.getby.date.toDayHeaderDto
+import com.rwawrzyniak.getby.core.ext.date.toDayHeaderDto
 import kotlinx.android.synthetic.main.day_header_element.view.*
 import kotlinx.android.synthetic.main.days_list.view.*
 import java.time.LocalDate
