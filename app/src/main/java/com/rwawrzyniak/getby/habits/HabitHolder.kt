@@ -8,9 +8,6 @@ import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.DateTimeProvider
-import com.rwawrzyniak.getby.date.getLastNDays
-import java.time.LocalDate
-import javax.inject.Inject
 
 // TODO change findVieweBy id to binding, check if it works with changing Days
 class HabitHolder(view: View, private val listener: HabitListener)

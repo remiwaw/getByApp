@@ -4,6 +4,7 @@ import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.DateTimeProvider
+import com.rwawrzyniak.getby.date.datesInRangeFromToday
 import com.rwawrzyniak.getby.date.getLastNDays
 import com.rwawrzyniak.getby.habits.Habit
 import com.rwawrzyniak.getby.habits.HabitDay
@@ -106,7 +107,8 @@ class HabitsDetailsViewModelImpl @Inject constructor(
 		}
 
 	// TODO this could lead to problem if user has change his calendar settings. I.e manually set date
-	private fun initHistory() = dateTimeProvider.getCurrentDate().getLastNDays(5).mapIndexed {
+	// TODO Important find a better way to initialzie dates. After a year is passed this will cause indexBoundOf exception!
+	private fun initHistory() = dateTimeProvider.getCurrentDate().datesInRangeFromToday(5, 365).mapIndexed {
 			index, localDate -> HabitDay(localDate, index)
 	}
 }

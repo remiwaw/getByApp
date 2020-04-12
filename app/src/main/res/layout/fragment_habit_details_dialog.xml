@@ -82,7 +82,6 @@
             android:layout_gravity="center"
             android:text="@string/repeatLabel"
             android:textSize="16sp"
-            android:layout_marginEnd="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/addFriendsButton" />
 
@@ -93,6 +92,14 @@
             app:layout_constraintBottom_toBottomOf="@+id/frequencyLabel"
             app:layout_constraintStart_toEndOf="@+id/frequencyLabel" />
 
+		<com.rwawrzyniak.getby.customview.CustomFrequencyView
+			android:visibility="gone"
+			android:layout_width="wrap_content"
+			android:layout_height="0dp"
+			app:layout_constraintTop_toTopOf="@id/frequencyLabel"
+			app:layout_constraintBottom_toBottomOf="@+id/frequencyLabel"
+			app:layout_constraintStart_toEndOf="@id/frequencyLabel" />
+
         <TextView
             android:id="@+id/reminderLabel"
             android:layout_width="wrap_content"
@@ -100,7 +107,6 @@
             android:layout_gravity="center"
             android:text="@string/reminderlabel"
             android:textSize="16sp"
-            android:layout_marginEnd="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/frequencyPicker" />
 
@@ -111,6 +117,7 @@
             android:layout_width="wrap_content"
             android:textStyle="bold"
             android:layout_height="wrap_content"
+			android:layout_marginStart="10dp"
             app:layout_constraintBottom_toBottomOf="@+id/reminderLabel"
             app:layout_constraintStart_toEndOf="@+id/reminderLabel"
             android:drawableEnd="@drawable/ic_arrow_drop_down"/>
