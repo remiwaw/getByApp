@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.DateTimeProvider
 import com.rwawrzyniak.getby.date.datesInRangeFromToday
-import com.rwawrzyniak.getby.date.getLastNDays
 import com.rwawrzyniak.getby.habits.Habit
 import com.rwawrzyniak.getby.habits.HabitDay
 import com.rwawrzyniak.getby.habits.HabitsRepository
@@ -56,14 +55,6 @@ class HabitsDetailsViewModelImpl @Inject constructor(
 			Completable.fromAction { state.onNext(HabitDetailsViewState(true, it)) }
 		}
 	}
-	// // private fun updateHabitState(habit: Habit): Completable =
-	// // 	updateState { copy(configuration = config) }
-	//
-	// private fun updateState(callback: HabitDetailsViewState.() -> HabitDetailsViewState) =
-	// 	state.take(1)
-	// 		.map(callback)
-	// 		.doOnNext { state.onNext(it) }
-	// 		.ignoreElements()
 
 	private fun onInputFieldChanged(action: HabitDetailsViewAction.OnInputFieldStateChanged): Completable =
 		Completable.fromAction {

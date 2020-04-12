@@ -90,7 +90,14 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 		if(state.isUpdateMode && state.backingHabit != null){
 			binding.habitName.setText(state.backingHabit.name)
 			binding.habitDescription.setText(state.backingHabit.description)
-			binding.frequencyPicker.setSelection(getFrequencyIndex(state.backingHabit.frequency))
+			if(shouldDisplayCustomFrequency(state.backingHabit.frequency)){
+				binding.customFrequencyView.setDays(state.backingHabit.frequency.days)
+				binding.customFrequencyView.setTimes(state.backingHabit.frequency.times)
+				showCustomFrequency()
+			} else{
+				binding.frequencyPicker.setSelection(getFrequencySpinnerIndex(state.backingHabit.frequency))
+				hideCustomFrequency()
+			}
 			binding.reminder.text = state.backingHabit.reminder.toString()
 		}
 	}
@@ -101,6 +108,9 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 			is HabitDetailsViewEffect.DismissPopup -> dismiss()
 		}
 	}
+
+	private fun shouldDisplayCustomFrequency(frequency: Frequency) =
+		getFrequencySpinnerIndex(frequency) == CUSTOM_FREQUENCY_USED
 
 	private fun showFieldsError(effect: HabitDetailsViewEffect.ConfigureFields) {
 			binding.habitNameLayout.isErrorEnabled = effect.habitNameInput.isError
@@ -217,7 +227,7 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 					Habit(
 						name = binding.habitName.text.toString(),
 						description = binding.habitDescription.text.toString(),
-						frequency = getFrequency(),
+						frequency = getFrequencyValue(),
 						reminder = getReminder()
 					)
 				)
@@ -226,14 +236,11 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 	}
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long){
-        // <item>Every day</item>
-        // <item>Once a week</item>
-        // <item>2 times per week</item>
-        // <item>5 times per week</item>
-        // <item>Custom</item>
         when (parent.id) {
-            R.id.frequencyPicker -> getFrequency()
-        }
+            R.id.frequencyPicker -> when (binding.frequencyPicker.selectedItemPosition) {
+				4 -> showCustomFrequency()
+			}
+		}
 	}
 
 	override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -248,21 +255,30 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 		return Reminder(HourMinute(hourOfDay, minuteOfDay), emptyList())
 	}
 
-	private fun getFrequency(): Frequency = when (binding.frequencyPicker.selectedItemPosition) {
+	private fun getFrequencyValue(): Frequency = when (binding.frequencyPicker.selectedItemPosition) {
 		0 -> Frequency(7, 7)
 		1 -> Frequency(1, 7)
 		2 -> Frequency(2, 7)
 		3 -> Frequency(5, 7)
-		4 -> TODO("Custom not yet made")
-		else -> error("Not such frequency")
+		else -> Frequency(binding.customFrequencyView.getDays(), binding.customFrequencyView.getTimes())
 	}
 
-	private fun getFrequencyIndex(frequency: Frequency): Int = when (frequency) {
+	private fun getFrequencySpinnerIndex(frequency: Frequency): Int = when (frequency) {
 		Frequency(7, 7) -> 0
 		Frequency(1, 7) -> 1
 		Frequency(2, 7) -> 2
 		Frequency(5, 7) -> 3
-		else -> error("Not such frequency index")
+		else -> CUSTOM_FREQUENCY_USED
+	}
+
+	private fun hideCustomFrequency() {
+		binding.customFrequencyView.visibility = View.GONE
+		binding.frequencyPicker.visibility = View.VISIBLE
+	}
+
+	private fun showCustomFrequency() {
+		binding.customFrequencyView.visibility = View.VISIBLE
+		binding.frequencyPicker.visibility = View.GONE
 	}
 
     private fun initializeFullScreen() {
@@ -282,6 +298,7 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
         const val ADD_NEW_HABIT_DIALOG_TAG = "AddNewHabitDialog"
         const val TIME_PICKER_DIALOG_TAG = "TimePickerDialog"
         const val ARG_HABIT_ID = "HabitIdArg"
+        private const val CUSTOM_FREQUENCY_USED =  -1
         fun show(habitId: String = "", fragmentManager: FragmentManager): HabitDetailsDialog =
             HabitDetailsDialog().apply {
 				arguments = Bundle().apply {

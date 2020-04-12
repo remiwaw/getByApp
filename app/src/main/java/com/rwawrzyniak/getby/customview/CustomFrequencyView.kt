@@ -26,9 +26,11 @@ class CustomFrequencyView : ConstraintLayout {
         parseAttributes(attrs)
     }
 
-	fun getTimes() = customFrequencyTimesEditText.text.toString().toLong()
+	fun getTimes() = customFrequencyTimesEditText.text.toString().toInt()
+	fun setTimes(times: Int) = customFrequencyDaysEditText.setText(times.toString())
 
-	fun getDays() = customFrequencyDaysEditText.text.toString().toLong()
+	fun getDays() = customFrequencyDaysEditText.text.toString().toInt()
+	fun setDays(days: Int) = customFrequencyDaysEditText.setText(days.toString())
 
 	private fun parseAttributes(attrs: AttributeSet?) {
         val typedAttrs =
