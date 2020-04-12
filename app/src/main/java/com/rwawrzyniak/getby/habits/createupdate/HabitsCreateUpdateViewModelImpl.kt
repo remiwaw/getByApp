@@ -1,4 +1,4 @@
-package com.rwawrzyniak.getby.habits.details
+package com.rwawrzyniak.getby.habits.createupdate
 
 import android.content.res.Resources
 import androidx.lifecycle.ViewModel
@@ -18,46 +18,46 @@ import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
 // TODO add error handling
-abstract class HabitsDetailsViewModel : ViewModel() {
-	abstract fun observeState(): Observable<HabitDetailsViewState>
+abstract class HabitsCreateUpdateViewModel : ViewModel() {
+	abstract fun observeState(): Observable<HabitCreateUpdateViewState>
 	abstract fun observeEffects(): Observable<HabitDetailsViewEffect>
-	abstract fun onAction(action: HabitDetailsViewAction): Completable
+	abstract fun onAction(action: HabitCreateUpdateViewAction): Completable
 }
 
 
-class HabitsDetailsViewModelImpl @Inject constructor(
+class HabitsCreateUpdateViewModelImpl @Inject constructor(
     private val habitsRepository: HabitsRepository,
 	private val resources: Resources,
 	private val dateTimeProvider: DateTimeProvider
-) : HabitsDetailsViewModel() {
+) : HabitsCreateUpdateViewModel() {
 	private val compositeDisposable = CompositeDisposable()
 	private val effects: Subject<HabitDetailsViewEffect> = PublishSubject.create<HabitDetailsViewEffect>()
-	private val state = BehaviorSubject.createDefault(HabitDetailsViewState(false))
+	private val state = BehaviorSubject.createDefault(HabitCreateUpdateViewState(false))
 
 	override fun onCleared() {
 		super.onCleared()
 		compositeDisposable.clear()
 	}
 
-	override fun observeState(): Observable<HabitDetailsViewState> = state.hide()
+	override fun observeState(): Observable<HabitCreateUpdateViewState> = state.hide()
 
 	override fun observeEffects(): Observable<HabitDetailsViewEffect> = effects.hide()
 
-	override fun onAction(action: HabitDetailsViewAction): Completable {
+	override fun onAction(action: HabitCreateUpdateViewAction): Completable {
 		return when(action){
-			is HabitDetailsViewAction.OnSaveHabitClicked -> validateAndSaveHabit(action.habit)
-			is HabitDetailsViewAction.OnInputFieldStateChanged -> onInputFieldChanged(action)
-			is HabitDetailsViewAction.LoadHabit -> loadHabit(action.habitId)
+			is HabitCreateUpdateViewAction.OnSaveHabitClicked -> validateAndSaveHabit(action.habit)
+			is HabitCreateUpdateViewAction.OnInputFieldStateChanged -> onInputFieldChanged(action)
+			is HabitCreateUpdateViewAction.LoadHabit -> loadHabit(action.habitId)
 		}
 	}
 
 	private fun loadHabit(habitId: String): Completable {
 		return habitsRepository.getSingle(habitId).flatMapCompletable {
-			Completable.fromAction { state.onNext(HabitDetailsViewState(true, it)) }
+			Completable.fromAction { state.onNext(HabitCreateUpdateViewState(true, it)) }
 		}
 	}
 
-	private fun onInputFieldChanged(action: HabitDetailsViewAction.OnInputFieldStateChanged): Completable =
+	private fun onInputFieldChanged(action: HabitCreateUpdateViewAction.OnInputFieldStateChanged): Completable =
 		Completable.fromAction {
 			effects.onNext(HabitDetailsViewEffect.ConfigureFields(
 				InputFieldState(isError = action.isNameFieldEmpty),

@@ -20,7 +20,7 @@ import com.rwawrzyniak.getby.core.ChromeConfiguration
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
-import com.rwawrzyniak.getby.habits.details.HabitDetailsDialog
+import com.rwawrzyniak.getby.habits.createupdate.HabitCreateUpdateDialog
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 class HabitsFragment : BaseFragment() {
@@ -106,7 +106,7 @@ class HabitsFragment : BaseFragment() {
 	}
 
 	private fun showCreateHabitPopup(habitId: String = "") {
-		HabitDetailsDialog.show(habitId, requireFragmentManager())
+		HabitCreateUpdateDialog.show(habitId, requireFragmentManager())
 	}
 
 	private fun showUndoSnackbar(swipedHabit: Habit, swipedAction: SwipedAction) {

@@ -1,4 +1,4 @@
-package com.rwawrzyniak.getby.habits.details
+package com.rwawrzyniak.getby.habits.createupdate
 
 sealed class HabitDetailsViewEffect {
 	internal data class ConfigureFields(

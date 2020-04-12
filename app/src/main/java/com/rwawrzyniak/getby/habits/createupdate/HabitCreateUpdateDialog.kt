@@ -1,4 +1,4 @@
-package com.rwawrzyniak.getby.habits.details
+package com.rwawrzyniak.getby.habits.createupdate
 
 import android.os.Bundle
 import android.text.Editable
@@ -19,7 +19,7 @@ import com.rwawrzyniak.getby.core.ext.date.convertWeekDaysToStandard
 import com.rwawrzyniak.getby.core.ext.markRequired
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
-import com.rwawrzyniak.getby.databinding.FragmentHabitDetailsDialogBinding
+import com.rwawrzyniak.getby.databinding.FragmentHabitCreateUpdateDialogBinding
 import com.rwawrzyniak.getby.habits.Frequency
 import com.rwawrzyniak.getby.habits.Habit
 import com.rwawrzyniak.getby.habits.HourMinute
@@ -29,11 +29,11 @@ import io.reactivex.Completable
 import io.reactivex.rxkotlin.subscribeBy
 import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
-import kotlinx.android.synthetic.main.fragment_habit_details_dialog.*
+import kotlinx.android.synthetic.main.fragment_habit_create_update_dialog.*
 import timber.log.Timber
 
-class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener {
-    private lateinit var binding: FragmentHabitDetailsDialogBinding
+class HabitCreateUpdateDialog : DialogFragment(), AdapterView.OnItemSelectedListener {
+    private lateinit var binding: FragmentHabitCreateUpdateDialogBinding
     private val viewModel by fragmentScopedViewModel { injector.habitsDetailsViewModel }
 	private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
 	private var isUserInput = true // TODO make it better, change to avoid executing listener on text changed.
@@ -49,7 +49,7 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        binding = FragmentHabitDetailsDialogBinding.inflate(inflater, container, false)
+        binding = FragmentHabitCreateUpdateDialogBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -68,7 +68,7 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 		super.onStart()
 		startObservers()
 		arguments?.getString(ARG_HABIT_ID)?.let {
-			subscribeTo(viewModel.onAction(HabitDetailsViewAction.LoadHabit(it)))
+			subscribeTo(viewModel.onAction(HabitCreateUpdateViewAction.LoadHabit(it)))
 		}
 		initializeFullScreen()
 	}
@@ -89,7 +89,7 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 			.disposeBy(lifecycle.onStop)
 	}
 
-	private fun renderState(state: HabitDetailsViewState) {
+	private fun renderState(state: HabitCreateUpdateViewState) {
 		binding.rowDayOfWeekPicker.selectAllDays()
 		if(state.isUpdateMode && state.backingHabit != null){
 			renderTextFields(state.backingHabit)
@@ -171,7 +171,7 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 				if (isUserInput) {
 					subscribeTo(
 						viewModel.onAction(
-							HabitDetailsViewAction.OnInputFieldStateChanged(
+							HabitCreateUpdateViewAction.OnInputFieldStateChanged(
 								isNameFieldEmpty = habitName.isBlank(),
 								isDescriptionFieldEmpty = binding.habitDescription.text.isNullOrBlank()
 							)
@@ -195,7 +195,7 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 				if (isUserInput) {
 					subscribeTo(
 						viewModel.onAction(
-							HabitDetailsViewAction.OnInputFieldStateChanged(
+							HabitCreateUpdateViewAction.OnInputFieldStateChanged(
 								isNameFieldEmpty = binding.habitName.text.isNullOrEmpty(),
 								isDescriptionFieldEmpty = habitDescription.isBlank()
 							)
@@ -253,7 +253,7 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 	private fun onSaveHabitClick() {
 		subscribeTo(
 			viewModel.onAction(
-				HabitDetailsViewAction.OnSaveHabitClicked(
+				HabitCreateUpdateViewAction.OnSaveHabitClicked(
 					Habit(
 						name = binding.habitName.text.toString(),
 						description = binding.habitDescription.text.toString(),
@@ -337,8 +337,8 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
         const val ARG_HABIT_ID = "HabitIdArg"
 
         private const val CUSTOM_FREQUENCY_USED =  -1
-        fun show(habitId: String = "", fragmentManager: FragmentManager): HabitDetailsDialog =
-            HabitDetailsDialog().apply {
+        fun show(habitId: String = "", fragmentManager: FragmentManager): HabitCreateUpdateDialog =
+            HabitCreateUpdateDialog().apply {
 				arguments = Bundle().apply {
 					putString(ARG_HABIT_ID, habitId)
 				}
