@@ -3,7 +3,8 @@ package com.rwawrzyniak.getby.habits.details
 sealed class HabitDetailsViewEffect {
 	internal data class ConfigureFields(
 		val habitNameInput: InputFieldState = InputFieldState(),
-		val habitDescriptionInput: InputFieldState = InputFieldState()
+		val habitDescriptionInput: InputFieldState = InputFieldState(),
+		val frequencyInput: InputFieldState = InputFieldState()
 	) : HabitDetailsViewEffect()
 	object DismissPopup : HabitDetailsViewEffect()
 }
@@ -14,3 +15,4 @@ data class InputFieldState(
 	val isError: Boolean = false,
 	val errorMessage: String = ""
 )
+

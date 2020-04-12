@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.rwawrzyniak.getby.R
@@ -91,8 +92,8 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 			binding.habitName.setText(state.backingHabit.name)
 			binding.habitDescription.setText(state.backingHabit.description)
 			if(shouldDisplayCustomFrequency(state.backingHabit.frequency)){
-				binding.customFrequencyView.setDays(state.backingHabit.frequency.days)
 				binding.customFrequencyView.setTimes(state.backingHabit.frequency.times)
+				binding.customFrequencyView.setDays(state.backingHabit.frequency.days)
 				showCustomFrequency()
 			} else{
 				binding.frequencyPicker.setSelection(getFrequencySpinnerIndex(state.backingHabit.frequency))
@@ -117,6 +118,9 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 			binding.habitDescriptionLayout.isErrorEnabled = effect.habitDescriptionInput.isError
 			binding.habitNameLayout.error = effect.habitNameInput.errorMessage
 			binding.habitDescriptionLayout.error = effect.habitDescriptionInput.errorMessage
+			if(binding.customFrequencyView.isVisible && effect.frequencyInput.isError){
+				binding.customFrequencyView.setError(effect.frequencyInput.errorMessage)
+			}
 	}
 
 	private fun setupPickers() {
@@ -260,7 +264,7 @@ class HabitDetailsDialog : DialogFragment(), AdapterView.OnItemSelectedListener 
 		1 -> Frequency(1, 7)
 		2 -> Frequency(2, 7)
 		3 -> Frequency(5, 7)
-		else -> Frequency(binding.customFrequencyView.getDays(), binding.customFrequencyView.getTimes())
+		else -> Frequency(binding.customFrequencyView.getTimes(), binding.customFrequencyView.getDays())
 	}
 
 	private fun getFrequencySpinnerIndex(frequency: Frequency): Int = when (frequency) {

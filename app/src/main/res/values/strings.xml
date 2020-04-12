@@ -18,6 +18,8 @@
 	<string name="customFrequenyPickerDaysValue">7</string>
 	<string name="customFrequencyPickerTimesLabel">times in</string>
 	<string name="customFrequencyPickerDaysLabel">days</string>
+	<string name="frequencyIncorrect">Number of times should be lower than number of days</string>
+
 
 	<!--    General error handling-->
     <string name="empty_field_error">You have to fill this field</string>

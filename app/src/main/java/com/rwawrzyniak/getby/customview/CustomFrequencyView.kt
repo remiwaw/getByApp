@@ -7,37 +7,63 @@ import com.rwawrzyniak.getby.R
 import kotlinx.android.synthetic.main.custom_frequency_element.view.*
 
 class CustomFrequencyView : ConstraintLayout {
+	private var isUserAction = true
 
     init {
         inflate(context, R.layout.custom_frequency_element, this)
-    }
+		setDefault()
+	}
 
-    constructor(context: Context) : super(context)
+	private fun setDefault() {
+		customFrequencyTimesEditText.setText(DEFAULT_TIMES_VALUE)
+		customFrequencyDaysEditText.setText(DEFAULT_DAYS_VALUE)
 
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        parseAttributes(attrs)
-    }
+		customFrequencyTimesEditText.setOnFocusChangeListener { _, hasFocus ->
+			if(isUserAction && hasFocus.not() && isNotValid(customFrequencyTimesEditText.editableText.toString())) {
+				customFrequencyTimesEditText.setText(DEFAULT_TIMES_VALUE)
+			}
+		}
+
+		customFrequencyDaysEditText.setOnFocusChangeListener { _, hasFocus ->
+			if(isUserAction && hasFocus.not() && isNotValid(customFrequencyDaysEditText.editableText.toString())) {
+				customFrequencyDaysEditText.setText(DEFAULT_DAYS_VALUE)
+			}
+		}
+	}
+
+	constructor(context: Context) : super(context)
+
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {}
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
         defStyleAttr
-    ) {
-        parseAttributes(attrs)
-    }
+    )
 
 	fun getTimes() = customFrequencyTimesEditText.text.toString().toInt()
-	fun setTimes(times: Int) = customFrequencyDaysEditText.setText(times.toString())
+	fun setTimes(times: Int) {
+		isUserAction = false
+		customFrequencyTimesEditText.setText(times.toString())
+		isUserAction = true
+	}
 
 	fun getDays() = customFrequencyDaysEditText.text.toString().toInt()
-	fun setDays(days: Int) = customFrequencyDaysEditText.setText(days.toString())
+	fun setDays(days: Int) {
+		isUserAction = false
+		customFrequencyDaysEditText.setText(days.toString())
+		isUserAction = true
+	}
 
-	private fun parseAttributes(attrs: AttributeSet?) {
-        val typedAttrs =
-            context.theme.obtainStyledAttributes(attrs, R.styleable.DayHeaderView, 0, 0)
+	fun setError(errorMessage: String){
+		customFrequencyTimesEditText.error = errorMessage
+		customFrequencyDaysEditText.error = errorMessage
+	}
 
-        typedAttrs.recycle()
-    }
+	private fun isNotValid(text: String): Boolean = text.isBlank() && text.toInt() <= 0
 
-
+	companion object{
+		private const val DEFAULT_TIMES_VALUE = 1.toString()
+		private const val DEFAULT_DAYS_VALUE = 7.toString()
+	}
 }

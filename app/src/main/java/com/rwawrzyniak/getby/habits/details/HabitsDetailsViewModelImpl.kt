@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.DateTimeProvider
 import com.rwawrzyniak.getby.date.datesInRangeFromToday
+import com.rwawrzyniak.getby.habits.Frequency
 import com.rwawrzyniak.getby.habits.Habit
 import com.rwawrzyniak.getby.habits.HabitDay
 import com.rwawrzyniak.getby.habits.HabitsRepository
@@ -68,10 +69,11 @@ class HabitsDetailsViewModelImpl @Inject constructor(
 
 		val effect = HabitDetailsViewEffect.ConfigureFields(
 			habitNameInput = checkInputState(habit.name),
-			habitDescriptionInput = checkInputState(habit.description)
+			habitDescriptionInput = checkInputState(habit.description),
+			frequencyInput = checkFrequencyState(habit.frequency)
 		)
 
-		return if(effect.habitNameInput.isError || effect.habitDescriptionInput.isError){
+		return if(effect.habitNameInput.isError || effect.habitDescriptionInput.isError || effect.frequencyInput.isError){
 			Completable.fromAction {  effects.onNext(effect) }
 		} else {
 			initializeHabitHistoryIfEmpty(habit)
@@ -92,6 +94,17 @@ class HabitsDetailsViewModelImpl @Inject constructor(
 				isEnabled = false,
 				isError = true,
 				errorMessage = resources.getString(R.string.empty_field_error)
+			)
+		} else {
+			InputFieldState()
+		}
+
+	private fun checkFrequencyState(frequency: Frequency): InputFieldState =
+		if (frequency.times > frequency.days) {
+			InputFieldState(
+				isEnabled = true,
+				isError = true,
+				errorMessage = resources.getString(R.string.frequencyIncorrect)
 			)
 		} else {
 			InputFieldState()
