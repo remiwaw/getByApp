@@ -10,8 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.Fragment
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.SchedulerProvider
 import com.rwawrzyniak.getby.core.ext.date.convertWeekDaysToMaterial
@@ -29,19 +28,16 @@ import io.reactivex.Completable
 import io.reactivex.rxkotlin.subscribeBy
 import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_habit_create_update_dialog.*
+import kotlinx.android.synthetic.main.fragment_tour.*
 import timber.log.Timber
 
-class HabitCreateUpdateDialog : DialogFragment(), AdapterView.OnItemSelectedListener {
+class HabitCreateUpdateDialog : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var binding: FragmentHabitCreateUpdateDialogBinding
-    private val viewModel by fragmentScopedViewModel { injector.habitsDetailsViewModel }
+    private val viewModel by fragmentScopedViewModel { injector.habitsCreateUpdateViewModel }
 	private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
 	private var isUserInput = true // TODO make it better, change to avoid executing listener on text changed.
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.AppTheme_FullScreenDialog)
-	}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -240,7 +236,7 @@ class HabitCreateUpdateDialog : DialogFragment(), AdapterView.OnItemSelectedList
 
     private fun setupToolbar() {
         with(toolbar) {
-            setNavigationOnClickListener { dismiss() }
+            setNavigationOnClickListener { nav_host.goToNextScreenButton() }
             title = "Some Title"
             inflateMenu(R.menu.menu_add_habit_popup)
             setOnMenuItemClickListener { item: MenuItem? ->
@@ -321,7 +317,6 @@ class HabitCreateUpdateDialog : DialogFragment(), AdapterView.OnItemSelectedList
     private fun initializeFullScreen() {
         val width = ViewGroup.LayoutParams.MATCH_PARENT
         val height = ViewGroup.LayoutParams.MATCH_PARENT
-        dialog?.window?.setLayout(width, height)
     }
 
 	private fun subscribeTo(completable: Completable) {
@@ -332,19 +327,15 @@ class HabitCreateUpdateDialog : DialogFragment(), AdapterView.OnItemSelectedList
 	}
 
     companion object {
-        const val ADD_NEW_HABIT_DIALOG_TAG = "AddNewHabitDialog"
         const val TIME_PICKER_DIALOG_TAG = "TimePickerDialog"
         const val ARG_HABIT_ID = "HabitIdArg"
 
         private const val CUSTOM_FREQUENCY_USED =  -1
-        fun show(habitId: String = "", fragmentManager: FragmentManager): HabitCreateUpdateDialog =
+        fun create(habitId: String = ""): HabitCreateUpdateDialog =
             HabitCreateUpdateDialog().apply {
 				arguments = Bundle().apply {
 					putString(ARG_HABIT_ID, habitId)
 				}
-				show(fragmentManager,
-					ADD_NEW_HABIT_DIALOG_TAG
-				)
 			}
     }
 }

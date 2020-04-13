@@ -5,6 +5,7 @@ import com.rwawrzyniak.getby.core.GlobalEvent
 import com.rwawrzyniak.getby.core.SchedulerProvider
 import com.rwawrzyniak.getby.habits.HabitsViewModel
 import com.rwawrzyniak.getby.habits.createupdate.HabitsCreateUpdateViewModelImpl
+import com.rwawrzyniak.getby.habits.details.HabitDetailsViewModelImpl
 import com.rwawrzyniak.getby.login.LoginViewModel
 import com.rwawrzyniak.getby.register.RegisterViewModel
 import dagger.BindsInstance
@@ -25,7 +26,8 @@ interface ApplicationComponent {
         ): ApplicationComponent
     }
 
-    val habitsDetailsViewModel: HabitsCreateUpdateViewModelImpl
+    val habitDetailsViewModel: HabitDetailsViewModelImpl
+    val habitsCreateUpdateViewModel: HabitsCreateUpdateViewModelImpl
     val habitsViewModel: HabitsViewModel
     val loginViewModel: LoginViewModel
     val registerViewModel: RegisterViewModel

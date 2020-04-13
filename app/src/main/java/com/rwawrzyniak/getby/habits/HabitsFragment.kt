@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +22,9 @@ import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
 import com.rwawrzyniak.getby.habits.createupdate.HabitCreateUpdateDialog
+import com.rwawrzyniak.getby.habits.details.HabitDetailsFragment.Companion.ARG_HABIT_ID
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+import kotlinx.android.synthetic.main.activity_main.*
 
 class HabitsFragment : BaseFragment() {
 	private lateinit var binding: FragmentHabitsBinding
@@ -29,6 +32,11 @@ class HabitsFragment : BaseFragment() {
 
 	private val onHabitListener = object: HabitHolder.HabitListener{
 		override fun onRowClicked(habit: Habit) {
+			nav_host.findNavController().navigate(
+				R.id.action_habitsFragment_to_habitDetailsFragment,
+				Bundle().apply { putString(ARG_HABIT_ID, habit.id) }
+			)
+
 			showCreateHabitPopup(habit.id)
 		}
 
@@ -106,7 +114,7 @@ class HabitsFragment : BaseFragment() {
 	}
 
 	private fun showCreateHabitPopup(habitId: String = "") {
-		HabitCreateUpdateDialog.show(habitId, requireFragmentManager())
+		HabitCreateUpdateDialog.create(habitId)
 	}
 
 	private fun showUndoSnackbar(swipedHabit: Habit, swipedAction: SwipedAction) {

@@ -91,9 +91,11 @@ dependencies {
     implementation "com.github.razir.progressbutton:progressbutton:$rootProject.progressButtonVersion"
     implementation "io.sellmair:disposer:$rootProject.disposerVersion"
     implementation "com.wdullaer:materialdatetimepicker:$rootProject.materialDateTimePickerVersion"
-	implementation "ca.antonious:materialdaypicker:$rootProject.materialDateRowPicker"
+	implementation "ca.antonious:materialdaypicker:$rootProject.materialDateRowPickerVersion"
+	implementation "com.github.AnyChart:AnyChart-Android:$rootProject.anyChartVersion"
 
-    //Android
+
+	//Android
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin_version"
     implementation "androidx.appcompat:appcompat:$rootProject.appCompatVersion"
     implementation "androidx.core:core-ktx:$rootProject.ktxVersion"

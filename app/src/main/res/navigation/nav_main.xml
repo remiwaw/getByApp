@@ -57,7 +57,19 @@
     <fragment
         android:id="@+id/habitsFragment"
         android:name="com.rwawrzyniak.getby.habits.HabitsFragment"
-        android:label="HabitsFragmnt" />
+        android:label="HabitsFragmnt" >
+		<action
+			android:id="@+id/action_habitsFragment_to_habitDetailsFragment"
+			app:destination="@id/habitDetailsFragment" />
+	</fragment>
 
     <fragment android:id="@+id/placeholder" />
+	<fragment
+		android:id="@+id/habitDetailsFragment"
+		android:name="com.rwawrzyniak.getby.habits.details.HabitDetailsFragment"
+		android:label="HabitDetailsFragment" >
+		<argument
+			android:name="habitId"
+			app:argType="string" />
+	</fragment>
 </navigation>
