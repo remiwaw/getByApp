@@ -10,15 +10,16 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import com.rwawrzyniak.getby.R
+import com.rwawrzyniak.getby.core.BaseFragment
+import com.rwawrzyniak.getby.core.ChromeConfiguration
 import com.rwawrzyniak.getby.core.SchedulerProvider
 import com.rwawrzyniak.getby.core.ext.date.convertWeekDaysToMaterial
 import com.rwawrzyniak.getby.core.ext.date.convertWeekDaysToStandard
 import com.rwawrzyniak.getby.core.ext.markRequired
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
-import com.rwawrzyniak.getby.databinding.FragmentHabitCreateUpdateDialogBinding
+import com.rwawrzyniak.getby.databinding.FragmentHabitCreateUpdateBinding
 import com.rwawrzyniak.getby.habits.Frequency
 import com.rwawrzyniak.getby.habits.Habit
 import com.rwawrzyniak.getby.habits.HourMinute
@@ -28,16 +29,19 @@ import io.reactivex.Completable
 import io.reactivex.rxkotlin.subscribeBy
 import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_habit_create_update_dialog.*
-import kotlinx.android.synthetic.main.fragment_tour.*
+import kotlinx.android.synthetic.main.fragment_habit_create_update.*
 import timber.log.Timber
 
-class HabitCreateUpdateDialog : Fragment(), AdapterView.OnItemSelectedListener {
-    private lateinit var binding: FragmentHabitCreateUpdateDialogBinding
+class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
+    private lateinit var binding: FragmentHabitCreateUpdateBinding
     private val viewModel by fragmentScopedViewModel { injector.habitsCreateUpdateViewModel }
 	private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
 	private var isUserInput = true // TODO make it better, change to avoid executing listener on text changed.
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setHasOptionsMenu(true)
+	}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +49,7 @@ class HabitCreateUpdateDialog : Fragment(), AdapterView.OnItemSelectedListener {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        binding = FragmentHabitCreateUpdateDialogBinding.inflate(inflater, container, false)
+        binding = FragmentHabitCreateUpdateBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -55,7 +59,6 @@ class HabitCreateUpdateDialog : Fragment(), AdapterView.OnItemSelectedListener {
         savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
         setupPickers()
         setupTextViews()
     }
@@ -66,7 +69,25 @@ class HabitCreateUpdateDialog : Fragment(), AdapterView.OnItemSelectedListener {
 		arguments?.getString(ARG_HABIT_ID)?.let {
 			subscribeTo(viewModel.onAction(HabitCreateUpdateViewAction.LoadHabit(it)))
 		}
-		initializeFullScreen()
+	}
+
+	override fun getChromeConfig(): ChromeConfiguration {
+		val isUpdateView = arguments?.getString(ARG_HABIT_ID) != null
+		return if(isUpdateView){
+			ChromeConfiguration(
+				showActionBar = true,
+				actionBarTitle = getString(R.string.habitsCreateTitle),
+				showBottomNavigationBar = false,
+				showActionBarEditButton = true
+			)
+		} else{
+			ChromeConfiguration(
+				showActionBar = true,
+				actionBarTitle = getString(R.string.habitsCreateTitle),
+				showBottomNavigationBar = false,
+				showActionBarSaveButton = true
+			)
+		}
 	}
 
 	private fun startObservers() {
@@ -124,7 +145,7 @@ class HabitCreateUpdateDialog : Fragment(), AdapterView.OnItemSelectedListener {
 	private fun executeEffect(effect: HabitDetailsViewEffect) {
 		when (effect) {
 			is HabitDetailsViewEffect.ConfigureFields -> showFieldsError(effect)
-			is HabitDetailsViewEffect.DismissPopup -> dismiss()
+			is HabitDetailsViewEffect.GoBack -> goBack()
 		}
 	}
 
@@ -234,17 +255,16 @@ class HabitCreateUpdateDialog : Fragment(), AdapterView.OnItemSelectedListener {
         binding.frequencyPicker.onItemSelectedListener = this
     }
 
-    private fun setupToolbar() {
-        with(toolbar) {
-            setNavigationOnClickListener { nav_host.goToNextScreenButton() }
-            title = "Some Title"
-            inflateMenu(R.menu.menu_add_habit_popup)
-            setOnMenuItemClickListener { item: MenuItem? ->
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		when (item.itemId) {
+			R.id.action_save -> {
 				onSaveHabitClick()
-                true
-            }
-        }
-    }
+				goBack()
+			}
+		}
+
+		return super.onOptionsItemSelected(item)
+	}
 
 	private fun onSaveHabitClick() {
 		subscribeTo(
@@ -314,11 +334,6 @@ class HabitCreateUpdateDialog : Fragment(), AdapterView.OnItemSelectedListener {
 		}
 	}
 
-    private fun initializeFullScreen() {
-        val width = ViewGroup.LayoutParams.MATCH_PARENT
-        val height = ViewGroup.LayoutParams.MATCH_PARENT
-    }
-
 	private fun subscribeTo(completable: Completable) {
 		completable.onErrorComplete()
 			.subscribeOn(schedulerProvider.io())
@@ -331,8 +346,8 @@ class HabitCreateUpdateDialog : Fragment(), AdapterView.OnItemSelectedListener {
         const val ARG_HABIT_ID = "HabitIdArg"
 
         private const val CUSTOM_FREQUENCY_USED =  -1
-        fun create(habitId: String = ""): HabitCreateUpdateDialog =
-            HabitCreateUpdateDialog().apply {
+        fun create(habitId: String = ""): HabitCreateUpdateFragment =
+            HabitCreateUpdateFragment().apply {
 				arguments = Bundle().apply {
 					putString(ARG_HABIT_ID, habitId)
 				}

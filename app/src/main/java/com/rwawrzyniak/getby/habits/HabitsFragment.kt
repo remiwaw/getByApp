@@ -21,7 +21,6 @@ import com.rwawrzyniak.getby.core.ChromeConfiguration
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
-import com.rwawrzyniak.getby.habits.createupdate.HabitCreateUpdateDialog
 import com.rwawrzyniak.getby.habits.details.HabitDetailsFragment.Companion.ARG_HABIT_ID
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,8 +35,6 @@ class HabitsFragment : BaseFragment() {
 				R.id.action_habitsFragment_to_habitDetailsFragment,
 				Bundle().apply { putString(ARG_HABIT_ID, habit.id) }
 			)
-
-			showCreateHabitPopup(habit.id)
 		}
 
 		override fun onCheckboxClicked(habit: Habit) {
@@ -48,6 +45,7 @@ class HabitsFragment : BaseFragment() {
 	override fun getChromeConfig(): ChromeConfiguration = ChromeConfiguration(
 		showActionBar = true,
 		actionBarTitle = getString(R.string.habits_action_bar_title),
+		showActionBarAddButton = true,
 		showBottomNavigationBar = true
 	)
 
@@ -66,6 +64,19 @@ class HabitsFragment : BaseFragment() {
 		val itemTouchHelper = ItemTouchHelper(HabitsSimpleCallback())
 		itemTouchHelper.attachToRecyclerView(binding.daysListView)
 
+		viewModel.firstDay.observe(viewLifecycleOwner) {
+			binding.daysHeaderView.initializeDaysHeader(it)
+		}
+
+		binding.daysListView.adapter = HabitsAdapter(
+				emptyList<Habit>().toMutableList(),
+				onHabitListener = onHabitListener
+			)
+
+		viewModel.habits.observe(viewLifecycleOwner) {
+			(binding.daysListView.adapter as HabitsAdapter).updateHabitListWithDiff(it)
+		}
+
 		binding.habitSearch.addTextChangedListener(object : TextWatcher {
 			override fun afterTextChanged(s: Editable?) {}
 
@@ -76,20 +87,6 @@ class HabitsFragment : BaseFragment() {
 			}
 		})
 
-		viewModel.firstDay.observe(viewLifecycleOwner) {
-			binding.daysHeaderView.initializeDaysHeader(it)
-		}
-
-		viewModel.habits.observe(viewLifecycleOwner) {
-			if(binding.daysListView.adapter == null){
-				binding.daysListView.adapter = HabitsAdapter(
-					it,
-					onHabitListener = onHabitListener
-				)
-			}
-			(binding.daysListView.adapter as HabitsAdapter).updateHabitListWithDiff(it)
-		}
-
 		binding.daysListView.layoutManager = LinearLayoutManager(requireContext())
 
 		return binding.root
@@ -98,7 +95,7 @@ class HabitsFragment : BaseFragment() {
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		val habitsAdapter = binding.daysListView.adapter as HabitsAdapter
 		when (item.itemId) {
-			R.id.menu_top_add -> showCreateHabitPopup()
+			R.id.top_add -> navigateToCreateHabit()
 			R.id.hideArchived -> {
 				if (item.isChecked) {
 					item.isChecked = false
@@ -113,8 +110,8 @@ class HabitsFragment : BaseFragment() {
 		return super.onOptionsItemSelected(item)
 	}
 
-	private fun showCreateHabitPopup(habitId: String = "") {
-		HabitCreateUpdateDialog.create(habitId)
+	private fun navigateToCreateHabit() {
+		nav_host.findNavController().navigate(R.id.action_habitsFragment_to_habitCreateUpdateFragment)
 	}
 
 	private fun showUndoSnackbar(swipedHabit: Habit, swipedAction: SwipedAction) {

@@ -78,7 +78,7 @@ class HabitsCreateUpdateViewModelImpl @Inject constructor(
 		} else {
 			initializeHabitHistoryIfEmpty(habit)
 			habitsRepository.saveHabit(habit)
-				.andThen { effects.onNext(HabitDetailsViewEffect.DismissPopup) }
+				.andThen { effects.onNext(HabitDetailsViewEffect.GoBack) }
 		}
 	}
 

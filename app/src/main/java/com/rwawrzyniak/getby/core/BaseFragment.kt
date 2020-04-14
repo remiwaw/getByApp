@@ -6,7 +6,9 @@ import android.view.MenuItem
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.rwawrzyniak.getby.R
+import kotlinx.android.synthetic.main.activity_main.*
 
 abstract class BaseFragment : Fragment() {
 
@@ -26,7 +28,20 @@ abstract class BaseFragment : Fragment() {
     }
     // endregion
 
-    // region Private Methods
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		val id = item.itemId
+		if (id == android.R.id.home) {
+			goBack()
+			return true
+		}
+		return super.onOptionsItemSelected(item)
+	}
+
+	protected fun goBack() {
+		nav_host.findNavController().popBackStack()
+	}
+
+	// region Private Methods
     private fun configureChrome(config: ChromeConfiguration) {
         setupActionBar(config)
         updateHomeAsUpButtonState(config.showActionBarUpButton)
@@ -57,7 +72,8 @@ abstract class BaseFragment : Fragment() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        val item: MenuItem = menu.findItem(R.id.menu_top_add)
-        item.isVisible = true
+		menu.findItem(R.id.top_add).isVisible = getChromeConfig().showActionBarAddButton
+		menu.findItem(R.id.action_save).isVisible = getChromeConfig().showActionBarSaveButton
+		menu.findItem(R.id.action_edit).isVisible = getChromeConfig().showActionBarEditButton
     }
 }

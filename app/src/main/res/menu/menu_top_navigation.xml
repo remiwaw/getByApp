@@ -3,13 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_top_add"
+        android:id="@+id/top_add"
         android:visible="false"
         android:icon="@android:drawable/ic_input_add"
         app:showAsAction="always"
         android:title="@string/top_action_bar_plus_action" />
 
-		<item
+	<item
+		android:id="@+id/action_save"
+		android:title="@string/save"
+		android:icon="@android:drawable/ic_menu_save"
+		app:showAsAction="ifRoom" />
+
+	<item
+		android:id="@+id/action_edit"
+		android:title="@string/save"
+		android:icon="@android:drawable/ic_menu_edit"
+		app:showAsAction="ifRoom" />
+
+	<item
 			android:id="@+id/moreVertical"
 			android:icon="@drawable/ic_more_vert_24px"
 		android:title="@string/topToolbar_action_more_vertical"
