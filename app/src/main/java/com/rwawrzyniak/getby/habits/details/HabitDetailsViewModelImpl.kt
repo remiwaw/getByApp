@@ -2,6 +2,7 @@ package com.rwawrzyniak.getby.habits.details
 
 import android.content.res.Resources
 import androidx.lifecycle.ViewModel
+import com.github.mikephil.charting.data.Entry
 import com.rwawrzyniak.getby.core.DateTimeProvider
 import com.rwawrzyniak.getby.habits.HabitsRepository
 import io.reactivex.Completable
@@ -27,7 +28,21 @@ class HabitDetailsViewModelImpl @Inject constructor(
 ) : HabitDetailsViewModel() {
 	private val compositeDisposable = CompositeDisposable()
 	private val effects: Subject<HabitDetailsViewEffect> = PublishSubject.create<HabitDetailsViewEffect>()
-	private val state = BehaviorSubject.createDefault(HabitDetailsViewState(false))
+	private val state = BehaviorSubject.createDefault(createDefaultState())
+
+	private fun createDefaultState(): HabitDetailsViewState {
+		return HabitDetailsViewState(
+			linearChartEntries = calculateLinearChartEntries()
+		)
+	}
+
+	private fun calculateLinearChartEntries(): List<Entry> =
+		(0 until 100).map { index ->
+			Entry(
+				index.toFloat(),
+				(index * 1.5).toFloat()
+			)
+		}
 
 	override fun onCleared() {
 		super.onCleared()
@@ -40,15 +55,15 @@ class HabitDetailsViewModelImpl @Inject constructor(
 
 	override fun onAction(action: HabitDetailsViewAction): Completable {
 		return when(action){
-			is HabitDetailsViewAction.LoadHabit -> loadHabit(action.habitId)
+			is HabitDetailsViewAction.LoadHabit -> TODO()
 			is HabitDetailsViewAction.OnSaveHabitClicked -> TODO()
 			is HabitDetailsViewAction.OnInputFieldStateChanged -> TODO()
 		}
 	}
 
-	private fun loadHabit(habitId: String): Completable {
-		return habitsRepository.getSingle(habitId).flatMapCompletable {
-			Completable.fromAction { state.onNext(HabitDetailsViewState(true, it)) }
-		}
-	}
+	// private fun loadHabit(habitId: String): Completable {
+	// 	return habitsRepository.getSingle(habitId).flatMapCompletable {
+	// 		Completable.fromAction { state.onNext(HabitDetailsViewState(true, it)) }
+	// 	}
+	// }
 }

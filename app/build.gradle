@@ -92,8 +92,7 @@ dependencies {
     implementation "io.sellmair:disposer:$rootProject.disposerVersion"
     implementation "com.wdullaer:materialdatetimepicker:$rootProject.materialDateTimePickerVersion"
 	implementation "ca.antonious:materialdaypicker:$rootProject.materialDateRowPickerVersion"
-	implementation "com.github.AnyChart:AnyChart-Android:$rootProject.anyChartVersion"
-
+	implementation "com.github.PhilJay:MPAndroidChart:$rootProject.MPAndroidChartVersion"
 
 	//Android
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin_version"

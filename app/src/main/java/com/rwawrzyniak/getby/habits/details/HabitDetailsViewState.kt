@@ -1,9 +1,7 @@
 package com.rwawrzyniak.getby.habits.details
 
-import com.rwawrzyniak.getby.habits.Habit
+import com.github.mikephil.charting.data.Entry
 
 data class HabitDetailsViewState(
-	val isUpdateMode: Boolean = false,
-	val backingHabit: Habit? = null
+	val linearChartEntries: List<Entry>
 )
-

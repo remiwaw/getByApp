@@ -47,7 +47,7 @@ buildscript {
         timberVersion = '4.7.1'
         materialVersion = '1.1.0-alpha09'
 		materialDateRowPickerVersion = '0.7.2'
-		anyChartVersion = '1.1.2'
+		MPAndroidChartVersion = 'v3.0.3'
 
         // 3rd party dependencies
         carouselVersion = '0.1.5'
