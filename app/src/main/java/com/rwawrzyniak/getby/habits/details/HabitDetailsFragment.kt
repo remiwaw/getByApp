@@ -56,29 +56,21 @@ class HabitDetailsFragment : BaseFragment() {
 		var xAxis: XAxis = binding.lineChart.xAxis
 		xAxis.position = XAxis.XAxisPosition.BOTTOM
 		// xAxis.enableGridDashedLine(10f, 10f, 0f)
-		//
-		// var yAxis: YAxis =  binding.lineChart.axisLeft
-		// yAxis.enableGridDashedLine(10f, 10f, 0f)
-		// yAxis.axisMaximum = 200f
-		// yAxis.axisMinimum = -50f
+
+		var yAxis = binding.lineChart.axisLeft
+		yAxis.axisMaximum = 1f
+		yAxis.axisMinimum =  0f
 
 		binding.lineChart.axisRight.isEnabled = false
 
 		return binding.root
     }
 
-
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-		super.onViewCreated(view, savedInstanceState)
-    }
-
 	override fun onStart() {
 		super.onStart()
 		startObservers()
 		habitId = requireNotNull(arguments?.getString(ARG_HABIT_ID))
+		subscribeTo(viewModel.onAction(HabitDetailsViewAction.InitializeView(habitId)))
 	}
 
 	private fun startObservers() {
@@ -122,6 +114,9 @@ class HabitDetailsFragment : BaseFragment() {
 	}
 
 	private fun renderState(state: HabitDetailsViewState) {
+		if(state.linearChartEntries.isEmpty())
+			return
+
 		val set1: LineDataSet
 
 		if (lineChart.data != null &&
@@ -134,7 +129,6 @@ class HabitDetailsFragment : BaseFragment() {
 			lineChart.notifyDataSetChanged()
 		} else {
 			set1 = LineDataSet(state.linearChartEntries, "DataSet 1")
-
 
 			set1.color = Color.BLACK
 			set1.setCircleColor(Color.BLACK)

@@ -10,15 +10,11 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 class CalculateHabitDayScoreUseCase @Inject constructor(private val habitsRepository: HabitsRepository) {
-	fun calculateScoreForMoreDays(startDate: LocalDate, endDate: LocalDate) {
-	}
-
 	fun calculateScoreForDayRange(
 		habitId: String,
 		startDate: LocalDate,
 		endDate: LocalDate
 	): Single<List<DayScore>> =
-
 		habitsRepository.getSingle(habitId)
 			.map { habit ->
 				datesBetween(startDate, endDate).map { givenDay ->
@@ -26,7 +22,7 @@ class CalculateHabitDayScoreUseCase @Inject constructor(private val habitsReposi
 						.sumBy { habitDay -> habitDay.checked.toInt() }
 					val validTotalPoints =
 						if (totalPointsInCycle > habit.frequency.times)
-						habit.frequency.times else totalPointsInCycle
+							habit.frequency.times else totalPointsInCycle
 
 					DayScore(givenDay, validTotalPoints)
 				}
