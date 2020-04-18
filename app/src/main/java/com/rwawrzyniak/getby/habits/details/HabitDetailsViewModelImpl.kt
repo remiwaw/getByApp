@@ -59,12 +59,12 @@ class HabitDetailsViewModelImpl @Inject constructor(
 		dateStart: LocalDate,
 		daysToShow: Long = 7
 	): Single<MutableList<Entry>> {
-		return calculateHabitDayScoreUseCase.calculateScoreForDayRange(
+		return calculateHabitDayScoreUseCase.calculateScoreForDayRangeExcludingStart(
 			habitId,
 			dateStart.minusDays(daysToShow),
 			dateStart
 		).flattenAsObservable { it }
-			.map { Entry(it.date.dayOfMonth.toFloat(), it.score.toFloat()) }
+			.map { Entry(it.date.dayOfMonth.toFloat(), it.fulfilledPercentage.toFloat()) }
 			.toList()
 	}
 

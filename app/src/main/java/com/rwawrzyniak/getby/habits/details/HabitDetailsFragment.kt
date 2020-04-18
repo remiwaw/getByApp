@@ -58,7 +58,7 @@ class HabitDetailsFragment : BaseFragment() {
 		// xAxis.enableGridDashedLine(10f, 10f, 0f)
 
 		var yAxis = binding.lineChart.axisLeft
-		yAxis.axisMaximum = 1f
+		yAxis.axisMaximum = 100f
 		yAxis.axisMinimum =  0f
 
 		binding.lineChart.axisRight.isEnabled = false

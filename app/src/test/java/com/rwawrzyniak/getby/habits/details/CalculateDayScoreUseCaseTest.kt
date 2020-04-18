@@ -27,11 +27,11 @@ internal class CalculateDayScoreUseCaseTest {
 
 	@Test
     fun calculateScoreForDayNotExceedingMaximumTimesPerCycle() {
-		val startDate = LocalDate.of(2020,12,20)
+		val startDate = LocalDate.of(2020,12,19)
 		val endDate = LocalDate.of(2020,12,21)
 		val expectedDayScoreList = listOf(
-			DayScore(LocalDate.of(2020,12,20), 2),
-			DayScore(LocalDate.of(2020,12,21), 3)
+			DayScore(LocalDate.of(2020,12,20), 66),
+			DayScore(LocalDate.of(2020,12,21), 100)
 		)
 		val testHabitId = "12345"
 		val frequency = Frequency(
@@ -53,7 +53,7 @@ internal class CalculateDayScoreUseCaseTest {
 			on { getSingle(any()) } doReturn Single.just(testHabit)
 		}
 
-		sut().calculateScoreForDayRange(testHabitId, startDate, endDate)
+		sut().calculateScoreForDayRangeExcludingStart(testHabitId, startDate, endDate)
 			.test()
 			.assertValue(expectedDayScoreList)
 	}
@@ -61,11 +61,11 @@ internal class CalculateDayScoreUseCaseTest {
 
 	@Test
 	fun calculateScoreForDayExceedingMaximumTimesPerCycle() {
-		val startDate = LocalDate.of(2020,12,20)
+		val startDate = LocalDate.of(2020,12,19)
 		val endDate = LocalDate.of(2020,12,21)
 		val expectedDayScoreList = listOf(
-			DayScore(LocalDate.of(2020,12,20), 3),
-			DayScore(LocalDate.of(2020,12,21), 3)
+			DayScore(LocalDate.of(2020,12,20), 100),
+			DayScore(LocalDate.of(2020,12,21), 100)
 		)
 		val testHabitId = "12345"
 		val frequency = Frequency(
@@ -87,7 +87,7 @@ internal class CalculateDayScoreUseCaseTest {
 			on { getSingle(any()) } doReturn Single.just(testHabit)
 		}
 
-		sut().calculateScoreForDayRange(testHabitId, startDate, endDate)
+		sut().calculateScoreForDayRangeExcludingStart(testHabitId, startDate, endDate)
 			.test()
 			.assertValue(expectedDayScoreList)
 	}

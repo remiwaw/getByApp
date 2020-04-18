@@ -10,7 +10,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 class CalculateHabitDayScoreUseCase @Inject constructor(private val habitsRepository: HabitsRepository) {
-	fun calculateScoreForDayRange(
+	fun calculateScoreForDayRangeExcludingStart(
 		habitId: String,
 		startDate: LocalDate,
 		endDate: LocalDate
@@ -24,7 +24,8 @@ class CalculateHabitDayScoreUseCase @Inject constructor(private val habitsReposi
 						if (totalPointsInCycle > habit.frequency.times)
 							habit.frequency.times else totalPointsInCycle
 
-					DayScore(givenDay, validTotalPoints)
+					val fulfilledPercentage = ((validTotalPoints.toDouble()/habit.frequency.times.toDouble())*100).toInt()
+					DayScore(givenDay, fulfilledPercentage)
 				}
 			}
 }
