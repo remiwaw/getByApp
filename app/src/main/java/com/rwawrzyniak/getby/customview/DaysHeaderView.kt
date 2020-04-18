@@ -21,8 +21,8 @@ class DaysHeaderView(context: Context, attrs: AttributeSet) : ConstraintLayout(c
     }
 
     fun initializeDaysHeader(firstDayAsCalendar: LocalDate) {
-        days_list_layout.children.forEachIndexed { index, item: View ->
-            val currentDay = firstDayAsCalendar.plusDays(index.toLong()).toDayHeaderDto
+        days_list_layout.children.toList().reversed().forEachIndexed { index, item: View ->
+            val currentDay = firstDayAsCalendar.minusDays(index.toLong()).toDayHeaderDto
             item.dayNameView.text = currentDay.shortName
             item.dayNumberView.text = currentDay.number.toString()
         }

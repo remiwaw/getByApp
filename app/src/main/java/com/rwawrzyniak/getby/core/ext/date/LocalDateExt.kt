@@ -12,17 +12,17 @@ val LocalDate.toDayHeaderDto: DayHeaderDto
 	)
 
 
-fun LocalDate.datesInRangeFromToday(lastDays: Long, futureDays: Long): List<LocalDate> = datesBetween(this.minusDays(lastDays), this.plusDays(futureDays))
+fun LocalDate.datesInRangeFromToday(lastDays: Long, futureDays: Long): List<LocalDate> = datesBetweenExcludingStartIncludingEnd(this.minusDays(lastDays), this.plusDays(futureDays))
 
-fun LocalDate.getLastNDays(lastDays: Long): List<LocalDate> = datesBetween(this.minusDays(lastDays), this)
+fun LocalDate.getLastNDays(lastDays: Long): List<LocalDate> = datesBetweenExcludingStartIncludingEnd(this.minusDays(lastDays), this)
 
-fun datesBetween(
+fun datesBetweenExcludingStartIncludingEnd(
 	start: LocalDate,
 	end: LocalDate?
 ): List<LocalDate> {
 	require(start.isBefore(end)){ "Start day must be before end day"}
 	val ret: MutableList<LocalDate> = ArrayList()
-	var date = start
+	var date = start.plusDays(1)
 	while (!date.isAfter(end)) {
 		ret.add(date)
 		date = date.plusDays(1)

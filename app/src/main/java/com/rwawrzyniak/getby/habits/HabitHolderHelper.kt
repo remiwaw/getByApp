@@ -10,7 +10,7 @@ class HabitHolderHelper @Inject constructor(private val dateTimeProvider: DateTi
 		val daysDisplayed: List<LocalDate> = dateTimeProvider.getCurrentDate().getLastNDays(checkboxListSize.toLong())
 
 		return history.filter {
-			it.day.isAfter(daysDisplayed.first().minusDays(1)) && it.day.isBefore(daysDisplayed.last())
+			it.day.isAfter(daysDisplayed.first().minusDays(1)) && it.day.isBefore(daysDisplayed.last().plusDays(1))
 		}
 	}
 }
