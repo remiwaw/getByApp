@@ -37,13 +37,15 @@ class HabitDetailsViewModelImpl @Inject constructor(
 		)
 	}
 
-	private fun calculateLinearChartEntries(): List<Entry> =
-		(0 until 10).map { index ->
+	private fun calculateLinearChartEntries(): List<Entry> {
+		// calculateHabitDayScoreUseCase.calculateScoreForDay()
+		return (0 until 10).map { index ->
 			Entry(
 				index.toFloat(),
 				(index * 10).toFloat()
 			)
 		}
+	}
 
 	override fun onCleared() {
 		super.onCleared()

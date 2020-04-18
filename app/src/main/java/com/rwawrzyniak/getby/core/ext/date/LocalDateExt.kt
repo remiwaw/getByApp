@@ -16,7 +16,7 @@ fun LocalDate.datesInRangeFromToday(lastDays: Long, futureDays: Long): List<Loca
 
 fun LocalDate.getLastNDays(lastDays: Long): List<LocalDate> = datesBetween(this.minusDays(lastDays), this)
 
-private fun datesBetween(
+fun datesBetween(
 	start: LocalDate,
 	end: LocalDate?
 ): List<LocalDate> {

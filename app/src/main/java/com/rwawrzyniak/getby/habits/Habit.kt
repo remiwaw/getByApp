@@ -27,6 +27,7 @@ data class HourMinute(val hour: Int, val minutes: Int){
 	}
 }
 data class HabitDay(val day: LocalDate, val dayNumber: Int, var checked: Boolean = false)
+data class DayScore(val date: LocalDate, val score: Int)
 
 fun Habit.getHabitDaysInCycle(today: LocalDate): List<HabitDay> = this.history.filter {
 	it.day.isAfter(today.minusDays(this.frequency.cycle.toLong())) && it.day.isBefore(today.plusDays(1))
