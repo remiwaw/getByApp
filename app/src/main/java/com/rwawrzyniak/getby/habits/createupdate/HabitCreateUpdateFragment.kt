@@ -123,7 +123,7 @@ class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedList
 	private fun renderFrequency(backingHabit: Habit) {
 		if (shouldDisplayCustomFrequency(backingHabit.frequency)) {
 			binding.customFrequencyView.setTimes(backingHabit.frequency.times)
-			binding.customFrequencyView.setDays(backingHabit.frequency.days)
+			binding.customFrequencyView.setDays(backingHabit.frequency.cycle)
 			showCustomFrequency()
 		} else {
 			binding.frequencyPicker.setSelection(getFrequencySpinnerIndex(backingHabit.frequency))

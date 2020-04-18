@@ -13,7 +13,7 @@ import io.reactivex.Single
 interface HabitDao {
 
 	@Query("SELECT * FROM habit WHERE id=:id ")
-	fun getSingle(id: String): Single<Habit>
+	fun getById(id: String): Single<Habit>
 
 	@Query("SELECT * FROM habit")
 	fun getAll(): LiveData<MutableList<Habit>>

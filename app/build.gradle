@@ -111,7 +111,13 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
 
-    testImplementation "junit:junit:$rootProject.junitVersion"
+	// Tests
+	testImplementation "junit:junit:$rootProject.junitVersion"
+
+	testImplementation  "org.mockito:mockito-inline:$rootProject.mockitoVersion"
+	testImplementation  "org.mockito:mockito-android:$rootProject.mockitoVersion"
+	testImplementation  "com.nhaarman.mockitokotlin2:mockito-kotlin:$rootProject.mockitoKotlinVersion"
+	testImplementation 	"org.hamcrest:hamcrest-library:$rootProject.hamcrestVersion"
 
     implementation "com.synnapps:carouselview:$rootProject.carouselVersion"
 }

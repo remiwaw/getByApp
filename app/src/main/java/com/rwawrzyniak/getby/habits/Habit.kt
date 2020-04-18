@@ -18,7 +18,7 @@ data class Habit(
 	@ColumnInfo var isArchived: Boolean = false
 )
 
-data class Frequency(val times: Int, val days: Int)
+data class Frequency(val times: Int, val cycle: Int)
 data class Reminder(val time: HourMinute, val days: List<DayOfWeek> = emptyList())
 data class HourMinute(val hour: Int, val minutes: Int){
 	override fun toString(): String {
@@ -27,3 +27,7 @@ data class HourMinute(val hour: Int, val minutes: Int){
 	}
 }
 data class HabitDay(val day: LocalDate, val dayNumber: Int, var checked: Boolean = false)
+
+fun Habit.getHabitDaysInCycle(today: LocalDate): List<HabitDay> = this.history.filter {
+	it.day.isAfter(today.minusDays(this.frequency.cycle.toLong())) && it.day.isBefore(today.plusDays(1))
+}

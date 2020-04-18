@@ -100,7 +100,7 @@ class HabitsCreateUpdateViewModelImpl @Inject constructor(
 		}
 
 	private fun checkFrequencyState(frequency: Frequency): InputFieldState =
-		if (frequency.times > frequency.days) {
+		if (frequency.times > frequency.cycle) {
 			InputFieldState(
 				isEnabled = true,
 				isError = true,

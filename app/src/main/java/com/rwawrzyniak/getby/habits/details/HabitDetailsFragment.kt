@@ -1,7 +1,6 @@
 package com.rwawrzyniak.getby.habits.details
 
 import android.graphics.Color
-import android.graphics.DashPathEffect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
@@ -54,17 +52,15 @@ class HabitDetailsFragment : BaseFragment() {
 
 		// binding.lineChart.setOnChartValueSelectedListener(this)
 		binding.lineChart.setDrawGridBackground(false)
-		binding.lineChart.isDragEnabled = true
-		binding.lineChart.setScaleEnabled(true)
-		binding.lineChart.setPinchZoom(true)
 
 		var xAxis: XAxis = binding.lineChart.xAxis
-		xAxis.enableGridDashedLine(10f, 10f, 0f)
-
-		var yAxis: YAxis =  binding.lineChart.axisLeft
-		yAxis.enableGridDashedLine(10f, 10f, 0f)
-		yAxis.axisMaximum = 200f
-		yAxis.axisMinimum = -50f
+		xAxis.position = XAxis.XAxisPosition.BOTTOM
+		// xAxis.enableGridDashedLine(10f, 10f, 0f)
+		//
+		// var yAxis: YAxis =  binding.lineChart.axisLeft
+		// yAxis.enableGridDashedLine(10f, 10f, 0f)
+		// yAxis.axisMaximum = 200f
+		// yAxis.axisMinimum = -50f
 
 		binding.lineChart.axisRight.isEnabled = false
 
@@ -139,8 +135,6 @@ class HabitDetailsFragment : BaseFragment() {
 		} else {
 			set1 = LineDataSet(state.linearChartEntries, "DataSet 1")
 
-			set1.setDrawIcons(false)
-			set1.enableDashedLine(10f, 5f, 0f)
 
 			set1.color = Color.BLACK
 			set1.setCircleColor(Color.BLACK)
@@ -150,13 +144,7 @@ class HabitDetailsFragment : BaseFragment() {
 
 			set1.setDrawCircleHole(false)
 
-			set1.formLineWidth = 1f
-			set1.formLineDashEffect = DashPathEffect(floatArrayOf(10f, 5f), 0f)
-			set1.formSize = 15f
-
 			set1.valueTextSize = 9f
-
-			set1.enableDashedHighlightLine(10f, 5f, 0f)
 
 			val dataSets = ArrayList<ILineDataSet>()
 			dataSets.add(set1)

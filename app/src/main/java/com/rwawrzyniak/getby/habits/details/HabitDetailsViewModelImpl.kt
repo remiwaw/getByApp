@@ -24,7 +24,8 @@ abstract class HabitDetailsViewModel: ViewModel() {
 class HabitDetailsViewModelImpl @Inject constructor(
     private val habitsRepository: HabitsRepository,
 	private val resources: Resources,
-	private val dateTimeProvider: DateTimeProvider
+	private val dateTimeProvider: DateTimeProvider,
+	private val calculateHabitDayScoreUseCase: CalculateHabitDayScoreUseCase
 ) : HabitDetailsViewModel() {
 	private val compositeDisposable = CompositeDisposable()
 	private val effects: Subject<HabitDetailsViewEffect> = PublishSubject.create<HabitDetailsViewEffect>()
@@ -37,10 +38,10 @@ class HabitDetailsViewModelImpl @Inject constructor(
 	}
 
 	private fun calculateLinearChartEntries(): List<Entry> =
-		(0 until 100).map { index ->
+		(0 until 10).map { index ->
 			Entry(
 				index.toFloat(),
-				(index * 1.5).toFloat()
+				(index * 10).toFloat()
 			)
 		}
 
@@ -60,10 +61,4 @@ class HabitDetailsViewModelImpl @Inject constructor(
 			is HabitDetailsViewAction.OnInputFieldStateChanged -> TODO()
 		}
 	}
-
-	// private fun loadHabit(habitId: String): Completable {
-	// 	return habitsRepository.getSingle(habitId).flatMapCompletable {
-	// 		Completable.fromAction { state.onNext(HabitDetailsViewState(true, it)) }
-	// 	}
-	// }
 }
