@@ -2,8 +2,10 @@ package com.rwawrzyniak.getby.habits.details
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
@@ -11,7 +13,10 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture
+import com.github.mikephil.charting.listener.OnChartGestureListener
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.BaseFragment
 import com.rwawrzyniak.getby.core.ChromeConfiguration
@@ -30,7 +35,7 @@ import timber.log.Timber
 import java.time.LocalDate
 import java.util.ArrayList
 
-class HabitDetailsFragment : BaseFragment() {
+class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
     private lateinit var binding: FragmentHabitDetailsBinding
     private val viewModel by fragmentScopedViewModel { injector.habitDetailsViewModel }
 	private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
@@ -49,25 +54,7 @@ class HabitDetailsFragment : BaseFragment() {
     ): View? {
         binding = FragmentHabitDetailsBinding.inflate(inflater, container, false)
 
-		binding.lineChart.setBackgroundColor(Color.WHITE)
-		binding.lineChart.description.isEnabled = false
-		binding.lineChart.setTouchEnabled(true)
-
-		// binding.lineChart.setOnChartValueSelectedListener(this)
-		binding.lineChart.setDrawGridBackground(false)
-
-		var xAxis: XAxis = binding.lineChart.xAxis
-		xAxis.position = XAxis.XAxisPosition.BOTTOM
-		xAxis.valueFormatter = IAxisValueFormatter { value, _ -> LocalDate.ofEpochDay(value.toLong()).toShortForm() }
-		xAxis.labelRotationAngle = 45f
-		// xAxis.enableGridDashedLine(10f, 10f, 0f)
-
-		var yAxis = binding.lineChart.axisLeft
-		yAxis.valueFormatter = IAxisValueFormatter { value, _ -> "$value%" }
-		yAxis.axisMaximum = 100f
-		yAxis.axisMinimum =  0f
-
-		binding.lineChart.axisRight.isEnabled = false
+		setupLinearChart()
 
 		return binding.root
     }
@@ -127,6 +114,37 @@ class HabitDetailsFragment : BaseFragment() {
 		if(state.linearChartEntries.isEmpty())
 			return
 
+		renderLinearChart(state)
+	}
+
+	private fun setupLinearChart() {
+		binding.lineChart.setBackgroundColor(Color.WHITE)
+		binding.lineChart.description.isEnabled = false
+		binding.lineChart.setTouchEnabled(true)
+
+		// binding.lineChart.setOnChartValueSelectedListener(this)
+		binding.lineChart.setDrawGridBackground(false)
+
+		// enable dragging
+		binding.lineChart.isDragYEnabled = true
+		binding.lineChart.onChartGestureListener = this
+
+		var xAxis: XAxis = binding.lineChart.xAxis
+		xAxis.position = XAxis.XAxisPosition.BOTTOM
+		xAxis.valueFormatter =
+			IAxisValueFormatter { value, _ -> LocalDate.ofEpochDay(value.toLong()).toShortForm() }
+		xAxis.labelRotationAngle = 60f
+		// xAxis.enableGridDashedLine(10f, 10f, 0f)
+
+		var yAxis = binding.lineChart.axisLeft
+		yAxis.valueFormatter = IAxisValueFormatter { value, _ -> "$value%" }
+		yAxis.axisMaximum = 100f
+		yAxis.axisMinimum = 0f
+
+		binding.lineChart.axisRight.isEnabled = false
+	}
+
+	private fun renderLinearChart(state: HabitDetailsViewState) {
 		val set1: LineDataSet
 
 		if (lineChart.data != null &&
@@ -157,7 +175,9 @@ class HabitDetailsFragment : BaseFragment() {
 			lineChart.data = data
 		}
 
-		lineChart.invalidate()
+		binding.lineChart.setVisibleXRangeMaximum(7f)
+		binding.lineChart.moveViewToX(state.todayEpochDay.toFloat())
+		// lineChart.invalidate()
 	}
 
 	private fun subscribeTo(completable: Completable) {
@@ -165,6 +185,79 @@ class HabitDetailsFragment : BaseFragment() {
 			.subscribeOn(schedulerProvider.io())
 			.subscribeBy(onError = Timber::e)
 			.disposeBy(lifecycle.onStop)
+	}
+
+	override fun onChartGestureStart(
+		me: MotionEvent,
+		lastPerformedGesture: ChartGesture?
+	) {
+		Log.i("Gesture", "START, x: " + me.x + ", y: " + me.y)
+	}
+
+	override fun onChartGestureEnd(
+		me: MotionEvent?,
+		lastPerformedGesture: ChartGesture
+	) {
+		Log.i("Gesture", "END, lastGesture: $lastPerformedGesture")
+		// un-highlight values after the gesture is finished and no single-tap
+		if (lastPerformedGesture != ChartGesture.SINGLE_TAP) // or highlightTouch(null) for callback to onNothingSelected(...)
+			binding.lineChart.highlightValues(null)
+	}
+
+	override fun onChartLongPressed(me: MotionEvent?) {
+		Log.i("LongPress", "Chart longpressed.")
+	}
+
+	override fun onChartDoubleTapped(me: MotionEvent?) {
+		Log.i("DoubleTap", "Chart double-tapped.")
+	}
+
+	override fun onChartSingleTapped(me: MotionEvent?) {
+		Log.i("SingleTap", "Chart single-tapped.")
+	}
+
+	override fun onChartFling(
+		me1: MotionEvent?, me2: MotionEvent?,
+		velocityX: Float, velocityY: Float
+	) {
+		Log.i(
+			"Fling", "Chart flinged. VeloX: "
+				+ velocityX + ", VeloY: " + velocityY
+		)
+	}
+
+	override fun onChartScale(
+		me: MotionEvent?,
+		scaleX: Float,
+		scaleY: Float
+	) {
+		Log.i("Scale / Zoom", "ScaleX: $scaleX, ScaleY: $scaleY")
+	}
+
+	override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {
+		Log.i("Translate / Move", "dX: $dX, dY: $dY")
+	}
+
+	fun onValueSelected(
+		e: Map.Entry<*, *>,
+		dataSetIndex: Int,
+		h: Highlight?
+	) {
+		Log.i("Entry selected", e.toString())
+		Log.i(
+			"LOWHIGH", "low: " + binding.lineChart.lowestVisibleX
+				.toString() + ", high: " + binding.lineChart.highestVisibleX
+		)
+		Log.i(
+			"MIN MAX", "xmin: " + binding.lineChart.xChartMin
+				.toString() + ", xmax: " + binding.lineChart.xChartMax
+				.toString() + ", ymin: " + binding.lineChart.yChartMin
+				.toString() + ", ymax: " + binding.lineChart.yChartMax
+		)
+	}
+
+	fun onNothingSelected() {
+		Log.i("Nothing selected", "Nothing selected.")
 	}
 
     companion object {

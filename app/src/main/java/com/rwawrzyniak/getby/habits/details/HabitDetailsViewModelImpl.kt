@@ -64,7 +64,8 @@ class HabitDetailsViewModelImpl @Inject constructor(
 						linearChartEntries,
 						habit.name,
 						resources.getString(R.string.frequencyTextInDetails, habit.frequency.times, habit.frequency.cycle),
-						if(habit.reminder == null) resources.getString(R.string.reminderDefaultValue) else habit.reminder.toString()
+						if(habit.reminder == null) resources.getString(R.string.reminderDefaultValue) else habit.reminder.toString(),
+						dateTimeProvider.getCurrentDate().toEpochDay()
 					)) }
 				}
 			}
@@ -73,7 +74,7 @@ class HabitDetailsViewModelImpl @Inject constructor(
 	private fun calculateLinearChartEntries(
 		habit: Habit,
 		dateStart: LocalDate,
-		daysToShow: Long = 7
+		daysToShow: Long = 28
 	): Single<MutableList<Entry>> {
 		return calculateHabitDayScoreUseCase.calculateScoreForDayRangeExcludingStart(
 			habit,
