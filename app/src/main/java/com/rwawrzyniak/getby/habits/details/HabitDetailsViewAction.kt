@@ -4,6 +4,7 @@ import com.rwawrzyniak.getby.habits.Habit
 
 sealed class HabitDetailsViewAction {
 	internal class InitializeView(val habitId: String) : HabitDetailsViewAction()
+	internal class LowestVisibleXBecomesVisible(val firstVisibleEpochDay: Int) : HabitDetailsViewAction()
 	internal class OnSaveHabitClicked(val habit: Habit) : HabitDetailsViewAction()
 	internal class OnInputFieldStateChanged(
 		val isNameFieldEmpty: Boolean,

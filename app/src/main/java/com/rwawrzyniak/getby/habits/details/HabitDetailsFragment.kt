@@ -39,7 +39,7 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
     private lateinit var binding: FragmentHabitDetailsBinding
     private val viewModel by fragmentScopedViewModel { injector.habitDetailsViewModel }
 	private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
-	private var isUserInput = true // TODO make it better, change to avoid executing listener on text changed.
+	private var busyIndicatorLinearGraph = false // TODO make it better
 	private lateinit var habitId: String
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -129,6 +129,8 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		binding.lineChart.isDragYEnabled = true
 		binding.lineChart.onChartGestureListener = this
 
+		// binding.lineChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
+
 		var xAxis: XAxis = binding.lineChart.xAxis
 		xAxis.position = XAxis.XAxisPosition.BOTTOM
 		xAxis.valueFormatter =
@@ -153,8 +155,13 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 			set1 = lineChart.data.getDataSetByIndex(0) as LineDataSet
 			set1.values = state.linearChartEntries
 			set1.notifyDataSetChanged()
+
+			val lowestVisibleX = binding.lineChart.lowestVisibleX
+			val highestVisibleX = binding.lineChart.highestVisibleX
+
 			lineChart.data.notifyDataChanged()
 			lineChart.notifyDataSetChanged()
+
 		} else {
 			set1 = LineDataSet(state.linearChartEntries, "DataSet 1")
 
@@ -173,11 +180,10 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 
 			val data = LineData(dataSets)
 			lineChart.data = data
+			binding.lineChart.moveViewToX(binding.lineChart.xAxis.axisMaximum)
 		}
 
 		binding.lineChart.setVisibleXRangeMaximum(7f)
-		binding.lineChart.moveViewToX(state.todayEpochDay.toFloat())
-		// lineChart.invalidate()
 	}
 
 	private fun subscribeTo(completable: Completable) {
@@ -234,8 +240,16 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		Log.i("Scale / Zoom", "ScaleX: $scaleX, ScaleY: $scaleY")
 	}
 
-	override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {
-		Log.i("Translate / Move", "dX: $dX, dY: $dY")
+	override fun onChartTranslate(me: MotionEvent, dX: Float, dY: Float) {
+		if(busyIndicatorLinearGraph.not() && dX > 0 && binding.lineChart.xAxis.axisMinimum == binding.lineChart.lowestVisibleX){
+			busyIndicatorLinearGraph = true
+			viewModel.onAction(HabitDetailsViewAction.LowestVisibleXBecomesVisible(binding.lineChart.lowestVisibleX.toInt()))
+				.onErrorComplete()
+				.subscribeOn(schedulerProvider.io())
+				.observeOn(schedulerProvider.main())
+				.subscribeBy(onComplete = { busyIndicatorLinearGraph = false }, onError = Timber::e)
+				.disposeBy(lifecycle.onStop)
+		}
 	}
 
 	fun onValueSelected(

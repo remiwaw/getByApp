@@ -46,48 +46,85 @@ class HabitDetailsViewModelImpl @Inject constructor(
 			is HabitDetailsViewAction.InitializeView -> updateLinearChartView(action.habitId)
 			is HabitDetailsViewAction.OnSaveHabitClicked -> TODO()
 			is HabitDetailsViewAction.OnInputFieldStateChanged -> TODO()
+			is HabitDetailsViewAction.LowestVisibleXBecomesVisible -> updateLinearChartViewOnScroll(action.firstVisibleEpochDay)
+		}
+	}
+
+	private fun updateLinearChartViewOnScroll(firstVisibleEpochDay: Int): Completable {
+		if (firstVisibleEpochDay == 0)
+			return Completable.complete()
+
+		return calculateLinearChartEntries(
+			requireNotNull(state.value?.habit),
+			dateTimeProvider.convertEpochToLocalDate(firstVisibleEpochDay.toLong())
+		).flatMapCompletable { newEntries ->
+			updateState { viewState ->
+				viewState.copy(
+					linearChartEntries = newEntries + viewState.linearChartEntries
+				)
+			}
 		}
 	}
 
 	private fun updateLinearChartView(
 		habitId: String,
 		fromDate: LocalDate = dateTimeProvider.getCurrentDate()
-	): Completable {
-		return habitsRepository.getSingle(habitId)
-			.flatMapCompletable { habit ->
-				calculateLinearChartEntries(
-					habit,
-					fromDate
-				).flatMapCompletable {
-					linearChartEntries ->
-					Completable.fromAction { state.onNext(HabitDetailsViewState(
-						linearChartEntries,
-						habit.name,
-						resources.getString(R.string.frequencyTextInDetails, habit.frequency.times, habit.frequency.cycle),
-						if(habit.reminder == null) resources.getString(R.string.reminderDefaultValue) else habit.reminder.toString(),
-						dateTimeProvider.getCurrentDate().toEpochDay()
-					)) }
+	): Completable = getHabitFromCacheOrRepo(habitId)
+		.flatMapCompletable { habit ->
+			calculateLinearChartEntries(
+				habit,
+				fromDate
+			).flatMapCompletable { linearChartEntries ->
+				Completable.fromAction {
+					state.onNext(
+						HabitDetailsViewState(
+							linearChartEntries,
+							habit,
+							habit.name,
+							resources.getString(
+								R.string.frequencyTextInDetails,
+								habit.frequency.times,
+								habit.frequency.cycle
+							),
+							if (habit.reminder == null) resources.getString(R.string.reminderDefaultValue) else habit.reminder.toString()
+						)
+					)
 				}
 			}
-	}
+		}
+
+	private fun getHabitFromCacheOrRepo(habitId: String): Single<Habit> =
+		if (state.value?.habit != null) Single.just(requireNotNull((state.value as HabitDetailsViewState).habit))
+		else habitsRepository.getSingle(habitId)
 
 	private fun calculateLinearChartEntries(
 		habit: Habit,
 		dateStart: LocalDate,
-		daysToShow: Long = 28
-	): Single<MutableList<Entry>> {
+		daysToLoad: Long = PAST_DAYS_TO_LOAD
+	): Single<List<Entry>> {
 		return calculateHabitDayScoreUseCase.calculateScoreForDayRangeExcludingStart(
 			habit,
-			dateStart.minusDays(daysToShow),
+			dateStart.minusDays(daysToLoad),
 			dateStart
 		).flattenAsObservable { it }
 			.map { Entry(it.date.toEpochDay().toFloat(), it.fulfilledPercentage.toFloat()) }
 			.toList()
 	}
 
+	private fun updateState(callback: (HabitDetailsViewState) -> HabitDetailsViewState): Completable =
+		state
+			.take(1)
+			.map(callback)
+			.doOnNext { state.onNext(it) }
+			.ignoreElements()
+
 	override fun onCleared() {
 		super.onCleared()
 		compositeDisposable.clear()
+	}
+
+	companion object{
+		const val PAST_DAYS_TO_LOAD = 14L
 	}
 
 }
