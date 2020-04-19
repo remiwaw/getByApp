@@ -81,5 +81,6 @@
 
 	<!--	Habit detail -->
 	<string name="habitsDetailsTitle">Details</string>
+	<string name="frequencyTextInDetails">%1$d times in %2$d days</string>
 
 </resources>

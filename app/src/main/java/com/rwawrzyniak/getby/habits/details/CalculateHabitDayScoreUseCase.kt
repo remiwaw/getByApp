@@ -3,19 +3,19 @@ package com.rwawrzyniak.getby.habits.details
 import com.rwawrzyniak.getby.core.ext.date.datesBetweenExcludingStartIncludingEnd
 import com.rwawrzyniak.getby.core.ext.toInt
 import com.rwawrzyniak.getby.habits.DayScore
-import com.rwawrzyniak.getby.habits.HabitsRepository
+import com.rwawrzyniak.getby.habits.Habit
 import com.rwawrzyniak.getby.habits.getHabitDaysInCycle
 import io.reactivex.Single
 import java.time.LocalDate
 import javax.inject.Inject
 
-class CalculateHabitDayScoreUseCase @Inject constructor(private val habitsRepository: HabitsRepository) {
+class CalculateHabitDayScoreUseCase @Inject internal constructor() {
 	fun calculateScoreForDayRangeExcludingStart(
-		habitId: String,
+		habit: Habit,
 		startDate: LocalDate,
 		endDate: LocalDate
 	): Single<List<DayScore>> =
-		habitsRepository.getSingle(habitId)
+		Single.just(habit)
 			.map { habit ->
 				datesBetweenExcludingStartIncludingEnd(startDate, endDate).map { givenDay ->
 					val totalPointsInCycle = habit.getHabitDaysInCycle(givenDay)

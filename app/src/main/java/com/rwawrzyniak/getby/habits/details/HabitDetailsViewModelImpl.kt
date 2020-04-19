@@ -3,7 +3,10 @@ package com.rwawrzyniak.getby.habits.details
 import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.data.Entry
+import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.DateTimeProvider
+import com.rwawrzyniak.getby.habits.Habit
+import com.rwawrzyniak.getby.habits.HabitsRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -25,7 +28,8 @@ abstract class HabitDetailsViewModel: ViewModel() {
 class HabitDetailsViewModelImpl @Inject constructor(
 	private val resources: Resources,
 	private val dateTimeProvider: DateTimeProvider,
-	private val calculateHabitDayScoreUseCase: CalculateHabitDayScoreUseCase
+	private val calculateHabitDayScoreUseCase: CalculateHabitDayScoreUseCase,
+	private val habitsRepository: HabitsRepository
 ) : HabitDetailsViewModel() {
 	private val compositeDisposable = CompositeDisposable()
 	private val effects: Subject<HabitDetailsViewEffect> = PublishSubject.create<HabitDetailsViewEffect>()
@@ -45,22 +49,34 @@ class HabitDetailsViewModelImpl @Inject constructor(
 		}
 	}
 
-	private fun updateLinearChartView(habitId: String, fromDate: LocalDate = dateTimeProvider.getCurrentDate()): Completable {
-		return calculateLinearChartEntries(
-			habitId,
-			fromDate
-		).flatMapCompletable {
-			Completable.fromAction { state.onNext(HabitDetailsViewState(it)) }
-		}
+	private fun updateLinearChartView(
+		habitId: String,
+		fromDate: LocalDate = dateTimeProvider.getCurrentDate()
+	): Completable {
+		return habitsRepository.getSingle(habitId)
+			.flatMapCompletable { habit ->
+				calculateLinearChartEntries(
+					habit,
+					fromDate
+				).flatMapCompletable {
+					linearChartEntries ->
+					Completable.fromAction { state.onNext(HabitDetailsViewState(
+						linearChartEntries,
+						habit.name,
+						resources.getString(R.string.frequencyTextInDetails, habit.frequency.times, habit.frequency.cycle),
+						if(habit.reminder == null) resources.getString(R.string.reminderDefaultValue) else habit.reminder.toString()
+					)) }
+				}
+			}
 	}
 
 	private fun calculateLinearChartEntries(
-		habitId: String,
+		habit: Habit,
 		dateStart: LocalDate,
 		daysToShow: Long = 7
 	): Single<MutableList<Entry>> {
 		return calculateHabitDayScoreUseCase.calculateScoreForDayRangeExcludingStart(
-			habitId,
+			habit,
 			dateStart.minusDays(daysToShow),
 			dateStart
 		).flattenAsObservable { it }

@@ -114,6 +114,10 @@ class HabitDetailsFragment : BaseFragment() {
 	}
 
 	private fun renderState(state: HabitDetailsViewState) {
+		habitDetaislName.text = state.habitName
+		habitDetailsFrequency.text = state.frequencyText
+		habitDetailsAlarm.text = state.habitAlarmText
+
 		if(state.linearChartEntries.isEmpty())
 			return
 
