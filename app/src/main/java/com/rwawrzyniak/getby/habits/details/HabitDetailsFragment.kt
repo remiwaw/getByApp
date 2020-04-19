@@ -13,7 +13,6 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
-import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture
 import com.github.mikephil.charting.listener.OnChartGestureListener
@@ -34,12 +33,12 @@ import kotlinx.android.synthetic.main.fragment_habit_details.*
 import timber.log.Timber
 import java.time.LocalDate
 import java.util.ArrayList
+import java.util.concurrent.TimeUnit
 
 class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
     private lateinit var binding: FragmentHabitDetailsBinding
     private val viewModel by fragmentScopedViewModel { injector.habitDetailsViewModel }
 	private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
-	private var busyIndicatorLinearGraph = false // TODO make it better
 	private lateinit var habitId: String
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,21 +121,16 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		binding.lineChart.description.isEnabled = false
 		binding.lineChart.setTouchEnabled(true)
 
-		// binding.lineChart.setOnChartValueSelectedListener(this)
 		binding.lineChart.setDrawGridBackground(false)
 
-		// enable dragging
 		binding.lineChart.isDragYEnabled = true
 		binding.lineChart.onChartGestureListener = this
-
-		// binding.lineChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
 
 		var xAxis: XAxis = binding.lineChart.xAxis
 		xAxis.position = XAxis.XAxisPosition.BOTTOM
 		xAxis.valueFormatter =
 			IAxisValueFormatter { value, _ -> LocalDate.ofEpochDay(value.toLong()).toShortForm() }
 		xAxis.labelRotationAngle = 60f
-		// xAxis.enableGridDashedLine(10f, 10f, 0f)
 
 		var yAxis = binding.lineChart.axisLeft
 		yAxis.valueFormatter = IAxisValueFormatter { value, _ -> "$value%" }
@@ -148,20 +142,34 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 
 	private fun renderLinearChart(state: HabitDetailsViewState) {
 		val set1: LineDataSet
+		binding.lineChart.isDragDecelerationEnabled = false
 
 		if (lineChart.data != null &&
 			lineChart.data.dataSetCount > 0
 		) {
+			switchChartScrollListener(false)
+			val lastLowestVisibleX = binding.lineChart.lowestVisibleX
+
 			set1 = lineChart.data.getDataSetByIndex(0) as LineDataSet
 			set1.values = state.linearChartEntries
 			set1.notifyDataSetChanged()
 
-			val lowestVisibleX = binding.lineChart.lowestVisibleX
-			val highestVisibleX = binding.lineChart.highestVisibleX
-
 			lineChart.data.notifyDataChanged()
 			lineChart.notifyDataSetChanged()
 
+			// TODO For some reason scroll to x doesnt work withou delay.
+			// https://github.com/PhilJay/MPAndroidChart/issues/765
+			Completable
+				.timer(100, TimeUnit.MILLISECONDS)
+				.subscribeOn(schedulerProvider.io())
+				.observeOn(schedulerProvider.main())
+				.subscribe({
+					// binding.lineChart.invalidate()
+					binding.lineChart.moveViewToX((lastLowestVisibleX))
+					switchChartScrollListener(true)
+				}, {
+					// do something on error
+				}).disposeBy(onStop)
 		} else {
 			set1 = LineDataSet(state.linearChartEntries, "DataSet 1")
 
@@ -180,10 +188,11 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 
 			val data = LineData(dataSets)
 			lineChart.data = data
+
 			binding.lineChart.moveViewToX(binding.lineChart.xAxis.axisMaximum)
 		}
 
-		binding.lineChart.setVisibleXRangeMaximum(7f)
+		binding.lineChart.setVisibleXRangeMaximum(VISIBLE_X_RANGE)
 	}
 
 	private fun subscribeTo(completable: Completable) {
@@ -205,9 +214,6 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		lastPerformedGesture: ChartGesture
 	) {
 		Log.i("Gesture", "END, lastGesture: $lastPerformedGesture")
-		// un-highlight values after the gesture is finished and no single-tap
-		if (lastPerformedGesture != ChartGesture.SINGLE_TAP) // or highlightTouch(null) for callback to onNothingSelected(...)
-			binding.lineChart.highlightValues(null)
 	}
 
 	override fun onChartLongPressed(me: MotionEvent?) {
@@ -241,40 +247,22 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 	}
 
 	override fun onChartTranslate(me: MotionEvent, dX: Float, dY: Float) {
-		if(busyIndicatorLinearGraph.not() && dX > 0 && binding.lineChart.xAxis.axisMinimum == binding.lineChart.lowestVisibleX){
-			busyIndicatorLinearGraph = true
-			viewModel.onAction(HabitDetailsViewAction.LowestVisibleXBecomesVisible(binding.lineChart.lowestVisibleX.toInt()))
-				.onErrorComplete()
-				.subscribeOn(schedulerProvider.io())
-				.observeOn(schedulerProvider.main())
-				.subscribeBy(onComplete = { busyIndicatorLinearGraph = false }, onError = Timber::e)
-				.disposeBy(lifecycle.onStop)
+		if(dX > 0 && binding.lineChart.xAxis.axisMinimum == binding.lineChart.lowestVisibleX){
+			switchChartScrollListener(false)
+			subscribeTo(viewModel.onAction(HabitDetailsViewAction.LowestVisibleXBecomesVisible(binding.lineChart.lowestVisibleX.toInt())))
 		}
 	}
 
-	fun onValueSelected(
-		e: Map.Entry<*, *>,
-		dataSetIndex: Int,
-		h: Highlight?
-	) {
-		Log.i("Entry selected", e.toString())
-		Log.i(
-			"LOWHIGH", "low: " + binding.lineChart.lowestVisibleX
-				.toString() + ", high: " + binding.lineChart.highestVisibleX
-		)
-		Log.i(
-			"MIN MAX", "xmin: " + binding.lineChart.xChartMin
-				.toString() + ", xmax: " + binding.lineChart.xChartMax
-				.toString() + ", ymin: " + binding.lineChart.yChartMin
-				.toString() + ", ymax: " + binding.lineChart.yChartMax
-		)
-	}
-
-	fun onNothingSelected() {
-		Log.i("Nothing selected", "Nothing selected.")
+	fun switchChartScrollListener(isActive : Boolean){
+		if(isActive){
+			binding.lineChart.onChartGestureListener = this
+		} else {
+			binding.lineChart.onChartGestureListener = null
+		}
 	}
 
     companion object {
         const val ARG_HABIT_ID = "HabitIdArg"
+		const val VISIBLE_X_RANGE = 7f
     }
 }
