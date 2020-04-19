@@ -80,7 +80,7 @@ class HabitDetailsViewModelImpl @Inject constructor(
 			dateStart.minusDays(daysToShow),
 			dateStart
 		).flattenAsObservable { it }
-			.map { Entry(it.date.dayOfMonth.toFloat(), it.fulfilledPercentage.toFloat()) }
+			.map { Entry(it.date.toEpochDay().toFloat(), it.fulfilledPercentage.toFloat()) }
 			.toList()
 	}
 

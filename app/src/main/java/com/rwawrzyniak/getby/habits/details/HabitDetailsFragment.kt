@@ -10,11 +10,13 @@ import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.BaseFragment
 import com.rwawrzyniak.getby.core.ChromeConfiguration
 import com.rwawrzyniak.getby.core.SchedulerProvider
+import com.rwawrzyniak.getby.core.ext.date.toShortForm
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitDetailsBinding
@@ -25,6 +27,7 @@ import io.sellmair.disposer.onStop
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_habit_details.*
 import timber.log.Timber
+import java.time.LocalDate
 import java.util.ArrayList
 
 class HabitDetailsFragment : BaseFragment() {
@@ -55,9 +58,12 @@ class HabitDetailsFragment : BaseFragment() {
 
 		var xAxis: XAxis = binding.lineChart.xAxis
 		xAxis.position = XAxis.XAxisPosition.BOTTOM
+		xAxis.valueFormatter = IAxisValueFormatter { value, _ -> LocalDate.ofEpochDay(value.toLong()).toShortForm() }
+		xAxis.labelRotationAngle = 45f
 		// xAxis.enableGridDashedLine(10f, 10f, 0f)
 
 		var yAxis = binding.lineChart.axisLeft
+		yAxis.valueFormatter = IAxisValueFormatter { value, _ -> "$value%" }
 		yAxis.axisMaximum = 100f
 		yAxis.axisMinimum =  0f
 

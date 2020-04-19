@@ -2,6 +2,7 @@ package com.rwawrzyniak.getby.core.ext.date
 
 import com.rwawrzyniak.getby.habits.DayHeaderDto
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -29,3 +30,5 @@ fun datesBetweenExcludingStartIncludingEnd(
 	}
 	return ret
 }
+
+fun LocalDate.toShortForm() = this.format(DateTimeFormatter.ofPattern("ccc d.MM"))
