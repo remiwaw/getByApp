@@ -25,7 +25,9 @@ import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitDetailsBinding
 import io.reactivex.Completable
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.subjects.PublishSubject
 import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,27 +38,29 @@ import java.util.ArrayList
 import java.util.concurrent.TimeUnit
 
 class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
-    private lateinit var binding: FragmentHabitDetailsBinding
-    private val viewModel by fragmentScopedViewModel { injector.habitDetailsViewModel }
+	private lateinit var binding: FragmentHabitDetailsBinding
+	private val viewModel by fragmentScopedViewModel { injector.habitDetailsViewModel }
 	private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
 	private lateinit var habitId: String
+	private var isDragInProgressSubject = PublishSubject.create<Boolean>()
+	private var noMoreDataToDisplaySubject = PublishSubject.create<Boolean>()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setHasOptionsMenu(true)
 	}
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentHabitDetailsBinding.inflate(inflater, container, false)
+	override fun onCreateView(
+		inflater: LayoutInflater,
+		container: ViewGroup?,
+		savedInstanceState: Bundle?
+	): View? {
+		binding = FragmentHabitDetailsBinding.inflate(inflater, container, false)
 
 		setupLinearChart()
 
 		return binding.root
-    }
+	}
 
 	override fun onStart() {
 		super.onStart()
@@ -100,6 +104,18 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 			.observeOn(schedulerProvider.main())
 			.subscribeBy(onNext = this::executeEffect)
 			.disposeBy(lifecycle.onStop)
+
+		Observables.combineLatest(isDragInProgressSubject.hide(), noMoreDataToDisplaySubject.hide()){
+				isDragInProgress, noMoreDataToDisplay ->
+			Log.i("blabla", "isDragInProgress: $isDragInProgress and noMoreDataToDisplay: $noMoreDataToDisplay")
+
+			isDragInProgress.not() && noMoreDataToDisplay
+
+		}.distinctUntilChanged()
+			.subscribeOn(schedulerProvider.io())
+			.observeOn(schedulerProvider.main())
+			.subscribeBy(onNext = { shouldRefreshData -> if(shouldRefreshData) refreshData() })
+			.disposeBy(onStop)
 	}
 
 	private fun executeEffect(effect: HabitDetailsViewEffect) {
@@ -147,7 +163,6 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		if (lineChart.data != null &&
 			lineChart.data.dataSetCount > 0
 		) {
-			switchChartScrollListener(false)
 			val lastLowestVisibleX = binding.lineChart.lowestVisibleX
 
 			set1 = lineChart.data.getDataSetByIndex(0) as LineDataSet
@@ -164,12 +179,11 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 				.subscribeOn(schedulerProvider.io())
 				.observeOn(schedulerProvider.main())
 				.subscribe({
-					// binding.lineChart.invalidate()
 					binding.lineChart.moveViewToX((lastLowestVisibleX))
-					switchChartScrollListener(true)
 				}, {
 					// do something on error
 				}).disposeBy(onStop)
+
 		} else {
 			set1 = LineDataSet(state.linearChartEntries, "DataSet 1")
 
@@ -206,6 +220,9 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		me: MotionEvent,
 		lastPerformedGesture: ChartGesture?
 	) {
+		if(lastPerformedGesture == ChartGesture.DRAG){
+			isDragInProgressSubject.onNext(true)
+		}
 		Log.i("Gesture", "START, x: " + me.x + ", y: " + me.y)
 	}
 
@@ -213,6 +230,9 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		me: MotionEvent?,
 		lastPerformedGesture: ChartGesture
 	) {
+		if(lastPerformedGesture == ChartGesture.DRAG){
+			isDragInProgressSubject.onNext(false)
+		}
 		Log.i("Gesture", "END, lastGesture: $lastPerformedGesture")
 	}
 
@@ -248,21 +268,16 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 
 	override fun onChartTranslate(me: MotionEvent, dX: Float, dY: Float) {
 		if(dX > 0 && binding.lineChart.xAxis.axisMinimum == binding.lineChart.lowestVisibleX){
-			switchChartScrollListener(false)
-			subscribeTo(viewModel.onAction(HabitDetailsViewAction.LowestVisibleXBecomesVisible(binding.lineChart.lowestVisibleX.toInt())))
+			noMoreDataToDisplaySubject.onNext(true)
 		}
 	}
 
-	fun switchChartScrollListener(isActive : Boolean){
-		if(isActive){
-			binding.lineChart.onChartGestureListener = this
-		} else {
-			binding.lineChart.onChartGestureListener = null
-		}
+	private fun refreshData(){
+		subscribeTo(viewModel.onAction(HabitDetailsViewAction.LowestVisibleXBecomesVisible(binding.lineChart.xAxis.axisMinimum.toInt())))
 	}
 
-    companion object {
-        const val ARG_HABIT_ID = "HabitIdArg"
+	companion object {
+		const val ARG_HABIT_ID = "HabitIdArg"
 		const val VISIBLE_X_RANGE = 7f
-    }
+	}
 }
