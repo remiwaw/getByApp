@@ -6,33 +6,36 @@
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:background="@color/backgroundColor"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 		<androidx.cardview.widget.CardView
 			android:id="@id/habitDetailsCardView"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
+			android:layout_height="0dp"
+			android:layout_marginTop="24dp"
+			android:layout_marginRight="4dp"
+			android:layout_marginLeft="4dp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:cardElevation="2dp"
 
-			app:cardBackgroundColor="@color/colorPrimary">
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent">
 
 			<androidx.constraintlayout.widget.ConstraintLayout
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				>
+				android:layout_height="wrap_content">
 
 				<TextView
 					android:id="@+id/habitDetaislName"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
+					android:paddingStart="4dp"
+					android:paddingEnd="4dp"
 					android:textAlignment="viewStart"
 					android:textSize="16sp"
 					android:textStyle="bold"
-					android:paddingStart="50dp"
-					android:paddingEnd="50dp"
-
+					android:textColor="@color/colorPrimary"
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintTop_toTopOf="parent"
 					tools:text="Habit name here" />
@@ -42,7 +45,8 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:drawableStart="@drawable/ic_repeat"
-					android:paddingStart="50dp"
+					android:paddingStart="4dp"
+					android:paddingEnd="4dp"
 					android:textSize="16sp"
 					android:textStyle="bold"
 
@@ -53,36 +57,96 @@
 
 				<TextView
 					android:id="@+id/habitDetailsAlarm"
-					tools:text="Alarm of"
-					android:textSize="16sp"
 					android:layout_width="wrap_content"
-					android:textStyle="bold"
 					android:layout_height="wrap_content"
-					android:paddingStart="10dp"
-					android:paddingEnd="50dp"
-
-					app:layout_constraintTop_toBottomOf="@+id/habitDetaislName"
-					app:layout_constraintStart_toEndOf="@+id/habitDetailsFrequency"
-
 					android:drawableStart="@drawable/ic_alarm"
-					/>
-				</androidx.constraintlayout.widget.ConstraintLayout>
+					android:paddingStart="4dp"
+					android:paddingEnd="4dp"
+					android:textSize="16sp"
+					android:textStyle="bold"
+
+					app:layout_constraintStart_toEndOf="@+id/habitDetailsFrequency"
+					app:layout_constraintTop_toBottomOf="@+id/habitDetaislName"
+
+					tools:text="Alarm of" />
+			</androidx.constraintlayout.widget.ConstraintLayout>
 
 		</androidx.cardview.widget.CardView>
 
 		<androidx.cardview.widget.CardView
+			android:id="@+id/linearGraphCardView"
 			android:layout_width="match_parent"
-			android:layout_height="300dp"
+			android:layout_height="320dp"
 			app:layout_constraintTop_toBottomOf="@+id/habitDetailsCardView"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
-			android:paddingTop="10dp"
+			app:cardElevation="2dp"
+			android:layout_marginTop="4dp"
 			>
 
-			<com.github.mikephil.charting.charts.LineChart
-				android:id="@+id/lineChart"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent" />
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:layout_height="match_parent"
+				android:layout_width="match_parent">
+
+				<TextView
+					android:id="@+id/linearGraphTitle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAlignment="viewStart"
+					android:textSize="16sp"
+					android:textStyle="bold"
+					android:textColor="@color/colorPrimary"
+					android:paddingStart="4dp"
+					android:paddingEnd="4dp"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent"
+					android:text="Habit strength"
+					/>
+
+				<com.github.mikephil.charting.charts.LineChart
+					android:id="@+id/lineChart"
+					android:layout_width="match_parent"
+					android:layout_height="300dp"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@id/linearGraphTitle"
+
+					/>
+
+			</androidx.constraintlayout.widget.ConstraintLayout>
+		</androidx.cardview.widget.CardView>
+
+		<androidx.cardview.widget.CardView
+			android:id="@+id/calendarLineGraph"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:layout_constraintTop_toBottomOf="@+id/linearGraphCardView"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:cardElevation="2dp"
+			android:layout_marginTop="4dp"
+			>
+
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:layout_height="match_parent"
+				android:layout_width="match_parent">
+
+				<TextView
+					android:id="@+id/calendarLineGraphTitle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textAlignment="viewStart"
+					android:textSize="16sp"
+					android:textStyle="bold"
+					android:textColor="@color/colorPrimary"
+					android:paddingStart="4dp"
+					android:paddingEnd="4dp"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent"
+					android:text="History"
+					/>
+
+
+			</androidx.constraintlayout.widget.ConstraintLayout>
 
 		</androidx.cardview.widget.CardView>
 	</androidx.constraintlayout.widget.ConstraintLayout>

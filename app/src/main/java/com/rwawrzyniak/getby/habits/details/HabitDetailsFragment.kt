@@ -13,6 +13,7 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
+import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture
 import com.github.mikephil.charting.listener.OnChartGestureListener
@@ -106,10 +107,7 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 			.disposeBy(lifecycle.onStop)
 
 		Observables.combineLatest(isDragInProgressSubject.hide(), noMoreDataToDisplaySubject.hide()){
-				isDragInProgress, noMoreDataToDisplay ->
-			Log.i("blabla", "isDragInProgress: $isDragInProgress and noMoreDataToDisplay: $noMoreDataToDisplay")
-
-			isDragInProgress.not() && noMoreDataToDisplay
+				isDragInProgress, noMoreDataToDisplay -> isDragInProgress.not() && noMoreDataToDisplay
 
 		}.distinctUntilChanged()
 			.subscribeOn(schedulerProvider.io())
@@ -141,6 +139,9 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 
 		binding.lineChart.isDragYEnabled = true
 		binding.lineChart.onChartGestureListener = this
+		binding.lineChart.legend.isEnabled = false
+		binding.lineChart.extraBottomOffset = 15f
+
 
 		var xAxis: XAxis = binding.lineChart.xAxis
 		xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -185,17 +186,20 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 				}).disposeBy(onStop)
 
 		} else {
-			set1 = LineDataSet(state.linearChartEntries, "DataSet 1")
+			set1 = LineDataSet(state.linearChartEntries, "")
 
-			set1.color = Color.BLACK
-			set1.setCircleColor(Color.BLACK)
+			set1.color = Color.CYAN
+			set1.setCircleColor(Color.CYAN)
 
-			set1.lineWidth = 1f
-			set1.circleRadius = 3f
+			set1.lineWidth = 1.75f
+			set1.circleRadius = 5f
+			set1.circleHoleRadius = 2.5f
+			set1.highLightColor = Color.WHITE
 
 			set1.setDrawCircleHole(false)
-
 			set1.valueTextSize = 9f
+			set1.valueTextColor = Color.BLUE
+			set1.valueFormatter = PercentFormatter()
 
 			val dataSets = ArrayList<ILineDataSet>()
 			dataSets.add(set1)
