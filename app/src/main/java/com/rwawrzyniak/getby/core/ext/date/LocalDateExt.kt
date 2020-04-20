@@ -2,8 +2,10 @@ package com.rwawrzyniak.getby.core.ext.date
 
 import com.rwawrzyniak.getby.habits.DayHeaderDto
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
+import java.util.Date
 import java.util.Locale
 
 val LocalDate.toDayHeaderDto: DayHeaderDto
@@ -32,3 +34,5 @@ fun datesBetweenExcludingStartIncludingEnd(
 }
 
 fun LocalDate.toShortForm() = this.format(DateTimeFormatter.ofPattern("ccc d.MM"))
+
+fun LocalDate.toDate(): Date = Date.from(this.atStartOfDay(ZoneId.systemDefault()).toInstant())

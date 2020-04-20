@@ -29,7 +29,8 @@ class HabitDetailsViewModelImpl @Inject constructor(
 	private val resources: Resources,
 	private val dateTimeProvider: DateTimeProvider,
 	private val calculateHabitDayScoreUseCase: CalculateHabitDayScoreUseCase,
-	private val habitsRepository: HabitsRepository
+	private val habitsRepository: HabitsRepository,
+	private val calculateDaysUseCase: CalculateDaysUseCase
 ) : HabitDetailsViewModel() {
 	private val compositeDisposable = CompositeDisposable()
 	private val effects: Subject<HabitDetailsViewEffect> = PublishSubject.create<HabitDetailsViewEffect>()
@@ -43,7 +44,7 @@ class HabitDetailsViewModelImpl @Inject constructor(
 
 	override fun onAction(action: HabitDetailsViewAction): Completable {
 		return when(action){
-			is HabitDetailsViewAction.InitializeView -> updateLinearChartView(action.habitId)
+			is HabitDetailsViewAction.InitializeView -> linitializeView(action.habitId)
 			is HabitDetailsViewAction.OnSaveHabitClicked -> TODO()
 			is HabitDetailsViewAction.OnInputFieldStateChanged -> TODO()
 			is HabitDetailsViewAction.LowestVisibleXBecomesVisible -> updateLinearChartViewOnScroll(action.firstVisibleEpochDay)
@@ -66,7 +67,7 @@ class HabitDetailsViewModelImpl @Inject constructor(
 		}
 	}
 
-	private fun updateLinearChartView(
+	private fun linitializeView(
 		habitId: String,
 		fromDate: LocalDate = dateTimeProvider.getCurrentDate()
 	): Completable = getHabitFromCacheOrRepo(habitId)

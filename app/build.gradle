@@ -93,6 +93,7 @@ dependencies {
     implementation "com.wdullaer:materialdatetimepicker:$rootProject.materialDateTimePickerVersion"
 	implementation "ca.antonious:materialdaypicker:$rootProject.materialDateRowPickerVersion"
 	implementation "com.github.PhilJay:MPAndroidChart:$rootProject.MPAndroidChartVersion"
+	implementation "com.savvi.datepicker:rangepicker:$rootProject.rangePickerVersion"
 
 	//Android
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlin_version"

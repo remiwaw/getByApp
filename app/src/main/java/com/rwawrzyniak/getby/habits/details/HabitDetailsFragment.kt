@@ -25,6 +25,7 @@ import com.rwawrzyniak.getby.core.ext.date.toShortForm
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitDetailsBinding
+import com.savvi.rangedatepicker.CalendarPickerView
 import io.reactivex.Completable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
@@ -128,6 +129,7 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 			return
 
 		renderLinearChart(state)
+		setupHistoryCalendar(state.historyCalendarState)
 	}
 
 	private fun setupLinearChart() {
@@ -155,6 +157,16 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		yAxis.axisMinimum = 0f
 
 		binding.lineChart.axisRight.isEnabled = false
+	}
+
+	private fun setupHistoryCalendar(historyCalendarState: HistoryCalendarState) {
+		// TODO skip if initialized
+		with(historyCalendarState) {
+			historyCalendar.init(minDate, maxDate) //
+				.inMode(CalendarPickerView.SelectionMode.MULTIPLE)
+				.withSelectedDates(selectedDates)
+				.withHighlightedDates(highlightedDates)
+		}
 	}
 
 	private fun renderLinearChart(state: HabitDetailsViewState) {
