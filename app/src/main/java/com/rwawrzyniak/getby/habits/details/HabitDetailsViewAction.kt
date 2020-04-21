@@ -1,13 +1,9 @@
 package com.rwawrzyniak.getby.habits.details
 
-import com.rwawrzyniak.getby.habits.Habit
+import java.util.Date
 
 sealed class HabitDetailsViewAction {
 	internal class InitializeView(val habitId: String) : HabitDetailsViewAction()
 	internal class LowestVisibleXBecomesVisible(val firstVisibleEpochDay: Int) : HabitDetailsViewAction()
-	internal class OnSaveHabitClicked(val habit: Habit) : HabitDetailsViewAction()
-	internal class OnInputFieldStateChanged(
-		val isNameFieldEmpty: Boolean,
-		val isDescriptionFieldEmpty: Boolean
-	) : HabitDetailsViewAction()
+	internal class OnSaveCalendarClicked(val selectedDates: List<Date>): HabitDetailsViewAction()
 }

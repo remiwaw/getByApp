@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.data.Entry
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.DateTimeProvider
+import com.rwawrzyniak.getby.core.ext.date.toLocalDate
 import com.rwawrzyniak.getby.habits.Habit
+import com.rwawrzyniak.getby.habits.HabitDay
 import com.rwawrzyniak.getby.habits.HabitsRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -16,6 +18,7 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import java.time.LocalDate
+import java.util.Date
 import javax.inject.Inject
 
 // TODO add error handling
@@ -47,11 +50,18 @@ class HabitDetailsViewModelImpl @Inject constructor(
 	override fun onAction(action: HabitDetailsViewAction): Completable {
 		return when(action){
 			is HabitDetailsViewAction.InitializeView -> initializeView(action.habitId)
-			is HabitDetailsViewAction.OnSaveHabitClicked -> TODO()
-			is HabitDetailsViewAction.OnInputFieldStateChanged -> TODO()
 			is HabitDetailsViewAction.LowestVisibleXBecomesVisible -> updateLinearChartViewOnScroll(action.firstVisibleEpochDay)
+			is HabitDetailsViewAction.OnSaveCalendarClicked -> saveNewDaysAndUpdateView(action.selectedDates)
 		}
 	}
+
+	private fun saveNewDaysAndUpdateView(selectedDates: List<Date>): Completable = state.take(1)
+		.flatMapCompletable {
+			val newHistory: List<HabitDay> = selectedDates.map { date ->  HabitDay(date.toLocalDate(), checked = true) }
+			val updatedHabit = requireNotNull(it.habit).copy(history = newHistory)
+			habitsRepository.saveHabit(updatedHabit)
+				.andThen(initializeView(it.habit.id))
+		}
 
 	private fun updateLinearChartViewOnScroll(firstVisibleEpochDay: Int): Completable {
 		if (firstVisibleEpochDay == 0)
@@ -64,7 +74,7 @@ class HabitDetailsViewModelImpl @Inject constructor(
 			updateState { viewState ->
 				viewState.copy(
 					linearChartEntries = newEntries + viewState.linearChartEntries,
-					historyCalendarState = viewState.historyCalendarState?.copy( isChanged =  false)
+					historyCalendarState = viewState.historyCalendarState?.copy( isSelectedDatesChanged =  false)
 				)
 			}
 		}
@@ -73,14 +83,15 @@ class HabitDetailsViewModelImpl @Inject constructor(
 	private fun initializeView(
 		habitId: String,
 		fromDate: LocalDate = dateTimeProvider.getCurrentDate()
-	): Completable = getHabitFromCacheOrRepo(habitId)
-		.flatMapCompletable { habit ->
-			Singles.zip(calculateLinearChartEntries(habit, fromDate), calculateHistoryCalendarState.calculate(habit))
-				.flatMapCompletable { calendarHistoryStateAndlinearChartEntries ->
-					Completable.fromAction {
-						publishInitState(calendarHistoryStateAndlinearChartEntries, habit)
+	): Completable =
+		habitsRepository.getSingle(habitId)
+			.flatMapCompletable { habit ->
+				Singles.zip(calculateLinearChartEntries(habit, fromDate), calculateHistoryCalendarState.calculate(habit))
+					.flatMapCompletable { calendarHistoryStateAndlinearChartEntries ->
+						Completable.fromAction {
+							publishInitState(calendarHistoryStateAndlinearChartEntries, habit)
+						}
 					}
-				}
 		}
 
 	private fun publishInitState(
@@ -107,10 +118,6 @@ class HabitDetailsViewModelImpl @Inject constructor(
 
 	private fun reminderText(habit: Habit) =
 		if (habit.reminder == null) resources.getString(R.string.reminderDefaultValue) else habit.reminder.toString()
-
-	private fun getHabitFromCacheOrRepo(habitId: String): Single<Habit> =
-		if (state.value?.habit != null) Single.just(requireNotNull((state.value as HabitDetailsViewState).habit))
-		else habitsRepository.getSingle(habitId)
 
 	private fun calculateLinearChartEntries(
 		habit: Habit,

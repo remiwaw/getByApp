@@ -153,6 +153,23 @@
 						android:text="History"
 						/>
 
+<!--					TODO make it more obvious that user must click save-->
+					<TextView
+						android:id="@+id/historyCalendarSave"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAlignment="viewStart"
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:textColor="@color/colorPrimary"
+						android:paddingStart="4dp"
+						android:paddingEnd="4dp"
+						android:drawableStart="@drawable/ic_save"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintBottom_toTopOf="@+id/historyCalendar"
+						android:text="@string/save"
+						/>
+
 					<com.savvi.rangedatepicker.CalendarPickerView
 						android:id="@+id/historyCalendar"
 						android:layout_width="wrap_content"

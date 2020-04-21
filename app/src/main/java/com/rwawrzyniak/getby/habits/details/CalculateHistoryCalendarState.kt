@@ -11,10 +11,10 @@ class CalculateHistoryCalendarState @Inject internal constructor(private val tim
 
 	fun calculate(habit: Habit): Single<HistoryCalendarState> {
 		return Single.just(HistoryCalendarState(
-			maxDate = requireNotNull(timeProvider.getCurrentDate().toDate()),
+			maxDate = requireNotNull(timeProvider.getCurrentDate().plusDays(1).toDate()),
 			selectedDates = filterByCheckStatus(habit),
 			highlightedDates = listOf(),
-			isChanged = true
+			isSelectedDatesChanged = true
 		))
 	}
 

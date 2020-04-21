@@ -18,5 +18,5 @@ data class HistoryCalendarState(
 	val maxDate: Date,
 	val selectedDates: Collection<Date>,
 	val highlightedDates: Collection<Date>,
-	val isChanged: Boolean = false
+	val isSelectedDatesChanged: Boolean = false
 )

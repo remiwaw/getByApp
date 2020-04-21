@@ -68,11 +68,18 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		return binding.root
 	}
 
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+	}
+
 	override fun onStart() {
 		super.onStart()
 		startObservers()
 		habitId = requireNotNull(arguments?.getString(ARG_HABIT_ID))
 		subscribeTo(viewModel.onAction(HabitDetailsViewAction.InitializeView(habitId)))
+		historyCalendarSave.setOnClickListener {
+			subscribeTo(viewModel.onAction(HabitDetailsViewAction.OnSaveCalendarClicked(binding.historyCalendar.selectedDates)))
+		}
 	}
 
 	private fun startObservers() {
@@ -165,10 +172,13 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 
 	private fun setupHistoryCalendar(historyCalendarState: HistoryCalendarState) {
 		with(historyCalendarState) {
-			if(isChanged.not())
-				return
+			val historyCalendarBuilder = binding.historyCalendar.init(
+				minDate,
+				maxDate,
+				SimpleDateFormat("MMMM, YYYY", Locale.getDefault())
+			)
 
-			binding.historyCalendar.init(minDate, maxDate, SimpleDateFormat("MMMM, YYYY", Locale.getDefault()))
+			historyCalendarBuilder
 				.inMode(CalendarPickerView.SelectionMode.MULTIPLE)
 				.withSelectedDates(selectedDates)
 				.withHighlightedDates(highlightedDates)

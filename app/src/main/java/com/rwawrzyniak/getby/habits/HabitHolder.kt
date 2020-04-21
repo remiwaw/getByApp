@@ -39,14 +39,14 @@ class HabitHolder(view: View, private val listener: HabitListener)
 		limitedHabitHistory = habitHolderHelper.filter(checkBoxList.size, habit.history)
 
 		checkBoxList.forEachIndexed {
-				index, checkBox -> checkBox.isChecked = limitedHabitHistory[index].checked
+				index, checkBox -> checkBox.isChecked = limitedHabitHistory.getOrNull(index)?.checked ?: false
 		}
 	}
 
 	override fun onClick(v: View?) {
 		if (v is CheckBox) {
-			val dayNumber = limitedHabitHistory[v.tag.toString().toInt()].dayNumber
-			habit.history[dayNumber].checked = v.isChecked
+			val chosenDate = limitedHabitHistory[v.tag.toString().toInt()]
+			habit.history.first { it.day == chosenDate.day }.checked = v.isChecked
 			listener.onCheckboxClicked(habit)
 		} else {
 			listener.onRowClicked(habit)

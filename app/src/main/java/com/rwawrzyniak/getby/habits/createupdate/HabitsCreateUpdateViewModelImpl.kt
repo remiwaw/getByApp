@@ -112,7 +112,7 @@ class HabitsCreateUpdateViewModelImpl @Inject constructor(
 
 	// TODO this could lead to problem if user has change his calendar settings. I.e manually set date
 	// TODO Important find a better way to initialzie dates. After a year is passed this will cause indexBoundOf exception!
-	private fun initHistory() = dateTimeProvider.getCurrentDate().datesInRangeFromToday(5, 365).mapIndexed {
-			index, localDate -> HabitDay(localDate, index)
+	private fun initHistory() = dateTimeProvider.getCurrentDate().datesInRangeFromToday(5, 365).map {
+			 localDate -> HabitDay(localDate)
 	}
 }

@@ -38,7 +38,10 @@ data class HourMinute(val hour: Int, val minutes: Int){
 		return "$hour:$minutesWithLeadingZeros"
 	}
 }
-data class HabitDay(val day: LocalDate, val dayNumber: Int, var checked: Boolean = false)
+data class HabitDay(val day: LocalDate, var checked: Boolean = false) : Comparable<HabitDay> {
+	override fun compareTo(other: HabitDay): Int = this.day.compareTo(other.day)
+}
+
 data class DayScore(val date: LocalDate, val fulfilledPercentage: Int)
 
 fun Habit.getHabitDaysInCycle(today: LocalDate): List<HabitDay> = this.history.filter {
