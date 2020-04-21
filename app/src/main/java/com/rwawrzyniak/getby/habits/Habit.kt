@@ -44,3 +44,5 @@ data class DayScore(val date: LocalDate, val fulfilledPercentage: Int)
 fun Habit.getHabitDaysInCycle(today: LocalDate): List<HabitDay> = this.history.filter {
 	it.day.isAfter(today.minusDays(this.frequency.cycle.toLong())) && it.day.isBefore(today.plusDays(1))
 }
+
+fun Habit.getStartDate() = this.history.firstOrNull()?.day // We assume list is stored in order TODO: check if its always is the case

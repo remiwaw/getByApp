@@ -10,12 +10,13 @@ data class HabitDetailsViewState(
 	val habitName: String = "",
 	val frequencyText: String = "",
 	val habitAlarmText: String = "",
-	val historyCalendarState: HistoryCalendarState
+	val historyCalendarState: HistoryCalendarState? = null
 )
 
 data class HistoryCalendarState(
-	val minDate: Date,
+	val minDate: Date = Date(0),
 	val maxDate: Date,
 	val selectedDates: Collection<Date>,
-	val highlightedDates: Collection<Date>
+	val highlightedDates: Collection<Date>,
+	val isChanged: Boolean = false
 )

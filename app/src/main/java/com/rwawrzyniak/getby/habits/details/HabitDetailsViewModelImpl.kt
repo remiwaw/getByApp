@@ -11,6 +11,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.Singles
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -30,7 +31,8 @@ class HabitDetailsViewModelImpl @Inject constructor(
 	private val dateTimeProvider: DateTimeProvider,
 	private val calculateHabitDayScoreUseCase: CalculateHabitDayScoreUseCase,
 	private val habitsRepository: HabitsRepository,
-	private val calculateDaysUseCase: CalculateDaysUseCase
+	private val calculateHistoryCalendarState: CalculateHistoryCalendarState
+
 ) : HabitDetailsViewModel() {
 	private val compositeDisposable = CompositeDisposable()
 	private val effects: Subject<HabitDetailsViewEffect> = PublishSubject.create<HabitDetailsViewEffect>()
@@ -44,7 +46,7 @@ class HabitDetailsViewModelImpl @Inject constructor(
 
 	override fun onAction(action: HabitDetailsViewAction): Completable {
 		return when(action){
-			is HabitDetailsViewAction.InitializeView -> linitializeView(action.habitId)
+			is HabitDetailsViewAction.InitializeView -> initializeView(action.habitId)
 			is HabitDetailsViewAction.OnSaveHabitClicked -> TODO()
 			is HabitDetailsViewAction.OnInputFieldStateChanged -> TODO()
 			is HabitDetailsViewAction.LowestVisibleXBecomesVisible -> updateLinearChartViewOnScroll(action.firstVisibleEpochDay)
@@ -61,38 +63,50 @@ class HabitDetailsViewModelImpl @Inject constructor(
 		).flatMapCompletable { newEntries ->
 			updateState { viewState ->
 				viewState.copy(
-					linearChartEntries = newEntries + viewState.linearChartEntries
+					linearChartEntries = newEntries + viewState.linearChartEntries,
+					historyCalendarState = viewState.historyCalendarState?.copy( isChanged =  false)
 				)
 			}
 		}
 	}
 
-	private fun linitializeView(
+	private fun initializeView(
 		habitId: String,
 		fromDate: LocalDate = dateTimeProvider.getCurrentDate()
 	): Completable = getHabitFromCacheOrRepo(habitId)
 		.flatMapCompletable { habit ->
-			calculateLinearChartEntries(
-				habit,
-				fromDate
-			).flatMapCompletable { linearChartEntries ->
-				Completable.fromAction {
-					state.onNext(
-						HabitDetailsViewState(
-							linearChartEntries,
-							habit,
-							habit.name,
-							resources.getString(
-								R.string.frequencyTextInDetails,
-								habit.frequency.times,
-								habit.frequency.cycle
-							),
-							if (habit.reminder == null) resources.getString(R.string.reminderDefaultValue) else habit.reminder.toString()
-						)
-					)
+			Singles.zip(calculateLinearChartEntries(habit, fromDate), calculateHistoryCalendarState.calculate(habit))
+				.flatMapCompletable { calendarHistoryStateAndlinearChartEntries ->
+					Completable.fromAction {
+						publishInitState(calendarHistoryStateAndlinearChartEntries, habit)
+					}
 				}
-			}
 		}
+
+	private fun publishInitState(
+		calendarHistoryStateAndlinearChartEntries: Pair<List<Entry>, HistoryCalendarState>,
+		habit: Habit
+	) {
+		state.onNext(
+			HabitDetailsViewState(
+				calendarHistoryStateAndlinearChartEntries.first,
+				habit,
+				habit.name,
+				frequencyText(habit),
+				reminderText(habit),
+				historyCalendarState = calendarHistoryStateAndlinearChartEntries.second
+			)
+		)
+	}
+
+	private fun frequencyText(habit: Habit): String = resources.getString(
+		R.string.frequencyTextInDetails,
+		habit.frequency.times,
+		habit.frequency.cycle
+	)
+
+	private fun reminderText(habit: Habit) =
+		if (habit.reminder == null) resources.getString(R.string.reminderDefaultValue) else habit.reminder.toString()
 
 	private fun getHabitFromCacheOrRepo(habitId: String): Single<Habit> =
 		if (state.value?.habit != null) Single.just(requireNotNull((state.value as HabitDetailsViewState).habit))

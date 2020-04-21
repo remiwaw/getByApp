@@ -35,8 +35,11 @@ import io.sellmair.disposer.onStop
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_habit_details.*
 import timber.log.Timber
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.ArrayList
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
@@ -60,6 +63,8 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		binding = FragmentHabitDetailsBinding.inflate(inflater, container, false)
 
 		setupLinearChart()
+		// We need to initialize calendar with somethin to render it
+		binding.historyCalendar.init(Date(), Date())
 
 		return binding.root
 	}
@@ -129,7 +134,7 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 			return
 
 		renderLinearChart(state)
-		setupHistoryCalendar(state.historyCalendarState)
+		state.historyCalendarState?.let { setupHistoryCalendar(it) }
 	}
 
 	private fun setupLinearChart() {
@@ -160,9 +165,11 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 	}
 
 	private fun setupHistoryCalendar(historyCalendarState: HistoryCalendarState) {
-		// TODO skip if initialized
 		with(historyCalendarState) {
-			historyCalendar.init(minDate, maxDate) //
+			if(isChanged.not())
+				return
+
+			binding.historyCalendar.init(minDate, maxDate, SimpleDateFormat("MMMM, YYYY", Locale.getDefault()))
 				.inMode(CalendarPickerView.SelectionMode.MULTIPLE)
 				.withSelectedDates(selectedDates)
 				.withHighlightedDates(highlightedDates)
