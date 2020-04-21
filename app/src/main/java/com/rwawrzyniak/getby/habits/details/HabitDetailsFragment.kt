@@ -2,7 +2,6 @@ package com.rwawrzyniak.getby.habits.details
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -246,7 +245,7 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		if(lastPerformedGesture == ChartGesture.DRAG){
 			isDragInProgressSubject.onNext(true)
 		}
-		Log.i("Gesture", "START, x: " + me.x + ", y: " + me.y)
+		Timber.d("Gesture Start, lastGesture: $lastPerformedGesture")
 	}
 
 	override fun onChartGestureEnd(
@@ -256,29 +255,26 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		if(lastPerformedGesture == ChartGesture.DRAG){
 			isDragInProgressSubject.onNext(false)
 		}
-		Log.i("Gesture", "END, lastGesture: $lastPerformedGesture")
+		Timber.d("Gesture END, lastGesture: $lastPerformedGesture")
 	}
 
 	override fun onChartLongPressed(me: MotionEvent?) {
-		Log.i("LongPress", "Chart longpressed.")
+		Timber.d("hart longpressed.")
 	}
 
 	override fun onChartDoubleTapped(me: MotionEvent?) {
-		Log.i("DoubleTap", "Chart double-tapped.")
+		Timber.d("Chart double-tapped.")
 	}
 
 	override fun onChartSingleTapped(me: MotionEvent?) {
-		Log.i("SingleTap", "Chart single-tapped.")
+		Timber.d("Chart single-tapped.")
 	}
 
 	override fun onChartFling(
 		me1: MotionEvent?, me2: MotionEvent?,
 		velocityX: Float, velocityY: Float
 	) {
-		Log.i(
-			"Fling", "Chart flinged. VeloX: "
-				+ velocityX + ", VeloY: " + velocityY
-		)
+		Timber.d("Chart flinged. VeloX: $velocityX, VeloY: $velocityY")
 	}
 
 	override fun onChartScale(
@@ -286,7 +282,7 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		scaleX: Float,
 		scaleY: Float
 	) {
-		Log.i("Scale / Zoom", "ScaleX: $scaleX, ScaleY: $scaleY")
+		Timber.d("ScaleX: $scaleX, ScaleY: $scaleY")
 	}
 
 	override fun onChartTranslate(me: MotionEvent, dX: Float, dY: Float) {
