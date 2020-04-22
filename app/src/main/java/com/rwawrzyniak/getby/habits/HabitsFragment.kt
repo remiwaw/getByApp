@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,16 +19,21 @@ import com.google.android.material.snackbar.Snackbar
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.BaseFragment
 import com.rwawrzyniak.getby.core.ChromeConfiguration
+import com.rwawrzyniak.getby.core.SchedulerProvider
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
 import com.rwawrzyniak.getby.habits.details.HabitDetailsFragment.Companion.ARG_HABIT_ID
+import io.reactivex.rxkotlin.subscribeBy
+import io.sellmair.disposer.disposeBy
+import io.sellmair.disposer.onStop
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.android.synthetic.main.activity_main.*
 
 class HabitsFragment : BaseFragment() {
 	private lateinit var binding: FragmentHabitsBinding
 	private val viewModel by fragmentScopedViewModel { injector.habitsViewModel }
+	private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
 
 	private val onHabitListener = object: HabitHolder.HabitListener{
 		override fun onRowClicked(habit: Habit) {
@@ -69,21 +75,32 @@ class HabitsFragment : BaseFragment() {
 		}
 
 		binding.daysListView.adapter = HabitsAdapter(
-				emptyList<Habit>().toMutableList(),
-				onHabitListener = onHabitListener
-			)
+			viewModel.oldFiteredHabits,
+			onHabitListener = onHabitListener
+		)
 
-		viewModel.habits.observe(viewLifecycleOwner) {
-			(binding.daysListView.adapter as HabitsAdapter).updateHabitListWithDiff(it)
-		}
+		viewModel.originalHabits
+			.flattenAsObservable { it }
+			.filter { !it.isArchived }
+			.toList()
+			.subscribeOn(schedulerProvider.io())
+			.observeOn(schedulerProvider.main())
+			.subscribeBy(
+				onSuccess = { newHabits ->
+					val diffResult = DiffUtil.calculateDiff(HabitDiffCallback(viewModel.oldFiteredHabits, newHabits))
+					viewModel.oldFiteredHabits.clear()
+					viewModel.oldFiteredHabits.addAll(newHabits)
+					diffResult.dispatchUpdatesTo(binding.daysListView.adapter as HabitsAdapter)
+				}
+		).disposeBy(onStop)
 
 		binding.habitSearch.addTextChangedListener(object : TextWatcher {
 			override fun afterTextChanged(s: Editable?) {}
 
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-			override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-				(binding.daysListView.adapter as HabitsAdapter).filter.filter(text)
+			override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
+				startFiltering(text, null)
 			}
 		})
 
@@ -92,18 +109,37 @@ class HabitsFragment : BaseFragment() {
 		return binding.root
 	}
 
+	private fun startFiltering(text: CharSequence = "", isShowArchived: Boolean?) {
+		viewModel.filter(text.toString(), isShowArchived)
+			.subscribeOn(schedulerProvider.io())
+			.observeOn(schedulerProvider.main())
+			.subscribe { processFiltering() }
+			.disposeBy(onStop)
+	}
+
+	private fun processFiltering() {
+		val diffResult = DiffUtil.calculateDiff(
+			HabitDiffCallback(
+				viewModel.oldFiteredHabits,
+				viewModel.filteredHabits
+			)
+		)
+		viewModel.oldFiteredHabits.clear()
+		viewModel.oldFiteredHabits.addAll(viewModel.filteredHabits)
+		diffResult.dispatchUpdatesTo(binding.daysListView.adapter as HabitsAdapter)
+	}
+
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
-		val habitsAdapter = binding.daysListView.adapter as HabitsAdapter
 		when (item.itemId) {
 			R.id.top_add -> navigateToCreateHabit()
 			R.id.hideArchived -> {
 				if (item.isChecked) {
 					item.isChecked = false
-					habitsAdapter.showAllHabits()
+					startFiltering(isShowArchived = true)
 				}
 				else {
 					item.isChecked = true
-					habitsAdapter.hideArchivedHabits()
+					startFiltering(isShowArchived = false)
 				}
 			}
 		}

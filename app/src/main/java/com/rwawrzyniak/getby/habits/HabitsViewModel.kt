@@ -1,6 +1,5 @@
 package com.rwawrzyniak.getby.habits
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.rwawrzyniak.getby.core.DateTimeProvider
@@ -9,6 +8,7 @@ import com.rwawrzyniak.getby.core.SchedulerProvider
 import com.rwawrzyniak.getby.dagger.BusModule.GLOBAL_EVENT_SUBJECT
 import com.rwawrzyniak.getby.dagger.SchedulerModule.SCHEDULER_PROVIDER
 import io.reactivex.Completable
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.PublishSubject
@@ -31,12 +31,16 @@ class HabitsViewModel @Inject internal constructor(
     // Observers will subscribe to this since it is immutable to them
     val isBusy: MutableLiveData<Boolean>
         get() = _isBusy
-    val habits: LiveData<MutableList<Habit>> = habitsRepository.loadHabits()
-    val firstDay: MutableLiveData<LocalDate>
+    val originalHabits: Single<List<Habit>> = habitsRepository.loadHabits()
+	val filteredHabits: MutableList<Habit> = arrayListOf()
+	val oldFiteredHabits: MutableList<Habit> = arrayListOf()
+
+	private var isShowArchivedFilterOn = false
+	val firstDay: MutableLiveData<LocalDate>
         get() = _firstDay
 
     init {
-        globalEventSubject
+		globalEventSubject
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.main())
             .subscribe { firstDay.postValue((LocalDate.now())) }
@@ -54,6 +58,20 @@ class HabitsViewModel @Inject internal constructor(
 
 	fun updateHabit(habit: Habit){
 		simplySubscribe(habitsRepository.updateHabit(habit))
+	}
+
+	fun filter(query: String, showArchived: Boolean?): Completable {
+		isShowArchivedFilterOn = showArchived ?: isShowArchivedFilterOn
+		return originalHabits
+			.flattenAsObservable { it }
+			.filter { habit -> habit.name.contains(query) && if (isShowArchivedFilterOn) true else !habit.isArchived }
+			.toList()
+			.flatMapCompletable {
+				Completable.fromAction {
+					filteredHabits.clear()
+					filteredHabits.addAll(it)
+				}
+			}
 	}
 
 	private fun simplySubscribe(completable: Completable){

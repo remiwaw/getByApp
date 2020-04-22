@@ -1,6 +1,5 @@
 package com.rwawrzyniak.getby.habits
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -17,7 +16,7 @@ interface HabitDao {
 	fun getById(id: String): Single<Habit>
 
 	@Query("SELECT * FROM habit")
-	fun getAll(): LiveData<MutableList<Habit>>
+	fun getAll(): Single<List<Habit>>
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	fun insert(vararg habit: Habit) : Completable
