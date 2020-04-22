@@ -3,11 +3,8 @@ package com.rwawrzyniak.getby.habits.createupdate
 import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import com.rwawrzyniak.getby.R
-import com.rwawrzyniak.getby.core.DateTimeProvider
-import com.rwawrzyniak.getby.core.ext.date.datesInRangeFromToday
 import com.rwawrzyniak.getby.habits.Frequency
 import com.rwawrzyniak.getby.habits.Habit
-import com.rwawrzyniak.getby.habits.HabitDay
 import com.rwawrzyniak.getby.habits.HabitsRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -26,9 +23,8 @@ abstract class HabitsCreateUpdateViewModel : ViewModel() {
 
 
 class HabitsCreateUpdateViewModelImpl @Inject constructor(
-    private val habitsRepository: HabitsRepository,
-	private val resources: Resources,
-	private val dateTimeProvider: DateTimeProvider
+	private val habitsRepository: HabitsRepository,
+	private val resources: Resources
 ) : HabitsCreateUpdateViewModel() {
 	private val compositeDisposable = CompositeDisposable()
 	private val effects: Subject<HabitDetailsViewEffect> = PublishSubject.create<HabitDetailsViewEffect>()
@@ -76,15 +72,8 @@ class HabitsCreateUpdateViewModelImpl @Inject constructor(
 		return if(effect.habitNameInput.isError || effect.habitDescriptionInput.isError || effect.frequencyInput.isError){
 			Completable.fromAction {  effects.onNext(effect) }
 		} else {
-			initializeHabitHistoryIfEmpty(habit)
 			habitsRepository.saveHabit(habit)
 				.andThen { effects.onNext(HabitDetailsViewEffect.GoBack) }
-		}
-	}
-
-	private fun initializeHabitHistoryIfEmpty(habit: Habit) {
-		if (habit.history.isEmpty()) {
-			habit.history = initHistory()
 		}
 	}
 
@@ -109,10 +98,4 @@ class HabitsCreateUpdateViewModelImpl @Inject constructor(
 		} else {
 			InputFieldState()
 		}
-
-	// TODO this could lead to problem if user has change his calendar settings. I.e manually set date
-	// TODO Important find a better way to initialzie dates. After a year is passed this will cause indexBoundOf exception!
-	private fun initHistory() = dateTimeProvider.getCurrentDate().datesInRangeFromToday(5, 365).map {
-			 localDate -> HabitDay(localDate)
-	}
 }

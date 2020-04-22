@@ -36,7 +36,11 @@ class HabitHolder(view: View, private val listener: HabitListener)
 		this.habit = habit
 		habitNameView.text = this.habit.name
 
+
 		limitedHabitHistory = habitHolderHelper.filter(checkBoxList.size, habit.history)
+		if(habit.history.isEmpty()){
+			habit.history = limitedHabitHistory
+		}
 
 		checkBoxList.forEachIndexed {
 				index, checkBox -> checkBox.isChecked = limitedHabitHistory.getOrNull(index)?.checked ?: false
