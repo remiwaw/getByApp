@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,10 +21,9 @@ import com.rwawrzyniak.getby.core.SchedulerProvider
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
-import com.rwawrzyniak.getby.habits.persistance.Habit
 import com.rwawrzyniak.getby.habits.details.HabitDetailsFragment.Companion.ARG_HABIT_ID
+import com.rwawrzyniak.getby.habits.persistance.Habit
 import io.reactivex.Completable
-import io.reactivex.Single
 import io.reactivex.rxkotlin.subscribeBy
 import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
@@ -47,9 +45,38 @@ class HabitsFragment : BaseFragment() {
 		}
 
 		override fun onCheckboxClicked(habit: Habit) {
-			viewModel.updateHabit(habit)
+			simplySubscribe( viewModel.onAction(HabitsViewAction.OnUpdateHabit(habit)) )
 		}
 	}
+
+	override fun onStart() {
+		super.onStart()
+		wireViewModel()
+	}
+
+	private fun wireViewModel() {
+		viewModel.observeState()
+			.observeOn(schedulerProvider.main())
+			.subscribeOn(schedulerProvider.io())
+			.subscribeBy(onNext = this::renderState)
+			.disposeBy(lifecycle.onStop)
+	}
+
+	private fun renderState(state: HabitsViewState) {
+		with(state){
+			binding.daysListView.adapter =
+				HabitsAdapter(
+					habits = viewModel.oldFilteredHabits,
+					onHabitListener = onHabitListener
+				)
+			binding.daysListView.layoutManager = LinearLayoutManager(requireContext())
+
+			binding.daysHeaderView.initializeDaysHeader(firstHabitDayHeader)
+			state.habitsDiffResult.dispatchUpdatesTo(binding.daysListView.adapter as HabitsAdapter)
+		}
+	}
+
+	// diffResult.dispatchUpdatesTo(binding.daysListView.adapter as HabitsAdapter)
 
 	override fun getChromeConfig(): ChromeConfiguration = ChromeConfiguration(
 		showActionBar = true,
@@ -73,82 +100,35 @@ class HabitsFragment : BaseFragment() {
 		val itemTouchHelper = ItemTouchHelper(HabitsSimpleCallback())
 		itemTouchHelper.attachToRecyclerView(binding.daysListView)
 
-		viewModel.firstDay.observe(viewLifecycleOwner) {
-			binding.daysHeaderView.initializeDaysHeader(it)
-		}
-
-		binding.daysListView.adapter =
-			HabitsAdapter(
-				viewModel.oldFiteredHabits,
-				onHabitListener = onHabitListener
-			)
-
-		viewModel.originalHabits
-			.flattenAsObservable { it }
-			.filter { !it.isArchived }
-			.toList()
-			.subscribeOn(schedulerProvider.io())
-			.observeOn(schedulerProvider.main())
-			.subscribeBy(
-				onSuccess = { newHabits ->
-					val diffResult = DiffUtil.calculateDiff(
-						HabitDiffCallback(
-							viewModel.oldFiteredHabits,
-							newHabits
-						)
-					)
-					viewModel.oldFiteredHabits.clear()
-					viewModel.oldFiteredHabits.addAll(newHabits)
-					diffResult.dispatchUpdatesTo(binding.daysListView.adapter as HabitsAdapter)
-				}
-			).disposeBy(onStop)
-
 		binding.habitSearch.addTextChangedListener(object : TextWatcher {
 			override fun afterTextChanged(s: Editable?) {}
 
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
 			override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
-				refreshHabits(text, null)
+				simplySubscribe(viewModel.onAction(HabitsViewAction.OnTextFilterChanged(text.toString())))
 			}
 		})
 
-		binding.daysListView.layoutManager = LinearLayoutManager(requireContext())
-
 		return binding.root
-	}
-
-	private fun refreshHabits(text: CharSequence = "", isShowArchived: Boolean? = null){
-		viewModel.filter(text.toString(), isShowArchived)
-			.andThen(Single.fromCallable {
-				val diffResult =
-					DiffUtil.calculateDiff(
-						HabitDiffCallback(
-							viewModel.oldFiteredHabits,
-							viewModel.filteredHabits
-						)
-					)
-				viewModel.oldFiteredHabits.clear()
-				viewModel.oldFiteredHabits.addAll(viewModel.filteredHabits)
-				diffResult
-			})
-			.subscribeOn(schedulerProvider.io())
-			.observeOn(schedulerProvider.main())
-			.subscribeBy(onSuccess = {it.dispatchUpdatesTo(binding.daysListView.adapter as HabitsAdapter)})
-			.disposeBy(onStop)
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		when (item.itemId) {
 			R.id.top_add -> navigateToCreateHabit()
 			R.id.hideArchived -> {
+				val isShowArchived: Boolean
+
 					if (item.isChecked) {
 						item.isChecked = false
-						refreshHabits(isShowArchived = true)
+						isShowArchived = true
 					} else {
 						item.isChecked = true
-						refreshHabits(isShowArchived = false)
+						isShowArchived = false
 					}
+
+				simplySubscribe( viewModel.onAction(HabitsViewAction.OnShowArchiveChange(isShowArchived)))
+
 			}
 		}
 		return super.onOptionsItemSelected(item)
@@ -174,13 +154,11 @@ class HabitsFragment : BaseFragment() {
 				if (event == DISMISS_EVENT_ACTION) {
 					(binding.daysListView.adapter as HabitsAdapter).undo()
 				} else {
-					simplySubscribe(
 						if (swipedAction == SwipedAction.REMOVE) {
-							viewModel.removeHabit(swipedHabit)
+							simplySubscribe( viewModel.onAction(HabitsViewAction.OnRemoveHabit(swipedHabit)))
 						} else {
-							viewModel.archiveHabit(swipedHabit)
-						}.andThen(Completable.fromAction { refreshHabits() })
-					)
+							simplySubscribe( viewModel.onAction(HabitsViewAction.OnArchiveHabit(swipedHabit)))
+						}
 				}
 			}
 

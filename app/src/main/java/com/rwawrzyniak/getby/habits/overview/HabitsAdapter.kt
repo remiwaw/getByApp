@@ -9,7 +9,7 @@ import com.rwawrzyniak.getby.habits.persistance.Habit
 
 // TODO move logic from adapter somwhere
 class HabitsAdapter(
-	private var habits: MutableList<Habit>,
+	private var habits: MutableList<Habit> = mutableListOf(),
 	private val onHabitListener: HabitHolder.HabitListener
 )
 	: RecyclerView.Adapter<HabitHolder>() {
