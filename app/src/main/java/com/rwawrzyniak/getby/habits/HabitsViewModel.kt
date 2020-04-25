@@ -47,18 +47,14 @@ class HabitsViewModel @Inject internal constructor(
             .addTo(compositeDisposable)
     }
 
-	fun removeHabit(habit: Habit){
-		simplySubscribe(habitsRepository.removeHabit(habit))
-	}
+	fun removeHabit(habit: Habit): Completable = habitsRepository.removeHabit(habit)
 
-	fun archiveHabit(habit: Habit){
+	fun archiveHabit(habit: Habit): Completable {
 		habit.isArchived = true
-		updateHabit(habit)
+		return updateHabit(habit)
 	}
 
-	fun updateHabit(habit: Habit){
-		simplySubscribe(habitsRepository.updateHabit(habit))
-	}
+	fun updateHabit(habit: Habit): Completable = habitsRepository.updateHabit(habit)
 
 	fun filter(query: String, showArchived: Boolean?): Completable {
 		isShowArchivedFilterOn = showArchived ?: isShowArchivedFilterOn
@@ -72,13 +68,6 @@ class HabitsViewModel @Inject internal constructor(
 					filteredHabits.addAll(it)
 				}
 			}
-	}
-
-	private fun simplySubscribe(completable: Completable){
-		completable.subscribeOn(schedulerProvider.io())
-			.observeOn(schedulerProvider.main())
-			.subscribe(	)
-			.addTo(compositeDisposable)
 	}
 
     override fun onCleared() {

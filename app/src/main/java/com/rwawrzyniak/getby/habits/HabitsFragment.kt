@@ -24,6 +24,8 @@ import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
 import com.rwawrzyniak.getby.habits.details.HabitDetailsFragment.Companion.ARG_HABIT_ID
+import io.reactivex.Completable
+import io.reactivex.Single
 import io.reactivex.rxkotlin.subscribeBy
 import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
@@ -92,7 +94,7 @@ class HabitsFragment : BaseFragment() {
 					viewModel.oldFiteredHabits.addAll(newHabits)
 					diffResult.dispatchUpdatesTo(binding.daysListView.adapter as HabitsAdapter)
 				}
-		).disposeBy(onStop)
+			).disposeBy(onStop)
 
 		binding.habitSearch.addTextChangedListener(object : TextWatcher {
 			override fun afterTextChanged(s: Editable?) {}
@@ -100,7 +102,7 @@ class HabitsFragment : BaseFragment() {
 			override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
 			override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
-				startFiltering(text, null)
+				refreshHabits(text, null)
 			}
 		})
 
@@ -109,38 +111,37 @@ class HabitsFragment : BaseFragment() {
 		return binding.root
 	}
 
-	private fun startFiltering(text: CharSequence = "", isShowArchived: Boolean?) {
+	private fun refreshHabits(text: CharSequence = "", isShowArchived: Boolean? = null){
 		viewModel.filter(text.toString(), isShowArchived)
+			.andThen(Single.fromCallable {
+				val diffResult =
+					DiffUtil.calculateDiff(
+						HabitDiffCallback(
+							viewModel.oldFiteredHabits,
+							viewModel.filteredHabits
+						)
+					)
+				viewModel.oldFiteredHabits.clear()
+				viewModel.oldFiteredHabits.addAll(viewModel.filteredHabits)
+				diffResult
+			})
 			.subscribeOn(schedulerProvider.io())
 			.observeOn(schedulerProvider.main())
-			.subscribe { processFiltering() }
+			.subscribeBy(onSuccess = {it.dispatchUpdatesTo(binding.daysListView.adapter as HabitsAdapter)})
 			.disposeBy(onStop)
-	}
-
-	private fun processFiltering() {
-		val diffResult = DiffUtil.calculateDiff(
-			HabitDiffCallback(
-				viewModel.oldFiteredHabits,
-				viewModel.filteredHabits
-			)
-		)
-		viewModel.oldFiteredHabits.clear()
-		viewModel.oldFiteredHabits.addAll(viewModel.filteredHabits)
-		diffResult.dispatchUpdatesTo(binding.daysListView.adapter as HabitsAdapter)
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
 		when (item.itemId) {
 			R.id.top_add -> navigateToCreateHabit()
 			R.id.hideArchived -> {
-				if (item.isChecked) {
-					item.isChecked = false
-					startFiltering(isShowArchived = true)
-				}
-				else {
-					item.isChecked = true
-					startFiltering(isShowArchived = false)
-				}
+					if (item.isChecked) {
+						item.isChecked = false
+						refreshHabits(isShowArchived = true)
+					} else {
+						item.isChecked = true
+						refreshHabits(isShowArchived = false)
+					}
 			}
 		}
 		return super.onOptionsItemSelected(item)
@@ -153,7 +154,10 @@ class HabitsFragment : BaseFragment() {
 	private fun showUndoSnackbar(swipedHabit: Habit, swipedAction: SwipedAction) {
 		val snackbar = Snackbar.make(
 			requireView(),
-			resources.getString(R.string.habits_undo_snackbar_title, swipedAction.name.toLowerCase()),
+			resources.getString(
+				R.string.habits_undo_snackbar_title,
+				swipedAction.name.toLowerCase()
+			),
 			Snackbar.LENGTH_LONG
 		)
 		snackbar.setAction(R.string.habits_undo_snackbar_button) { }
@@ -163,8 +167,13 @@ class HabitsFragment : BaseFragment() {
 				if (event == DISMISS_EVENT_ACTION) {
 					(binding.daysListView.adapter as HabitsAdapter).undo()
 				} else {
-					if(swipedAction == SwipedAction.REMOVE) viewModel.removeHabit(swipedHabit)
-					else viewModel.archiveHabit(swipedHabit)
+					simplySubscribe(
+						if (swipedAction == SwipedAction.REMOVE) {
+							viewModel.removeHabit(swipedHabit)
+						} else {
+							viewModel.archiveHabit(swipedHabit)
+						}.andThen(Completable.fromAction { refreshHabits() })
+					)
 				}
 			}
 
@@ -235,6 +244,13 @@ class HabitsFragment : BaseFragment() {
 				c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive
 			)
 		}
+	}
+
+	private fun simplySubscribe(completable: Completable) {
+		completable.subscribeOn(schedulerProvider.io())
+			.observeOn(schedulerProvider.main())
+			.subscribe()
+			.disposeBy(onStop)
 	}
 
 	companion object{
