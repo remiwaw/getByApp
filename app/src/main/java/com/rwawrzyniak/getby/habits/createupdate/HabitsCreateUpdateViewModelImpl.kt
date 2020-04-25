@@ -3,9 +3,9 @@ package com.rwawrzyniak.getby.habits.createupdate
 import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import com.rwawrzyniak.getby.R
-import com.rwawrzyniak.getby.habits.Frequency
-import com.rwawrzyniak.getby.habits.Habit
-import com.rwawrzyniak.getby.habits.HabitsRepository
+import com.rwawrzyniak.getby.habits.persistance.Frequency
+import com.rwawrzyniak.getby.habits.persistance.Habit
+import com.rwawrzyniak.getby.habits.persistance.HabitsRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable

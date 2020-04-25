@@ -1,7 +1,7 @@
 package com.rwawrzyniak.getby.habits.details
 
 import com.github.mikephil.charting.data.Entry
-import com.rwawrzyniak.getby.habits.Habit
+import com.rwawrzyniak.getby.habits.persistance.Habit
 import java.util.Date
 
 data class HabitDetailsViewState(

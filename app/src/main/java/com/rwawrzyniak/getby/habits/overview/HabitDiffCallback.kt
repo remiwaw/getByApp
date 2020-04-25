@@ -1,7 +1,7 @@
-package com.rwawrzyniak.getby.habits
+package com.rwawrzyniak.getby.habits.overview
 
 import androidx.recyclerview.widget.DiffUtil
-import kotlin.math.sign
+import com.rwawrzyniak.getby.habits.persistance.Habit
 
 class HabitDiffCallback(
 	private val oldList: List<Habit>,

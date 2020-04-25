@@ -20,10 +20,10 @@ import com.rwawrzyniak.getby.core.ext.markRequired
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitCreateUpdateBinding
-import com.rwawrzyniak.getby.habits.Frequency
-import com.rwawrzyniak.getby.habits.Habit
-import com.rwawrzyniak.getby.habits.HourMinute
-import com.rwawrzyniak.getby.habits.Reminder
+import com.rwawrzyniak.getby.habits.persistance.Frequency
+import com.rwawrzyniak.getby.habits.persistance.Habit
+import com.rwawrzyniak.getby.habits.persistance.HourMinute
+import com.rwawrzyniak.getby.habits.persistance.Reminder
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
 import io.reactivex.Completable
 import io.reactivex.rxkotlin.subscribeBy
@@ -297,7 +297,13 @@ class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedList
 		val reminderText = binding.reminder.text
 		val hourOfDay = reminderText.split(":")[0].toInt()
 		val minuteOfDay  = reminderText.split(":")[1].toInt()
-		return Reminder(HourMinute(hourOfDay, minuteOfDay), daysOfWeek)
+		return Reminder(
+			HourMinute(
+				hourOfDay,
+				minuteOfDay
+			),
+			daysOfWeek
+		)
 	}
 
 	private fun getFrequencyValue(): Frequency = when (binding.frequencyPicker.selectedItemPosition) {
@@ -305,7 +311,10 @@ class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedList
 		1 -> Frequency(1, 7)
 		2 -> Frequency(2, 7)
 		3 -> Frequency(5, 7)
-		else -> Frequency(binding.customFrequencyView.getTimes(), binding.customFrequencyView.getDays())
+		else -> Frequency(
+			binding.customFrequencyView.getTimes(),
+			binding.customFrequencyView.getDays()
+		)
 	}
 
 	private fun getFrequencySpinnerIndex(frequency: Frequency): Int = when (frequency) {

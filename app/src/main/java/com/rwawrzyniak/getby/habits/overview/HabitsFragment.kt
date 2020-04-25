@@ -1,4 +1,4 @@
-package com.rwawrzyniak.getby.habits
+package com.rwawrzyniak.getby.habits.overview
 
 import android.graphics.Canvas
 import android.os.Bundle
@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -23,6 +22,7 @@ import com.rwawrzyniak.getby.core.SchedulerProvider
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
+import com.rwawrzyniak.getby.habits.persistance.Habit
 import com.rwawrzyniak.getby.habits.details.HabitDetailsFragment.Companion.ARG_HABIT_ID
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -34,10 +34,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class HabitsFragment : BaseFragment() {
 	private lateinit var binding: FragmentHabitsBinding
-	private val viewModel by fragmentScopedViewModel { injector.habitsViewModel }
+	private val viewModel by fragmentScopedViewModel { injector.habitsViewModelImpl }
 	private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
 
-	private val onHabitListener = object: HabitHolder.HabitListener{
+	private val onHabitListener = object:
+		HabitHolder.HabitListener {
 		override fun onRowClicked(habit: Habit) {
 			nav_host.findNavController().navigate(
 				R.id.action_habitsFragment_to_habitDetailsFragment,
@@ -76,10 +77,11 @@ class HabitsFragment : BaseFragment() {
 			binding.daysHeaderView.initializeDaysHeader(it)
 		}
 
-		binding.daysListView.adapter = HabitsAdapter(
-			viewModel.oldFiteredHabits,
-			onHabitListener = onHabitListener
-		)
+		binding.daysListView.adapter =
+			HabitsAdapter(
+				viewModel.oldFiteredHabits,
+				onHabitListener = onHabitListener
+			)
 
 		viewModel.originalHabits
 			.flattenAsObservable { it }
@@ -89,7 +91,12 @@ class HabitsFragment : BaseFragment() {
 			.observeOn(schedulerProvider.main())
 			.subscribeBy(
 				onSuccess = { newHabits ->
-					val diffResult = DiffUtil.calculateDiff(HabitDiffCallback(viewModel.oldFiteredHabits, newHabits))
+					val diffResult = DiffUtil.calculateDiff(
+						HabitDiffCallback(
+							viewModel.oldFiteredHabits,
+							newHabits
+						)
+					)
 					viewModel.oldFiteredHabits.clear()
 					viewModel.oldFiteredHabits.addAll(newHabits)
 					diffResult.dispatchUpdatesTo(binding.daysListView.adapter as HabitsAdapter)
@@ -201,8 +208,12 @@ class HabitsFragment : BaseFragment() {
 				(binding.daysListView.adapter as HabitsAdapter).processSwipedItem(position)
 
 			when (direction) {
-				ItemTouchHelper.LEFT -> showUndoSnackbar(swipedItem, SwipedAction.REMOVE)
-				ItemTouchHelper.RIGHT -> showUndoSnackbar(swipedItem, SwipedAction.ARCHIVE)
+				ItemTouchHelper.LEFT -> showUndoSnackbar(swipedItem,
+					SwipedAction.REMOVE
+				)
+				ItemTouchHelper.RIGHT -> showUndoSnackbar(swipedItem,
+					SwipedAction.ARCHIVE
+				)
 			}
 		}
 

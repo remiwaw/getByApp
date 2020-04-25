@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import com.rwawrzyniak.getby.core.GlobalEvent
 import com.rwawrzyniak.getby.core.PreferencesHelper
 import com.rwawrzyniak.getby.core.SchedulerProvider
-import com.rwawrzyniak.getby.habits.HabitsViewModel
+import com.rwawrzyniak.getby.habits.overview.HabitsViewModelImpl
 import com.rwawrzyniak.getby.habits.createupdate.HabitsCreateUpdateViewModelImpl
 import com.rwawrzyniak.getby.habits.details.HabitDetailsViewModelImpl
 import com.rwawrzyniak.getby.login.LoginViewModel
@@ -30,7 +30,7 @@ interface ApplicationComponent {
 
     val habitDetailsViewModel: HabitDetailsViewModelImpl
     val habitsCreateUpdateViewModel: HabitsCreateUpdateViewModelImpl
-    val habitsViewModel: HabitsViewModel
+    val habitsViewModelImpl: HabitsViewModelImpl
     val loginViewModel: LoginViewModel
     val registerViewModel: RegisterViewModel
     @Named("schedulerProvider") fun provideSchedulerProvider(): SchedulerProvider

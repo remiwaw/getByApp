@@ -1,10 +1,12 @@
-package com.rwawrzyniak.getby.habits
+package com.rwawrzyniak.getby.habits.overview
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.rwawrzyniak.getby.R
+import com.rwawrzyniak.getby.habits.persistance.Habit
+
 // TODO move logic from adapter somwhere
 class HabitsAdapter(
 	private var habits: MutableList<Habit>,
@@ -54,7 +56,7 @@ class HabitsAdapter(
 		)
 		notifyItemInserted(recentlySwipedItemPosition)
 	}
-	
+
 	companion object{
 		private const val ARCHIVED_HABIT = 1
 		private const val ACTIVE_HABIT = 0

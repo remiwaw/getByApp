@@ -2,7 +2,7 @@ package com.rwawrzyniak.getby.habits.details
 
 import com.rwawrzyniak.getby.core.DateTimeProvider
 import com.rwawrzyniak.getby.core.ext.date.toDate
-import com.rwawrzyniak.getby.habits.Habit
+import com.rwawrzyniak.getby.habits.persistance.Habit
 import io.reactivex.Single
 import java.util.Date
 import javax.inject.Inject

@@ -1,6 +1,6 @@
 package com.rwawrzyniak.getby.core.ext.date
 
-import com.rwawrzyniak.getby.habits.DayHeaderDto
+import com.rwawrzyniak.getby.habits.persistance.DayHeaderDto
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter

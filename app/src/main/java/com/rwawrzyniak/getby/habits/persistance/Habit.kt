@@ -1,4 +1,4 @@
-package com.rwawrzyniak.getby.habits
+package com.rwawrzyniak.getby.habits.persistance
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

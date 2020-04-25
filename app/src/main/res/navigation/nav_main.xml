@@ -56,7 +56,7 @@
     </fragment>
     <fragment
         android:id="@+id/habitsFragment"
-        android:name="com.rwawrzyniak.getby.habits.HabitsFragment"
+        android:name="com.rwawrzyniak.getby.habits.overview.HabitsFragment"
         android:label="HabitsFragmnt" >
 		<action
 			android:id="@+id/action_habitsFragment_to_habitDetailsFragment"

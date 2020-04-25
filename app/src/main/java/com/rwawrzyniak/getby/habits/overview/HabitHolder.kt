@@ -1,4 +1,4 @@
-package com.rwawrzyniak.getby.habits
+package com.rwawrzyniak.getby.habits.overview
 
 import android.view.View
 import android.widget.CheckBox
@@ -8,12 +8,15 @@ import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.DateTimeProvider
+import com.rwawrzyniak.getby.habits.persistance.Habit
+import com.rwawrzyniak.getby.habits.persistance.HabitDay
 
 // TODO change findVieweBy id to binding, check if it works with changing Days
 class HabitHolder(view: View, private val listener: HabitListener)
     : RecyclerView.ViewHolder(view), View.OnClickListener {
 
-	private val habitHolderHelper: HabitHolderHelper = HabitHolderHelper(DateTimeProvider())
+	private val habitHolderHelper: HabitHolderHelper =
+		HabitHolderHelper(DateTimeProvider())
 	private lateinit var limitedHabitHistory: List<HabitDay>
 
 	interface HabitListener {

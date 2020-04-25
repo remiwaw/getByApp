@@ -6,9 +6,9 @@ import com.github.mikephil.charting.data.Entry
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.DateTimeProvider
 import com.rwawrzyniak.getby.core.ext.date.toLocalDate
-import com.rwawrzyniak.getby.habits.Habit
-import com.rwawrzyniak.getby.habits.HabitDay
-import com.rwawrzyniak.getby.habits.HabitsRepository
+import com.rwawrzyniak.getby.habits.persistance.Habit
+import com.rwawrzyniak.getby.habits.persistance.HabitDay
+import com.rwawrzyniak.getby.habits.persistance.HabitsRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -57,7 +57,12 @@ class HabitDetailsViewModelImpl @Inject constructor(
 
 	private fun saveNewDaysAndUpdateView(selectedDates: List<Date>): Completable = state.take(1)
 		.flatMapCompletable {
-			val newHistory: List<HabitDay> = selectedDates.map { date ->  HabitDay(date.toLocalDate(), checked = true) }
+			val newHistory: List<HabitDay> = selectedDates.map { date ->
+				HabitDay(
+					date.toLocalDate(),
+					checked = true
+				)
+			}
 			val updatedHabit = requireNotNull(it.habit).copy(history = newHistory)
 			habitsRepository.saveHabit(updatedHabit)
 				.andThen(initializeView(it.habit.id))
