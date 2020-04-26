@@ -31,12 +31,13 @@ class HabitsViewModelImpl @Inject internal constructor(
 	private val state = BehaviorSubject.create<HabitsViewState>()
 
 	private val filteredHabits: MutableList<Habit> = arrayListOf()
-	val oldFilteredHabits: MutableList<Habit> = arrayListOf()
+	private val oldFilteredHabits: MutableList<Habit> = arrayListOf()
 
 	// TODO change this to use shared preferences
 	private var isShowArchivedFilterOn = false
 
-	override fun observeState(): Observable<HabitsViewState> = state.startWith(createDefaultState()).hide()
+
+	override fun observeState(): Observable<HabitsViewState> = state.hide()
 
 	override fun onAction(action: HabitsViewAction): Completable {
 		return when(action){
@@ -45,6 +46,7 @@ class HabitsViewModelImpl @Inject internal constructor(
 			is HabitsViewAction.OnUpdateHabit -> onUpdateHabit(action.habit)
 			is HabitsViewAction.OnTextFilterChanged -> onTextFilterChanged(action.filterText)
 			is HabitsViewAction.OnShowArchiveChange -> onShowArchiveChange(action.isShowArchived)
+			is HabitsViewAction.Init -> createDefaultState().flatMapCompletable { Completable.fromAction { state.onNext(it) }  }
 		}
 	}
 
@@ -62,20 +64,18 @@ class HabitsViewModelImpl @Inject internal constructor(
 	): Completable =
 		callback.andThen(
 			refreshHabits(isShowArchived = isShowArchived, text = filterText)
-				.flatMapCompletable { diffResult ->
-					Completable.fromAction {
+				.flatMapCompletable { updatedHabitsInfo ->
 						updateState { viewState ->
 							viewState.copy(
-								habitsDiffResult = diffResult
+								updatedHabitsInfo = updatedHabitsInfo
 							)
-						}
 					}
 				})
 
 	private fun createDefaultState(): Observable<HabitsViewState> {
 		return Observables.combineLatest(initHabits(), Observable.just(false), initFirstHeaderDay()){
-				habitsDiffResult: DiffUtil.DiffResult , isShowArchived: Boolean, firstHeaderDay ->
-			HabitsViewState(habitsDiffResult, isShowArchived, firstHeaderDay)
+				updatedHabitsInfo: UpdatedHabitsInfo , isShowArchived: Boolean, firstHeaderDay ->
+			HabitsViewState(updatedHabitsInfo, isShowArchived, firstHeaderDay)
 		}
 	}
 
@@ -84,7 +84,7 @@ class HabitsViewModelImpl @Inject internal constructor(
 		.startWith(GlobalEvent.DateChanged)
 			.map {  dateTimeProvider.getCurrentDate() }
 
-	private fun initHabits(): Observable<DiffUtil.DiffResult> =
+	private fun initHabits(): Observable<UpdatedHabitsInfo> =
 		habitsRepository.loadHabits()
 			.flattenAsObservable { it }
 			.filter { !it.isArchived }
@@ -98,10 +98,10 @@ class HabitsViewModelImpl @Inject internal constructor(
 			)
 				oldFilteredHabits.clear()
 				oldFilteredHabits.addAll(newHabits)
-				diffResult
+				UpdatedHabitsInfo(newHabits, diffResult)
 			}.toObservable()
 
-	private fun refreshHabits(text: CharSequence = "", isShowArchived: Boolean? = null): Single<DiffUtil.DiffResult> {
+	private fun refreshHabits(text: CharSequence = "", isShowArchived: Boolean? = null): Single<UpdatedHabitsInfo> {
 		return filter(text.toString(), isShowArchived)
 			.andThen(Single.fromCallable {
 				val diffResult =
@@ -113,7 +113,7 @@ class HabitsViewModelImpl @Inject internal constructor(
 					)
 				oldFilteredHabits.clear()
 				oldFilteredHabits.addAll(filteredHabits)
-				diffResult
+				UpdatedHabitsInfo(filteredHabits, diffResult)
 			})
 	}
 

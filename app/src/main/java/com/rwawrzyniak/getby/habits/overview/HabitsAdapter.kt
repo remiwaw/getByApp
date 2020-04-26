@@ -17,6 +17,10 @@ class HabitsAdapter(
 	private var recentlySwipedItemPosition: Int = -1
 	private lateinit var recentlySwipedItem: Habit
 
+	fun setData(data: List<Habit>){
+		habits = data.toMutableList()
+	}
+
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitHolder {
 		val context: Context = parent.context
 		val inflater = LayoutInflater.from(context)

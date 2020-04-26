@@ -49,35 +49,6 @@ class HabitsFragment : BaseFragment() {
 		}
 	}
 
-	override fun onStart() {
-		super.onStart()
-		wireViewModel()
-	}
-
-	private fun wireViewModel() {
-		viewModel.observeState()
-			.observeOn(schedulerProvider.main())
-			.subscribeOn(schedulerProvider.io())
-			.subscribeBy(onNext = this::renderState)
-			.disposeBy(lifecycle.onStop)
-	}
-
-	private fun renderState(state: HabitsViewState) {
-		with(state){
-			binding.daysListView.adapter =
-				HabitsAdapter(
-					habits = viewModel.oldFilteredHabits,
-					onHabitListener = onHabitListener
-				)
-			binding.daysListView.layoutManager = LinearLayoutManager(requireContext())
-
-			binding.daysHeaderView.initializeDaysHeader(firstHabitDayHeader)
-			state.habitsDiffResult.dispatchUpdatesTo(binding.daysListView.adapter as HabitsAdapter)
-		}
-	}
-
-	// diffResult.dispatchUpdatesTo(binding.daysListView.adapter as HabitsAdapter)
-
 	override fun getChromeConfig(): ChromeConfiguration = ChromeConfiguration(
 		showActionBar = true,
 		actionBarTitle = getString(R.string.habits_action_bar_title),
@@ -90,6 +61,11 @@ class HabitsFragment : BaseFragment() {
 		setHasOptionsMenu(true)
 	}
 
+	override fun onStart() {
+		super.onStart()
+		wireViewModel()
+	}
+
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,
@@ -99,6 +75,12 @@ class HabitsFragment : BaseFragment() {
 
 		val itemTouchHelper = ItemTouchHelper(HabitsSimpleCallback())
 		itemTouchHelper.attachToRecyclerView(binding.daysListView)
+
+		binding.daysListView.adapter =
+			HabitsAdapter(
+				onHabitListener = onHabitListener
+			)
+		binding.daysListView.layoutManager = LinearLayoutManager(requireContext())
 
 		binding.habitSearch.addTextChangedListener(object : TextWatcher {
 			override fun afterTextChanged(s: Editable?) {}
@@ -111,6 +93,25 @@ class HabitsFragment : BaseFragment() {
 		})
 
 		return binding.root
+	}
+
+	private fun wireViewModel() {
+		simplySubscribe(viewModel.onAction(HabitsViewAction.Init))
+
+		viewModel.observeState()
+			.observeOn(schedulerProvider.main())
+			.subscribeOn(schedulerProvider.io())
+			.subscribeBy(onNext = this::renderState)
+			.disposeBy(lifecycle.onStop)
+	}
+
+	private fun renderState(state: HabitsViewState) {
+		with(state){
+			val adapter = binding.daysListView.adapter as HabitsAdapter
+			binding.daysHeaderView.initializeDaysHeader(firstHabitDayHeader)
+			adapter.setData(state.updatedHabitsInfo.updatedList)
+			state.updatedHabitsInfo.habitsDiffResult.dispatchUpdatesTo(adapter)
+		}
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
