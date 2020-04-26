@@ -18,8 +18,8 @@ class PreferencesHelper @Inject internal constructor(private val preferences: Sh
 		preferences.edit().putBoolean(key, value).apply()
 	}
 
-	fun getBoolean( key: String): Boolean {
-		return preferences.getBoolean(key, false)
+	fun getBoolean( key: String, defaultValue: Boolean = false): Boolean {
+		return preferences.getBoolean(key, defaultValue)
 	}
 
 	fun putInt( key: String, value: Boolean) {

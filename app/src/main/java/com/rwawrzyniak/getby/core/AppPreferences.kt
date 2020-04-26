@@ -3,13 +3,13 @@ package com.rwawrzyniak.getby.core
 import javax.inject.Inject
 
 class AppPreferences @Inject internal constructor(private val preferencesHelper: PreferencesHelper){
-	fun setShowArchivedHabits(isShowArchived: Boolean){
-		preferencesHelper.putBoolean(SHOW_ARCHIVED_HABITS_FLAG, isShowArchived)
+	fun setHideArchivedHabits(isHideArchived: Boolean){
+		preferencesHelper.putBoolean(HIDE_ARCHIVED_HABITS, isHideArchived)
 	}
 
-	fun getShowArchivedHabits(): Boolean = preferencesHelper.getBoolean(SHOW_ARCHIVED_HABITS_FLAG)
+	fun getHideArchivedHabits(): Boolean = preferencesHelper.getBoolean(HIDE_ARCHIVED_HABITS, true)
 
 	companion object{
-		private const val SHOW_ARCHIVED_HABITS_FLAG = "showArchivedHabits"
+		private const val HIDE_ARCHIVED_HABITS = "hideArchivedHabits"
 	}
 }

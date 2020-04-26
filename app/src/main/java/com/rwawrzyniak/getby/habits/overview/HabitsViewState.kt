@@ -6,7 +6,8 @@ import java.time.LocalDate
 
 data class HabitsViewState(
 	val updatedHabitsInfo: UpdatedHabitsInfo,
-	val isShownArchive: Boolean = false,
+	val isHideArchive: Boolean = true,
+	val isInit: Boolean = false, // only in initialize phase we change some views, i.e isShowArchive
 	val firstHabitDayHeader: LocalDate
 )
 

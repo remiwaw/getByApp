@@ -8,5 +8,5 @@ sealed class HabitsViewAction {
 	internal class OnArchiveHabit(val habit: Habit): HabitsViewAction()
 	internal class OnUpdateHabit(val habit: Habit): HabitsViewAction()
 	internal class OnTextFilterChanged(val filterText: String): HabitsViewAction()
-	internal class OnShowArchiveChange(val isShowArchived: Boolean): HabitsViewAction()
+	internal class OnShowArchiveChange(val isHideArchived: Boolean): HabitsViewAction()
 }

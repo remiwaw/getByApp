@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 abstract class BaseFragment : Fragment() {
 
+	lateinit var topMenu: Menu
     val actionBar by lazy { (activity as ChromeExtensionsProvider).getAppActionBar() }
     val bottomNavigationView by lazy {
         (activity as ChromeExtensionsProvider).getBottomNavigation()
@@ -72,6 +73,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
+		topMenu = menu
 		menu.findItem(R.id.top_add).isVisible = getChromeConfig().showActionBarAddButton
 		menu.findItem(R.id.action_save).isVisible = getChromeConfig().showActionBarSaveButton
 		menu.findItem(R.id.action_edit).isVisible = getChromeConfig().showActionBarEditButton

@@ -2,6 +2,7 @@ package com.rwawrzyniak.getby.habits.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.DiffUtil
+import com.rwawrzyniak.getby.core.AppPreferences
 import com.rwawrzyniak.getby.core.DateTimeProvider
 import com.rwawrzyniak.getby.core.GlobalEvent
 import com.rwawrzyniak.getby.dagger.BusModule.GLOBAL_EVENT_SUBJECT
@@ -25,17 +26,14 @@ abstract class HabitsViewModel: ViewModel() {
 class HabitsViewModelImpl @Inject internal constructor(
     @Named(GLOBAL_EVENT_SUBJECT) private val globalEventSubject: PublishSubject<GlobalEvent>,
     private val habitsRepository: HabitsRepository,
-	private val dateTimeProvider: DateTimeProvider
+	private val dateTimeProvider: DateTimeProvider,
+	private val preferences: AppPreferences
 ) : HabitsViewModel() {
     private val compositeDisposable = CompositeDisposable()
 	private val state = BehaviorSubject.create<HabitsViewState>()
 
 	private val filteredHabits: MutableList<Habit> = arrayListOf()
 	private val oldFilteredHabits: MutableList<Habit> = arrayListOf()
-
-	// TODO change this to use shared preferences
-	private var isShowArchivedFilterOn = false
-
 
 	override fun observeState(): Observable<HabitsViewState> = state.hide()
 
@@ -45,37 +43,45 @@ class HabitsViewModelImpl @Inject internal constructor(
 			is HabitsViewAction.OnArchiveHabit -> onArchiveHabit(action.habit)
 			is HabitsViewAction.OnUpdateHabit -> onUpdateHabit(action.habit)
 			is HabitsViewAction.OnTextFilterChanged -> onTextFilterChanged(action.filterText)
-			is HabitsViewAction.OnShowArchiveChange -> onShowArchiveChange(action.isShowArchived)
+			is HabitsViewAction.OnShowArchiveChange -> onShowArchiveChange(action.isHideArchived)
 			is HabitsViewAction.Init -> createDefaultState().flatMapCompletable { Completable.fromAction { state.onNext(it) }  }
 		}
 	}
 
 	private fun onTextFilterChanged(filterText: String) = updateHabitState(filterText = filterText)
-	private fun onShowArchiveChange(showArchived: Boolean) = updateHabitState(isShowArchived = showArchived)
+	private fun onShowArchiveChange(hideArchived: Boolean): Completable {
+		val callback = Completable.fromAction { preferences.setHideArchivedHabits(hideArchived) }
+		return updateHabitState(callback)
+	}
 	private fun onRemoveHabit(habit: Habit) = updateHabitState(removeHabit(habit))
-	private fun onArchiveHabit(habit: Habit) = updateHabitState(archiveHabit(habit.copy(isArchived = true)))
+	private fun onArchiveHabit(habit: Habit) = updateHabitState(updateHabit(habit.copy(isArchived = true)))
 
 	private fun onUpdateHabit(habit: Habit) = habitsRepository.updateHabit(habit) // no need to refresh view
 
 	private fun updateHabitState(
 		callback: Completable = Completable.complete(),
-		isShowArchived: Boolean = false,
 		filterText: String = ""
-	): Completable =
-		callback.andThen(
-			refreshHabits(isShowArchived = isShowArchived, text = filterText)
-				.flatMapCompletable { updatedHabitsInfo ->
+	): Completable {
+		return callback.andThen(
+			Completable.defer {
+				refreshHabits(text = filterText)
+					.flatMapCompletable { updatedHabitsInfo ->
 						updateState { viewState ->
 							viewState.copy(
-								updatedHabitsInfo = updatedHabitsInfo
+								isInit = false,
+								updatedHabitsInfo = updatedHabitsInfo,
+								isHideArchive = preferences.getHideArchivedHabits()
 							)
+						}
 					}
-				})
+			}
+		)
+	}
 
 	private fun createDefaultState(): Observable<HabitsViewState> {
-		return Observables.combineLatest(initHabits(), Observable.just(false), initFirstHeaderDay()){
-				updatedHabitsInfo: UpdatedHabitsInfo , isShowArchived: Boolean, firstHeaderDay ->
-			HabitsViewState(updatedHabitsInfo, isShowArchived, firstHeaderDay)
+		return Observables.combineLatest(initHabits(), Observable.just(preferences.getHideArchivedHabits()), initFirstHeaderDay()){
+				updatedHabitsInfo: UpdatedHabitsInfo , hideArchived: Boolean, firstHeaderDay ->
+			HabitsViewState(updatedHabitsInfo, hideArchived, true, firstHeaderDay)
 		}
 	}
 
@@ -101,8 +107,9 @@ class HabitsViewModelImpl @Inject internal constructor(
 				UpdatedHabitsInfo(newHabits, diffResult)
 			}.toObservable()
 
-	private fun refreshHabits(text: CharSequence = "", isShowArchived: Boolean? = null): Single<UpdatedHabitsInfo> {
-		return filter(text.toString(), isShowArchived)
+	private fun refreshHabits(text: CharSequence = ""): Single<UpdatedHabitsInfo> =
+		Single.just(preferences.getHideArchivedHabits())
+			.flatMapCompletable { hideArchived -> filter(text.toString(), hideArchived)}
 			.andThen(Single.fromCallable {
 				val diffResult =
 					DiffUtil.calculateDiff(
@@ -115,22 +122,14 @@ class HabitsViewModelImpl @Inject internal constructor(
 				oldFilteredHabits.addAll(filteredHabits)
 				UpdatedHabitsInfo(filteredHabits, diffResult)
 			})
-	}
 
 	private fun removeHabit(habit: Habit): Completable = habitsRepository.removeHabit(habit)
-
-	private fun archiveHabit(habit: Habit): Completable {
-		habit.isArchived = true
-		return updateHabit(habit)
-	}
-
 	private fun updateHabit(habit: Habit): Completable = habitsRepository.updateHabit(habit)
 
-	private fun filter(query: String, showArchived: Boolean?): Completable {
-		isShowArchivedFilterOn = showArchived ?: isShowArchivedFilterOn
+	private fun filter(query: String, hideArchived: Boolean): Completable {
 		return habitsRepository.loadHabits()
 			.flattenAsObservable { it }
-			.filter { habit -> habit.name.contains(query) && if (isShowArchivedFilterOn) true else !habit.isArchived }
+			.filter { habit -> habit.name.contains(query) && if (hideArchived) !habit.isArchived else true  }
 			.toList()
 			.flatMapCompletable {
 				Completable.fromAction {

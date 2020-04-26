@@ -111,6 +111,9 @@ class HabitsFragment : BaseFragment() {
 			binding.daysHeaderView.initializeDaysHeader(firstHabitDayHeader)
 			adapter.setData(state.updatedHabitsInfo.updatedList)
 			state.updatedHabitsInfo.habitsDiffResult.dispatchUpdatesTo(adapter)
+			if(state.isInit){
+				topMenu.getItem(3).subMenu.getItem(0).isChecked = state.isHideArchive // TODO change it to safe calls, why findViewBy id return null?
+			}
 		}
 	}
 
@@ -118,17 +121,10 @@ class HabitsFragment : BaseFragment() {
 		when (item.itemId) {
 			R.id.top_add -> navigateToCreateHabit()
 			R.id.hideArchived -> {
-				val isShowArchived: Boolean
-
-					if (item.isChecked) {
-						item.isChecked = false
-						isShowArchived = true
-					} else {
-						item.isChecked = true
-						isShowArchived = false
-					}
-
-				simplySubscribe( viewModel.onAction(HabitsViewAction.OnShowArchiveChange(isShowArchived)))
+				item.isChecked = !item.isChecked
+				simplySubscribe( viewModel.onAction(HabitsViewAction.OnShowArchiveChange(
+					isHideArchived = item.isChecked
+				)))
 
 			}
 		}
