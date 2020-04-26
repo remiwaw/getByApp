@@ -259,7 +259,6 @@ class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedList
 		when (item.itemId) {
 			R.id.action_save -> {
 				onSaveHabitClick()
-				goBack()
 			}
 		}
 
