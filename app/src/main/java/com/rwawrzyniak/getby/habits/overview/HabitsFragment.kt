@@ -29,6 +29,7 @@ import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_habits.*
 import java.util.Locale
 
 class HabitsFragment : BaseFragment() {
@@ -108,10 +109,12 @@ class HabitsFragment : BaseFragment() {
 
 	private fun renderState(state: HabitsViewState) {
 		with(state){
+			val data = state.updatedHabitsInfo.updatedList
 			val adapter = binding.daysListView.adapter as HabitsAdapter
 			binding.daysHeaderView.initializeDaysHeader(firstHabitDayHeader)
-			adapter.setData(state.updatedHabitsInfo.updatedList)
+			adapter.setData(data)
 			state.updatedHabitsInfo.habitsDiffResult.dispatchUpdatesTo(adapter)
+			if(data.isEmpty()) noHabits.visibility = View.VISIBLE else noHabits.visibility = View.INVISIBLE
 			if(state.isInit){
 				topMenu.getItem(3).subMenu.getItem(0).isChecked = state.isHideArchive // TODO change it to safe calls, why findViewBy id return null?
 			}

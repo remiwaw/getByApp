@@ -83,5 +83,6 @@
 	<!--	Habit detail -->
 	<string name="habitsDetailsTitle">Details</string>
 	<string name="frequencyTextInDetails">%1$d times in %2$d days</string>
+	<string name="noHabitsText">Currently there are no habits. Add one!</string>
 
 </resources>

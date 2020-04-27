@@ -27,6 +27,15 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/habitSearch" />
 
+	<TextView
+		android:id="@+id/noHabits"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center"
+		android:text="@string/noHabitsText"
+		android:textAppearance="?android:textAppearanceMedium"
+		android:visibility="invisible" />
+
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/daysListView"
 		android:layout_width="match_parent"
