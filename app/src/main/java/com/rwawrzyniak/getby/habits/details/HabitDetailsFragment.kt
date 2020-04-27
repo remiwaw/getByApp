@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
@@ -136,6 +138,7 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 			return
 
 		renderLinearChart(state)
+		renderBestStrikeChart(state)
 		state.historyCalendarState?.let { setupHistoryCalendar(it) }
 	}
 
@@ -235,6 +238,24 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		}
 
 		binding.lineChart.setVisibleXRangeMaximum(VISIBLE_X_RANGE)
+	}
+
+	private fun renderBestStrikeChart(state: HabitDetailsViewState){
+		val bestStrikeDataSet: BarDataSet
+
+		if (bestStrikeChart.data != null &&
+			bestStrikeChart.data.dataSetCount > 0
+		) {
+
+		} else {
+			bestStrikeDataSet = BarDataSet(state.bestStrikeLineEntries, "")
+			bestStrikeDataSet.valueTextSize = 9f
+			bestStrikeDataSet.setColors(Color.rgb(124, 181, 236))
+			val data = BarData(bestStrikeDataSet)
+			data.barWidth = 8.5f
+			bestStrikeChart.data = data
+			bestStrikeChart.invalidate()
+		}
 	}
 
 	private fun subscribeTo(completable: Completable) {

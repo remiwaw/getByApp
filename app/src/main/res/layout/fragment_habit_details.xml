@@ -122,7 +122,7 @@
 			</androidx.cardview.widget.CardView>
 
 			<androidx.cardview.widget.CardView
-				android:id="@+id/calendarLineGraph"
+				android:id="@id/calendarLineGraphCard"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				app:layout_constraintTop_toBottomOf="@+id/linearGraphCardView"
@@ -183,6 +183,51 @@
 				</androidx.constraintlayout.widget.ConstraintLayout>
 
 			</androidx.cardview.widget.CardView>
+
+			<androidx.cardview.widget.CardView
+				android:id="@+id/bestStrikeGraphCardView"
+				android:layout_width="match_parent"
+				android:layout_height="320dp"
+				app:layout_constraintTop_toBottomOf="@+id/calendarLineGraphCard"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:cardElevation="2dp"
+				android:layout_marginTop="8dp"
+				android:layout_marginRight="8dp"
+				android:layout_marginLeft="8dp"
+				>
+
+				<androidx.constraintlayout.widget.ConstraintLayout
+					android:layout_height="match_parent"
+					android:layout_width="match_parent">
+
+					<TextView
+						android:id="@+id/bestStrikeGraphCardTitle"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textAlignment="viewStart"
+						android:textSize="16sp"
+						android:textStyle="bold"
+						android:textColor="@color/colorPrimary"
+						android:paddingStart="4dp"
+						android:paddingEnd="4dp"
+						app:layout_constraintStart_toStartOf="parent"
+						app:layout_constraintTop_toTopOf="parent"
+						android:text="Best series"
+						/>
+
+					<com.github.mikephil.charting.charts.HorizontalBarChart
+						android:id="@+id/bestStrikeChart"
+						android:layout_width="match_parent"
+						android:layout_height="300dp"
+						app:layout_constraintStart_toStartOf="parent"
+						app:layout_constraintTop_toBottomOf="@id/bestStrikeGraphCardTitle"
+						/>
+
+				</androidx.constraintlayout.widget.ConstraintLayout>
+			</androidx.cardview.widget.CardView>
+
+
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>
 </layout>

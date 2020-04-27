@@ -2,6 +2,7 @@ package com.rwawrzyniak.getby.habits.details
 
 import android.content.res.Resources
 import androidx.lifecycle.ViewModel
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.DateTimeProvider
@@ -18,6 +19,7 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import java.time.LocalDate
+import java.util.ArrayList
 import java.util.Date
 import javax.inject.Inject
 
@@ -91,26 +93,29 @@ class HabitDetailsViewModelImpl @Inject constructor(
 	): Completable =
 		habitsRepository.getSingle(habitId)
 			.flatMapCompletable { habit ->
-				Singles.zip(calculateLinearChartEntries(habit, fromDate), calculateHistoryCalendarState.calculate(habit))
-					.flatMapCompletable { calendarHistoryStateAndlinearChartEntries ->
+				Singles.zip(calculateLinearChartEntries(habit, fromDate), calculateHistoryCalendarState.calculate(habit), calculateBestStrikeChartEntries()){
+					linearChartEntries,calendarEntries, bestStrikeEntries -> ChartInfos(linearChartEntries, calendarEntries, bestStrikeEntries)
+				}
+					.flatMapCompletable { chartInfos ->
 						Completable.fromAction {
-							publishInitState(calendarHistoryStateAndlinearChartEntries, habit)
+							publishInitState(chartInfos, habit)
 						}
 					}
 		}
 
 	private fun publishInitState(
-		calendarHistoryStateAndlinearChartEntries: Pair<List<Entry>, HistoryCalendarState>,
+		chartInfos: ChartInfos,
 		habit: Habit
 	) {
 		state.onNext(
 			HabitDetailsViewState(
-				calendarHistoryStateAndlinearChartEntries.first,
-				habit,
+				chartInfos.habitsHistoryEntries,
+				chartInfos.bestStrikeEntries,
+				chartInfos.historyCalendarState,
 				habit.name,
 				frequencyText(habit),
 				reminderText(habit),
-				historyCalendarState = calendarHistoryStateAndlinearChartEntries.second
+				habit
 			)
 		)
 	}
@@ -124,6 +129,13 @@ class HabitDetailsViewModelImpl @Inject constructor(
 	private fun reminderText(habit: Habit) =
 		if (habit.reminder == null) resources.getString(R.string.reminderDefaultValue) else habit.reminder.toString()
 
+	private fun calculateBestStrikeChartEntries(): Single<ArrayList<BarEntry>> {
+		// IMPORTANT: When using negative values in stacked bars, always make sure the negative values are in the array first
+		val values = ArrayList<BarEntry>()
+		values.add(BarEntry(5f, floatArrayOf(-10f, 10f)))
+		values.add(BarEntry(15f, floatArrayOf(-12f, 13f)))
+		return Single.just(values)
+	}
 	private fun calculateLinearChartEntries(
 		habit: Habit,
 		dateStart: LocalDate,
@@ -149,6 +161,8 @@ class HabitDetailsViewModelImpl @Inject constructor(
 		super.onCleared()
 		compositeDisposable.clear()
 	}
+
+	private data class ChartInfos(val habitsHistoryEntries: List<Entry>, val historyCalendarState: HistoryCalendarState, val bestStrikeEntries: List<BarEntry>)
 
 	companion object{
 		const val PAST_DAYS_TO_LOAD = 14L
