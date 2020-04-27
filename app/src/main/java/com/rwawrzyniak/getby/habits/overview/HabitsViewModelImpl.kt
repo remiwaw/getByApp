@@ -18,6 +18,7 @@ import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 import javax.inject.Named
 
+// TODO check if it possible to simply filter method / init methods
 abstract class HabitsViewModel: ViewModel() {
 	abstract fun observeState(): Observable<HabitsViewState>
 	abstract fun onAction(action: HabitsViewAction): Completable
@@ -40,7 +41,7 @@ class HabitsViewModelImpl @Inject internal constructor(
 	override fun onAction(action: HabitsViewAction): Completable {
 		return when(action){
 			is HabitsViewAction.OnRemoveHabit -> onRemoveHabit(action.habit)
-			is HabitsViewAction.OnArchiveHabit -> onArchiveHabit(action.habit)
+			is HabitsViewAction.OnSwitchArchiveState -> switchArchiveState(action.habit)
 			is HabitsViewAction.OnUpdateHabit -> onUpdateHabit(action.habit)
 			is HabitsViewAction.OnTextFilterChanged -> onTextFilterChanged(action.filterText)
 			is HabitsViewAction.OnShowArchiveChange -> onShowArchiveChange(action.isHideArchived)
@@ -54,7 +55,7 @@ class HabitsViewModelImpl @Inject internal constructor(
 		return updateHabitState(callback)
 	}
 	private fun onRemoveHabit(habit: Habit) = updateHabitState(removeHabit(habit))
-	private fun onArchiveHabit(habit: Habit) = updateHabitState(updateHabit(habit.copy(isArchived = true)))
+	private fun switchArchiveState(habit: Habit) = updateHabitState(updateHabit(habit.copy(isArchived = habit.isArchived.not())))
 
 	private fun onUpdateHabit(habit: Habit) = habitsRepository.updateHabit(habit) // no need to refresh view
 
@@ -79,9 +80,17 @@ class HabitsViewModelImpl @Inject internal constructor(
 	}
 
 	private fun createDefaultState(): Observable<HabitsViewState> {
-		return Observables.combineLatest(initHabits(), Observable.just(preferences.getHideArchivedHabits()), initFirstHeaderDay()){
-				updatedHabitsInfo: UpdatedHabitsInfo , hideArchived: Boolean, firstHeaderDay ->
-			HabitsViewState(updatedHabitsInfo, hideArchived, true, firstHeaderDay)
+		return Observables.combineLatest(
+			initHabits(preferences.getHideArchivedHabits()),
+			initFirstHeaderDay()
+		){
+				updatedHabitsInfo: UpdatedHabitsInfo, firstHeaderDay ->
+			HabitsViewState(
+				updatedHabitsInfo,
+				preferences.getHideArchivedHabits(),
+				true,
+				firstHeaderDay
+			)
 		}
 	}
 
@@ -90,10 +99,10 @@ class HabitsViewModelImpl @Inject internal constructor(
 		.startWith(GlobalEvent.DateChanged)
 			.map {  dateTimeProvider.getCurrentDate() }
 
-	private fun initHabits(): Observable<UpdatedHabitsInfo> =
+	private fun initHabits(hideArchived: Boolean): Observable<UpdatedHabitsInfo> =
 		habitsRepository.loadHabits()
 			.flattenAsObservable { it }
-			.filter { !it.isArchived }
+			.filter { if (hideArchived) !it.isArchived else true  }
 			.toList()
 			.map { newHabits ->
 				val diffResult = DiffUtil.calculateDiff(

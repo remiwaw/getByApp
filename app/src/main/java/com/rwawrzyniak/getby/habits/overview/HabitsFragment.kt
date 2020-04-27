@@ -29,6 +29,7 @@ import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.Locale
 
 class HabitsFragment : BaseFragment() {
 	private lateinit var binding: FragmentHabitsBinding
@@ -136,11 +137,15 @@ class HabitsFragment : BaseFragment() {
 	}
 
 	private fun showUndoSnackbar(swipedHabit: Habit, swipedAction: SwipedAction) {
+		val actionName = when(swipedAction){
+			SwipedAction.CHANGE_ARCHIVE_STATE -> resources.getString(R.string.habits_undo_snackbar_change_archive_state_action)
+			SwipedAction.REMOVE -> resources.getString(R.string.habits_undo_snackbar_remove_action)
+		}
 		val snackbar = Snackbar.make(
 			requireView(),
 			resources.getString(
 				R.string.habits_undo_snackbar_title,
-				swipedAction.name.toLowerCase()
+				actionName.toLowerCase(Locale.getDefault())
 			),
 			Snackbar.LENGTH_LONG
 		)
@@ -154,7 +159,7 @@ class HabitsFragment : BaseFragment() {
 						if (swipedAction == SwipedAction.REMOVE) {
 							simplySubscribe( viewModel.onAction(HabitsViewAction.OnRemoveHabit(swipedHabit)))
 						} else {
-							simplySubscribe( viewModel.onAction(HabitsViewAction.OnArchiveHabit(swipedHabit)))
+							simplySubscribe( viewModel.onAction(HabitsViewAction.OnSwitchArchiveState(swipedHabit)))
 						}
 				}
 			}
@@ -186,9 +191,9 @@ class HabitsFragment : BaseFragment() {
 				ItemTouchHelper.LEFT -> showUndoSnackbar(swipedItem,
 					SwipedAction.REMOVE
 				)
-				ItemTouchHelper.RIGHT -> showUndoSnackbar(swipedItem,
-					SwipedAction.ARCHIVE
-				)
+				ItemTouchHelper.RIGHT -> {
+					showUndoSnackbar(swipedItem, SwipedAction.CHANGE_ARCHIVE_STATE)
+				}
 			}
 		}
 
@@ -240,7 +245,7 @@ class HabitsFragment : BaseFragment() {
 	}
 
 	companion object{
-		private enum class SwipedAction {ARCHIVE, REMOVE}
+		private enum class SwipedAction {CHANGE_ARCHIVE_STATE, REMOVE}
 	}
 }
 

@@ -53,8 +53,8 @@
     <string name="habits_action_bar_title">Habits</string>
     <string name="habits_undo_snackbar_title">Undo %1$s</string>
     <string name="habits_undo_snackbar_button">Undo?</string>
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="habits_undo_snackbar_change_archive_state_action">change archives state</string>
+    <string name="habits_undo_snackbar_remove_action">remove</string>
 
 
     <!--    Create new habit-->
