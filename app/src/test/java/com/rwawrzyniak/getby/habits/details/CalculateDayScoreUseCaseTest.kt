@@ -45,64 +45,16 @@ internal class CalculateDayScoreUseCaseTest {
 			description = "description",
 			frequency = frequency,
 			reminder = null,
-			history = listOf(
-				HabitDay(
-					LocalDate.of(
-						2020,
-						12,
-						23
-					), 0, checked = false
-				),
-				HabitDay(
-					LocalDate.of(
-						2020,
-						12,
-						22
-					), 0, checked = false
-				),
-				HabitDay(
-					LocalDate.of(
-						2020,
-						12,
-						21
-					), 0, checked = true
-				),
-				HabitDay(
-					LocalDate.of(
-						2020,
-						12,
-						20
-					), 0, checked = false
-				),
-				HabitDay(
-					LocalDate.of(
-						2020,
-						12,
-						19
-					), 0, checked = true
-				),
-				HabitDay(
-					LocalDate.of(
-						2020,
-						12,
-						18
-					), 0, checked = false
-				),
-				HabitDay(
-					LocalDate.of(
-						2020,
-						12,
-						17
-					), 0, checked = false
-				),
-				HabitDay(
-					LocalDate.of(
-						2020,
-						12,
-						16
-					), 0, checked = true
-				)
-			)
+			history  = listOf(
+				HabitDay(LocalDate.of(2020, 12, 23), checked = false),
+				HabitDay(LocalDate.of(2020, 12, 22), checked = false),
+				HabitDay(LocalDate.of(2020, 12, 21), checked = true),
+				HabitDay(LocalDate.of(2020, 12, 20), checked = false),
+				HabitDay(LocalDate.of(2020, 12, 19), checked = true),
+				HabitDay(LocalDate.of(2020, 12, 18), checked = false),
+				HabitDay(LocalDate.of(2020, 12, 17), checked = false),
+				HabitDay(LocalDate.of(2020, 12, 16), checked = true)
+		)
 		)
 
 		sut().calculateScoreForDayRangeExcludingStart(testHabit, startDate, endDate)
@@ -141,62 +93,14 @@ internal class CalculateDayScoreUseCaseTest {
 			frequency = frequency,
 			reminder = null,
 			history = listOf(
-				HabitDay(
-					LocalDate.of(
-						2020,
-						12,
-						23
-					), 0, checked = true
-				),
-				HabitDay(
-					LocalDate.of(
-						2020,
-						12,
-						22
-					), 0, checked = true
-				),
-				HabitDay(
-					LocalDate.of(
-						2020,
-						12,
-						21
-					), 0, checked = true
-				),
-				HabitDay(
-					LocalDate.of(
-						2020,
-						12,
-						20
-					), 0, checked = true
-				),
-				HabitDay(
-					LocalDate.of(
-						2020,
-						12,
-						19
-					), 0, checked = true
-				),
-				HabitDay(
-					LocalDate.of(
-						2020,
-						12,
-						18
-					), 0, checked = true
-				),
-				HabitDay(
-					LocalDate.of(
-						2020,
-						12,
-						17
-					), 0, checked = true
-				),
-				HabitDay(
-					LocalDate.of(
-						2020,
-						12,
-						16
-					), 0, checked = true
-				)
+				HabitDay(LocalDate.of(2020, 12, 23), checked = true),
+				HabitDay(LocalDate.of(2020, 12, 22), checked = true),
+				HabitDay(LocalDate.of(2020, 12, 21), checked = true),
+				HabitDay(LocalDate.of(2020, 12, 20), checked = true),
+				HabitDay(LocalDate.of(2020, 12, 19), checked = true),
+				HabitDay(LocalDate.of(2020, 12, 18), checked = true),
+				HabitDay(LocalDate.of(2020, 12, 17), checked = true),
+				HabitDay(LocalDate.of(2020, 12, 16), checked = true)
 			)
 		)
 
