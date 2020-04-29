@@ -39,10 +39,17 @@ class CalculateBestSeriesUseCase @Inject internal constructor() {
 				newStrikeFound = false
 			}
 			if (prev.plusDays(1) == next) {
-				count++
+				count+=1
+				if(i == dateList.size-1 && prev != firstInStrike) {
+					strikes.add(Strike(firstInStrike, next, count+1))
+					count = 0
+				}
 			} else {
 				newStrikeFound = true
-				strikes.add(Strike(firstInStrike, prev, count))
+				if(prev != firstInStrike){
+					strikes.add(Strike(firstInStrike, prev, count+1))
+					count = 0
+				}
 			}
 			prev = next
 		}

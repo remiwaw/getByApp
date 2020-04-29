@@ -105,12 +105,7 @@ class CalculateBestSeriesUseCaseTest {
 	}
 
 	@Test
-	fun shouldCalculateStrikeIfTheSameSingleDays() {
-		val expectedStrikes = listOf(
-			Strike(LocalDate.of(2020, 12, 17), LocalDate.of(2020, 12, 17), 1),
-			Strike(LocalDate.of(2020, 12, 19), LocalDate.of(2020, 12, 19), 1)
-		)
-
+	fun shouldCalculateStrikeNoneIfOnlySingleDays() {
 		val history  = listOf(
 			HabitDay(LocalDate.of(2020, 12, 16), checked = false),
 			HabitDay(LocalDate.of(2020, 12, 17), checked = true),
@@ -130,8 +125,7 @@ class CalculateBestSeriesUseCaseTest {
 		sut().calculateScoreForDayRangeExcludingStart(testHabit)
 			.test()
 			.assertValue{
-				it[0] == expectedStrikes[0]
-				it[1] == expectedStrikes[1]
+				it.isEmpty()
 			}
 	}
 
