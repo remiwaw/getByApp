@@ -2,11 +2,11 @@ package com.rwawrzyniak.getby.habits.details
 
 import java.time.LocalDate
 
-class Strike(val startDate: LocalDate, val endDate: LocalDate, val strike: Int){
+class Strike(val startDate: LocalDate, val endDate: LocalDate, val daysInRow: Int){
 	override fun equals(other: Any?): Boolean {
 		val otherStrike = other as Strike
 		return startDate.isEqual(otherStrike.startDate) &&
 		endDate.isEqual(otherStrike.endDate) &&
-		strike == other.strike
+		daysInRow == other.daysInRow
 	}
 }

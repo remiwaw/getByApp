@@ -19,7 +19,6 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import java.time.LocalDate
-import java.util.ArrayList
 import java.util.Date
 import javax.inject.Inject
 
@@ -36,7 +35,8 @@ class HabitDetailsViewModelImpl @Inject constructor(
 	private val dateTimeProvider: DateTimeProvider,
 	private val calculateHabitDayScoreUseCase: CalculateHabitDayScoreUseCase,
 	private val habitsRepository: HabitsRepository,
-	private val calculateHistoryCalendarState: CalculateHistoryCalendarState
+	private val calculateHistoryCalendarState: CalculateHistoryCalendarState,
+	private val prepareBestSeriesForChart: PrepareBestSeriesForChart
 
 ) : HabitDetailsViewModel() {
 	private val compositeDisposable = CompositeDisposable()
@@ -93,7 +93,7 @@ class HabitDetailsViewModelImpl @Inject constructor(
 	): Completable =
 		habitsRepository.getSingle(habitId)
 			.flatMapCompletable { habit ->
-				Singles.zip(calculateLinearChartEntries(habit, fromDate), calculateHistoryCalendarState.calculate(habit), calculateBestStrikeChartEntries()){
+				Singles.zip(calculateLinearChartEntries(habit, fromDate), calculateHistoryCalendarState.calculate(habit), calculateBestStrikeChartEntries(habit)){
 					linearChartEntries,calendarEntries, bestStrikeEntries -> ChartInfos(linearChartEntries, calendarEntries, bestStrikeEntries)
 				}
 					.flatMapCompletable { chartInfos ->
@@ -129,13 +129,9 @@ class HabitDetailsViewModelImpl @Inject constructor(
 	private fun reminderText(habit: Habit) =
 		if (habit.reminder == null) resources.getString(R.string.reminderDefaultValue) else habit.reminder.toString()
 
-	private fun calculateBestStrikeChartEntries(): Single<ArrayList<BarEntry>> {
-		// IMPORTANT: When using negative values in stacked bars, always make sure the negative values are in the array first
-		val values = ArrayList<BarEntry>()
-		values.add(BarEntry(5f, floatArrayOf(-10f, 10f)))
-		values.add(BarEntry(15f, floatArrayOf(-12f, 13f)))
-		return Single.just(values)
-	}
+	private fun calculateBestStrikeChartEntries(habit: Habit): Single<MutableList<BarEntry>> =
+		prepareBestSeriesForChart.mapStrikesToBarEntry(habit)
+
 	private fun calculateLinearChartEntries(
 		habit: Habit,
 		dateStart: LocalDate,

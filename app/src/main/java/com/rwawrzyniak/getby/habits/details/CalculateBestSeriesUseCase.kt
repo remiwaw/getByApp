@@ -6,7 +6,8 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 class CalculateBestSeriesUseCase @Inject internal constructor() {
-	fun calculateScoreForDayRangeExcludingStart(
+
+	fun calculateStrike(
 		habit: Habit
 	): Single<List<Strike>> =
 		Single.just(habit)
@@ -14,7 +15,8 @@ class CalculateBestSeriesUseCase @Inject internal constructor() {
 			.filter { it.checked }
 			.map { it.day }
 			.toList()
-			.map { findTheLongestStrike(it) }
+			.map { findTheLongestStrike(it).sortedByDescending { strike -> strike.daysInRow } }
+
 
 	private fun findTheLongestStrike(
 		dateList: List<LocalDate>

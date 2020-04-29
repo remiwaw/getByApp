@@ -248,11 +248,22 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		) {
 
 		} else {
+
+			val xAxis = bestStrikeChart.xAxis;
+			xAxis.position = XAxis.XAxisPosition.BOTH_SIDED;
+			xAxis.setDrawGridLines(false)
+			xAxis.setDrawAxisLine(false)
+			xAxis.textSize = 9f
+			xAxis.axisMinimum = 0f
+			xAxis.axisMaximum = 4f
+			xAxis.setCenterAxisLabels(true)
+			xAxis.granularity = 0.1f
+
 			bestStrikeDataSet = BarDataSet(state.bestStrikeLineEntries, "")
-			bestStrikeDataSet.valueTextSize = 9f
+			bestStrikeDataSet.valueTextSize = 2f
 			bestStrikeDataSet.setColors(Color.rgb(124, 181, 236))
 			val data = BarData(bestStrikeDataSet)
-			data.barWidth = 8.5f
+			data.barWidth = 0.9f
 			bestStrikeChart.data = data
 			bestStrikeChart.invalidate()
 		}

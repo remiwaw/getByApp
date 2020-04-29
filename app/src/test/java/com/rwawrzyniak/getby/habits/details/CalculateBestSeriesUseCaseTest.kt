@@ -16,10 +16,10 @@ class CalculateBestSeriesUseCaseTest {
 	}
 
     @Test
-    fun shouldCalculateStrike() {
+    fun shouldCalculateStrikeWithSortedByDaysInRow() {
 		val expectedStrikes = listOf(
-			Strike(LocalDate.of(2020, 12, 16), LocalDate.of(2020, 12, 17), 2),
-			Strike(LocalDate.of(2020, 12, 19), LocalDate.of(2020, 12, 21), 3)
+			Strike(LocalDate.of(2020, 12, 19), LocalDate.of(2020, 12, 21), 3),
+			Strike(LocalDate.of(2020, 12, 16), LocalDate.of(2020, 12, 17), 2)
 		)
 
 		val history  = listOf(
@@ -41,7 +41,7 @@ class CalculateBestSeriesUseCaseTest {
 			history = history
 		)
 
-		sut().calculateScoreForDayRangeExcludingStart(testHabit)
+		sut().calculateStrike(testHabit)
 			.test()
 			.assertValue{
 				it[0] == expectedStrikes[0]
@@ -51,11 +51,6 @@ class CalculateBestSeriesUseCaseTest {
 
 	@Test
 	fun shouldCalculateStrikeIfAndReturnEmptyListIfNoStrikes() {
-		val expectedStrikes = listOf(
-			Strike(LocalDate.of(2020, 12, 16), LocalDate.of(2020, 12, 17), 2),
-			Strike(LocalDate.of(2020, 12, 19), LocalDate.of(2020, 12, 21), 3)
-		)
-
 		val history  = listOf(
 			HabitDay(LocalDate.of(2020, 12, 16), checked = false),
 			HabitDay(LocalDate.of(2020, 12, 17), checked = false),
@@ -70,7 +65,7 @@ class CalculateBestSeriesUseCaseTest {
 			history = history
 		)
 
-		sut().calculateScoreForDayRangeExcludingStart(testHabit)
+		sut().calculateStrike(testHabit)
 			.test()
 			.assertValue{
 				it.isEmpty()
@@ -97,7 +92,7 @@ class CalculateBestSeriesUseCaseTest {
 			history = history
 		)
 
-		sut().calculateScoreForDayRangeExcludingStart(testHabit)
+		sut().calculateStrike(testHabit)
 			.test()
 			.assertValue{
 				it[0] == expectedStrikes[0]
@@ -122,7 +117,7 @@ class CalculateBestSeriesUseCaseTest {
 			history = history
 		)
 
-		sut().calculateScoreForDayRangeExcludingStart(testHabit)
+		sut().calculateStrike(testHabit)
 			.test()
 			.assertValue{
 				it.isEmpty()
@@ -132,8 +127,8 @@ class CalculateBestSeriesUseCaseTest {
 	@Test
 	fun shouldCalculateStrikeWhenLastDayIsChecked() {
 		val expectedStrikes = listOf(
-			Strike(LocalDate.of(2020, 12, 17), LocalDate.of(2020, 12, 18), 2),
-			Strike(LocalDate.of(2020, 12, 20), LocalDate.of(2020, 12, 22), 3)
+			Strike(LocalDate.of(2020, 12, 20), LocalDate.of(2020, 12, 22), 3),
+			Strike(LocalDate.of(2020, 12, 17), LocalDate.of(2020, 12, 18), 2)
 		)
 
 		val history  = listOf(
@@ -154,7 +149,7 @@ class CalculateBestSeriesUseCaseTest {
 			history = history
 		)
 
-		sut().calculateScoreForDayRangeExcludingStart(testHabit)
+		sut().calculateStrike(testHabit)
 			.test()
 			.assertValue{
 				it[0] == expectedStrikes[0]
