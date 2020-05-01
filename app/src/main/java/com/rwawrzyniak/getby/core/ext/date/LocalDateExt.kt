@@ -33,6 +33,7 @@ fun datesBetweenExcludingStartIncludingEnd(
 	return ret
 }
 
-fun LocalDate.toShortForm() = this.format(DateTimeFormatter.ofPattern("ccc d.MM"))
+fun LocalDate.toShortForm(): String = this.format(DateTimeFormatter.ofPattern("ccc d.MM"))
+fun LocalDate.toddMM(): String = this.format(DateTimeFormatter.ofPattern("dd MMM"))
 
 fun LocalDate.toDate(): Date = Date.from(this.atStartOfDay(ZoneId.systemDefault()).toInstant())

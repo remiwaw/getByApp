@@ -14,15 +14,17 @@ class PrepareBestSeriesForChart @Inject internal constructor(private val calcula
 	): Single<MutableList<BarEntry>> =
 		calculateBestSeriesUseCase.calculateStrike(habit)
 			.flattenAsObservable{ it }
-			.zipWith(Observable.range(1, Integer.MAX_VALUE))
+			.take(MAX_BEST_STRIKES_TO_BE_DISPLAYED)
+			.zipWith(Observable.range(0, Integer.MAX_VALUE))
 			.map { strikeWithIndex: Pair<Strike, Int> ->
 				val index = strikeWithIndex.second
-				val daysInRow = strikeWithIndex.first.daysInRow
-				BarEntry(index.toFloat(), floatArrayOf((-daysInRow/2f), daysInRow/2f))
+				val strike = strikeWithIndex.first
+				val daysInRow = strike.daysInRow
+				BarEntry(index.toFloat(), floatArrayOf((-daysInRow/2f), daysInRow/2f), strike)
 			}
 			.toList()
 
-	companion object{
-		private const val BAR_HEIGHT = 1f
+	companion object {
+		private const val MAX_BEST_STRIKES_TO_BE_DISPLAYED = 3L
 	}
 }

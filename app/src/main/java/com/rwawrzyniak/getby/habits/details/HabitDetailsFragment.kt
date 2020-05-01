@@ -11,17 +11,21 @@ import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
+import com.github.mikephil.charting.formatter.IValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture
 import com.github.mikephil.charting.listener.OnChartGestureListener
+import com.github.mikephil.charting.utils.ViewPortHandler
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.BaseFragment
 import com.rwawrzyniak.getby.core.ChromeConfiguration
 import com.rwawrzyniak.getby.core.SchedulerProvider
+import com.rwawrzyniak.getby.core.ext.date.toddMM
 import com.rwawrzyniak.getby.core.ext.date.toShortForm
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
@@ -160,7 +164,7 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 
 
 		var xAxis: XAxis = binding.lineChart.xAxis
-		xAxis.position = XAxis.XAxisPosition.BOTTOM
+		xAxis.position = XAxis.XAxisPosition.BOTH_SIDED
 		xAxis.valueFormatter =
 			IAxisValueFormatter { value, _ -> LocalDate.ofEpochDay(value.toLong()).toShortForm() }
 		xAxis.labelRotationAngle = 60f
@@ -253,22 +257,26 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 
 		} else {
 
+			bestStrikeChart.description.isEnabled = false
+			bestStrikeChart.legend.isEnabled = false;
+			bestStrikeChart.axisRight.isEnabled = false
+			bestStrikeChart.axisLeft.isEnabled = false
+
 			val xAxis = bestStrikeChart.xAxis;
-			xAxis.position = XAxis.XAxisPosition.BOTH_SIDED;
-			xAxis.setDrawGridLines(false)
-			xAxis.setDrawAxisLine(false)
-			xAxis.textSize = 9f
-			xAxis.axisMinimum = 0f
-			xAxis.axisMaximum = 4f
-			xAxis.setCenterAxisLabels(true)
-			xAxis.granularity = 0.1f
+			xAxis.isEnabled = false
 
 			bestStrikeDataSet = BarDataSet(state.bestStrikeLineEntries, "")
-			bestStrikeDataSet.valueTextSize = 2f
+			bestStrikeDataSet.valueTextSize = 9f
+			bestStrikeDataSet.valueFormatter = IValueFormatter { value: Float, entry: Entry, _: Int, _: ViewPortHandler ->
+				val strike = (entry.data as Strike)
+				if(value < 0) strike.startDate.toddMM() else strike.endDate.toddMM()
+			}
+
 			bestStrikeDataSet.setColors(Color.rgb(124, 181, 236))
 			val data = BarData(bestStrikeDataSet)
-			data.barWidth = 0.9f
+			data.barWidth = 0.8f
 			bestStrikeChart.data = data
+			xAxis.labelCount = data.entryCount
 			bestStrikeChart.invalidate()
 		}
 	}
