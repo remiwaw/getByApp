@@ -157,5 +157,38 @@ class CalculateBestSeriesUseCaseTest {
 			}
 	}
 
+	@Test
+	fun shouldCalculateSd() {
+		val expectedStrikes = listOf(
+			Strike(LocalDate.of(2020, 12, 15), LocalDate.of(2020, 12, 17), 3),
+			Strike(LocalDate.of(2020, 12, 28), LocalDate.of(2020, 12, 29), 2)
+		)
+
+		val history  = listOf(
+			HabitDay(LocalDate.of(2020, 12, 15), checked = true),
+			HabitDay(LocalDate.of(2020, 12, 16), checked = true),
+			HabitDay(LocalDate.of(2020, 12, 17), checked = true),
+			HabitDay(LocalDate.of(2020, 12, 19), checked = true),
+			HabitDay(LocalDate.of(2020, 12, 28), checked = true),
+			HabitDay(LocalDate.of(2020, 12, 29), checked = true)
+		)
+
+		val testHabit = Habit(
+			name = "name",
+			description = "description",
+			frequency = Frequency(times = 3, cycle = 7),
+			reminder = null,
+			history = history
+		)
+
+		sut().calculateStrike(testHabit)
+			.test()
+			.assertValue{
+				it[0] == expectedStrikes[0]
+				it[1] == expectedStrikes[1]
+			}
+	}
+
+
 	fun sut() = CalculateBestSeriesUseCase()
 }
