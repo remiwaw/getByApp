@@ -18,7 +18,7 @@ data class HabitDetailsViewState(
 data class HistoryCalendarState(
 	val minDate: Date = Date(0),
 	val maxDate: Date,
-	val selectedDates: Collection<Date>,
+	val selectedDates: Collection<Date> = emptyList(),
 	val highlightedDates: Collection<Date>,
 	val isSelectedDatesChanged: Boolean = false
 )

@@ -39,6 +39,7 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.ArrayList
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -65,7 +66,10 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 
 		setupLinearChart()
 		// We need to initialize calendar with somethin to render it
-		binding.historyCalendar.init(Date(), Date())
+		val tomorrow = Calendar.getInstance().apply {
+			add(Calendar.DAY_OF_MONTH, 1)
+		}.time
+		binding.historyCalendar.init(Date(0), tomorrow)
 
 		return binding.root
 	}

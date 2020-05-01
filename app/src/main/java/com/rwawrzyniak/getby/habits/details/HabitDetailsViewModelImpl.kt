@@ -45,7 +45,7 @@ class HabitDetailsViewModelImpl @Inject constructor(
 
 	private fun createDefaultState(): HabitDetailsViewState = HabitDetailsViewState(emptyList())
 
-	override fun observeState(): Observable<HabitDetailsViewState> = state.distinctUntilChanged().hide()
+	override fun observeState(): Observable<HabitDetailsViewState> = state.hide()
 
 	override fun observeEffects(): Observable<HabitDetailsViewEffect> = effects.hide()
 
