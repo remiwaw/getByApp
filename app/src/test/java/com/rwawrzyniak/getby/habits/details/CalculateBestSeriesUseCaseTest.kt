@@ -33,18 +33,12 @@ class CalculateBestSeriesUseCaseTest {
 			HabitDay(LocalDate.of(2020, 12, 23), checked = true)
 		)
 
-		val testHabit = Habit(
-			name = "name",
-			description = "description",
-			frequency = Frequency(times = 3, cycle = 7),
-			reminder = null,
-			history = history
-		)
+		val testHabit = testHabit(history)
 
 		sut().calculateStrike(testHabit)
 			.test()
 			.assertValue{
-				it[0] == expectedStrikes[0]
+				it[0] == expectedStrikes[0] &&
 				it[1] == expectedStrikes[1]
 			}
     }
@@ -57,13 +51,7 @@ class CalculateBestSeriesUseCaseTest {
 			HabitDay(LocalDate.of(2020, 12, 18), checked = false)
 		)
 
-		val testHabit = Habit(
-			name = "name",
-			description = "description",
-			frequency = Frequency(times = 3, cycle = 7),
-			reminder = null,
-			history = history
-		)
+		val testHabit = testHabit(history)
 
 		sut().calculateStrike(testHabit)
 			.test()
@@ -84,13 +72,7 @@ class CalculateBestSeriesUseCaseTest {
 			HabitDay(LocalDate.of(2020, 12, 18), checked = false)
 		)
 
-		val testHabit = Habit(
-			name = "name",
-			description = "description",
-			frequency = Frequency(times = 3, cycle = 7),
-			reminder = null,
-			history = history
-		)
+		val testHabit = testHabit(history)
 
 		sut().calculateStrike(testHabit)
 			.test()
@@ -109,13 +91,7 @@ class CalculateBestSeriesUseCaseTest {
 			HabitDay(LocalDate.of(2020, 12, 20), checked = false)
 		)
 
-		val testHabit = Habit(
-			name = "name",
-			description = "description",
-			frequency = Frequency(times = 3, cycle = 7),
-			reminder = null,
-			history = history
-		)
+		val testHabit = testHabit(history)
 
 		sut().calculateStrike(testHabit)
 			.test()
@@ -141,54 +117,55 @@ class CalculateBestSeriesUseCaseTest {
 			HabitDay(LocalDate.of(2020, 12, 22), checked = true)
 		)
 
-		val testHabit = Habit(
-			name = "name",
-			description = "description",
-			frequency = Frequency(times = 3, cycle = 7),
-			reminder = null,
-			history = history
-		)
+		val testHabit = testHabit(history)
 
 		sut().calculateStrike(testHabit)
 			.test()
 			.assertValue{
-				it[0] == expectedStrikes[0]
+				it[0] == expectedStrikes[0] &&
 				it[1] == expectedStrikes[1]
 			}
 	}
 
 	@Test
-	fun shouldCalculateSd() {
+	fun shouldCalculateThreeSetsOfStrikes() {
 		val expectedStrikes = listOf(
-			Strike(LocalDate.of(2020, 12, 15), LocalDate.of(2020, 12, 17), 3),
-			Strike(LocalDate.of(2020, 12, 28), LocalDate.of(2020, 12, 29), 2)
+			Strike(LocalDate.of(2020, 12, 14), LocalDate.of(2020, 12, 18), 5),
+			Strike(LocalDate.of(2020, 12, 2), LocalDate.of(2020, 12, 4), 3),
+			Strike(LocalDate.of(2020, 12, 10), LocalDate.of(2020, 12, 11), 2)
 		)
 
 		val history  = listOf(
+			HabitDay(LocalDate.of(2020, 12, 2), checked = true),
+			HabitDay(LocalDate.of(2020, 12, 3), checked = true),
+			HabitDay(LocalDate.of(2020, 12, 4), checked = true),
+			HabitDay(LocalDate.of(2020, 12, 10), checked = true),
+			HabitDay(LocalDate.of(2020, 12, 11), checked = true),
+			HabitDay(LocalDate.of(2020, 12, 14), checked = true),
 			HabitDay(LocalDate.of(2020, 12, 15), checked = true),
 			HabitDay(LocalDate.of(2020, 12, 16), checked = true),
 			HabitDay(LocalDate.of(2020, 12, 17), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 19), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 28), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 29), checked = true)
+			HabitDay(LocalDate.of(2020, 12, 18), checked = true)
 		)
 
-		val testHabit = Habit(
-			name = "name",
-			description = "description",
-			frequency = Frequency(times = 3, cycle = 7),
-			reminder = null,
-			history = history
-		)
+		val testHabit = testHabit(history)
 
 		sut().calculateStrike(testHabit)
 			.test()
 			.assertValue{
-				it[0] == expectedStrikes[0]
-				it[1] == expectedStrikes[1]
+				it[0] == expectedStrikes[0] &&
+				it[1] == expectedStrikes[1] &&
+				it[2] == expectedStrikes[2]
 			}
 	}
 
+	private fun testHabit(history: List<HabitDay>): Habit = Habit(
+		name = "name",
+		description = "description",
+		frequency = Frequency(times = 3, cycle = 7),
+		reminder = null,
+		history = history
+	)
 
-	fun sut() = CalculateBestSeriesUseCase()
+	private fun sut() = CalculateBestSeriesUseCase()
 }

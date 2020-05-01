@@ -36,25 +36,25 @@ class CalculateBestSeriesUseCase @Inject internal constructor() {
 
 		for (i in 1 until dateList.size) {
 			val next = dateList[i]
+
 			if(newStrikeFound){
 				firstInStrike = prev
 				newStrikeFound = false
 			}
+
 			if (prev.plusDays(1) == next) {
 				count+=1
-				if(i == dateList.size-1 && prev != firstInStrike) {
-					strikes.add(Strike(prev, next, count+1))
-					count = 0
-					newStrikeFound = true
-				}
-			} else {
-				if(prev != firstInStrike){
-					strikes.add(Strike(firstInStrike, prev, count+1))
-					count = 0
-					newStrikeFound = true
-				}
+			} else if(count > 0){
+				strikes.add(Strike(firstInStrike, prev, count+1))
+				count = 0
+				newStrikeFound = true
 			}
+
 			prev = next
+
+			if(i == dateList.size-1 && count > 0) {
+				strikes.add(Strike(firstInStrike, prev, count+1))
+			}
 		}
 		return strikes.toList()
 	}
