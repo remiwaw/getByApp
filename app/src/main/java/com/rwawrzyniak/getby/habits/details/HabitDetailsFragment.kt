@@ -25,8 +25,8 @@ import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.BaseFragment
 import com.rwawrzyniak.getby.core.ChromeConfiguration
 import com.rwawrzyniak.getby.core.SchedulerProvider
-import com.rwawrzyniak.getby.core.ext.date.toddMM
 import com.rwawrzyniak.getby.core.ext.date.toShortForm
+import com.rwawrzyniak.getby.core.ext.date.toddMM
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitDetailsBinding
@@ -161,10 +161,11 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		binding.lineChart.onChartGestureListener = this
 		binding.lineChart.legend.isEnabled = false
 		binding.lineChart.extraBottomOffset = 15f
-
+		binding.lineChart.setScaleEnabled(false)
+		binding.lineChart.axisRight.isEnabled = false
 
 		var xAxis: XAxis = binding.lineChart.xAxis
-		xAxis.position = XAxis.XAxisPosition.BOTH_SIDED
+		xAxis.position = XAxis.XAxisPosition.BOTTOM
 		xAxis.valueFormatter =
 			IAxisValueFormatter { value, _ -> LocalDate.ofEpochDay(value.toLong()).toShortForm() }
 		xAxis.labelRotationAngle = 60f
@@ -174,7 +175,6 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		yAxis.axisMaximum = 100f
 		yAxis.axisMinimum = 0f
 
-		binding.lineChart.axisRight.isEnabled = false
 	}
 
 	private fun setupHistoryCalendar(historyCalendarState: HistoryCalendarState) {
@@ -196,19 +196,16 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		val set1: LineDataSet
 		binding.lineChart.isDragDecelerationEnabled = false
 
-		if (lineChart.data != null &&
-			lineChart.data.dataSetCount > 0
+		if (binding.lineChart.data != null &&
+			binding.lineChart.data.dataSetCount > 0
 		) {
 			val lastLowestVisibleX = binding.lineChart.lowestVisibleX
 
-			set1 = lineChart.data.getDataSetByIndex(0) as LineDataSet
+			set1 = binding.lineChart.data.getDataSetByIndex(0) as LineDataSet
 			set1.values = state.linearChartEntries
 			set1.notifyDataSetChanged()
 
-			lineChart.data.notifyDataChanged()
-			lineChart.notifyDataSetChanged()
-
-			// TODO For some reason scroll to x doesnt work withou delay.
+			// TODO For some reason scroll to x doesnt work without delay.
 			// https://github.com/PhilJay/MPAndroidChart/issues/765
 			Completable
 				.timer(100, TimeUnit.MILLISECONDS)
@@ -240,8 +237,7 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 			dataSets.add(set1)
 
 			val data = LineData(dataSets)
-			lineChart.data = data
-
+			binding.lineChart.data = data
 			binding.lineChart.moveViewToX(binding.lineChart.xAxis.axisMaximum)
 		}
 
@@ -254,15 +250,18 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 		if (bestStrikeChart.data != null &&
 			bestStrikeChart.data.dataSetCount > 0
 		) {
-
+			bestStrikeDataSet = bestStrikeChart.data.getDataSetByIndex(0) as BarDataSet
+			bestStrikeDataSet.values = state.bestStrikeLineEntries
+			bestStrikeChart.data.notifyDataChanged()
+			bestStrikeChart.notifyDataSetChanged()
 		} else {
-
 			bestStrikeChart.description.isEnabled = false
-			bestStrikeChart.legend.isEnabled = false;
+			bestStrikeChart.legend.isEnabled = false
 			bestStrikeChart.axisRight.isEnabled = false
 			bestStrikeChart.axisLeft.isEnabled = false
+			bestStrikeChart.setScaleEnabled(false)
 
-			val xAxis = bestStrikeChart.xAxis;
+			val xAxis = bestStrikeChart.xAxis
 			xAxis.isEnabled = false
 
 			bestStrikeDataSet = BarDataSet(state.bestStrikeLineEntries, "")
@@ -277,9 +276,9 @@ class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 			data.barWidth = 0.8f
 			bestStrikeChart.data = data
 			xAxis.labelCount = data.entryCount
-			bestStrikeChart.invalidate()
 		}
-	}
+
+		bestStrikeChart.invalidate() }
 
 	private fun subscribeTo(completable: Completable) {
 		completable.onErrorComplete()
