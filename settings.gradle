@@ -1,2 +1,7 @@
 include ':app'
+include ':features:sharing'
+include ':libraries:core-android'
+include ':libraries:core'
+include ':libraries:core-android-test'
+include ':libraries:core-test'
 rootProject.name='GetBy'
