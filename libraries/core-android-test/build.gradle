@@ -1,11 +1,10 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-
 dependencies {
-//    implementation Deps.androidx_material
-//
-//    testImplementation Deps.testlib_junit
-//
-//    androidTestImplementation Deps.testandroidx_runner
-//    androidTestImplementation Deps.testandroidx_espressocore
+	testImplementation Dependencies.testMockiktoAndroid
+	testImplementation Dependencies.testRoom
+
+	androidTestImplementation Dependencies.testAndroixRunner
+	androidTestImplementation Dependencies.testAndroidxRules
+	androidTestImplementation Dependencies.testEspressoCore
+
+	testImplementation project(':libraries:core-test')
 }

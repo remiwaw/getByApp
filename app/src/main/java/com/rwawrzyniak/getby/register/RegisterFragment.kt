@@ -12,7 +12,7 @@ import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.BaseFragment
-import com.rwawrzyniak.getby.core.SchedulerProvider
+import com.rwawrzyniak.getby.core.android.rx.SchedulerProvider
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentRegisterBinding

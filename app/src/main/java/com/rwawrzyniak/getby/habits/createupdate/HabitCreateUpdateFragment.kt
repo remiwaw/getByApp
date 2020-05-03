@@ -9,14 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.core.view.isVisible
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.BaseFragment
-import com.rwawrzyniak.getby.core.ChromeConfiguration
-import com.rwawrzyniak.getby.core.SchedulerProvider
-import com.rwawrzyniak.getby.core.ext.date.convertWeekDaysToMaterial
-import com.rwawrzyniak.getby.core.ext.date.convertWeekDaysToStandard
-import com.rwawrzyniak.getby.core.ext.markRequired
+import com.rwawrzyniak.getby.core.android.fragment.ChromeConfiguration
+import com.rwawrzyniak.getby.core.android.rx.SchedulerProvider
+import com.rwawrzyniak.getby.core.ext.convertWeekDaysToMaterial
+import com.rwawrzyniak.getby.core.ext.convertWeekDaysToStandard
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitCreateUpdateBinding
@@ -135,7 +133,11 @@ class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedList
 		backingHabit: Habit
 	) {
 		backingHabit.reminder?.let {
-			binding.rowDayOfWeekPicker.setSelectedDays(convertWeekDaysToMaterial(it.days))
+			binding.rowDayOfWeekPicker.setSelectedDays(
+				convertWeekDaysToMaterial(
+					it.days
+				)
+			)
 		}
 
 		showWeekDayRow(resources.getString(R.string.reminderDefaultValue) == binding.reminder.text)
@@ -292,7 +294,10 @@ class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedList
 		if(binding.reminder.text == resources.getString(R.string.reminderDefaultValue)){
 			return null
 		}
-		val daysOfWeek = convertWeekDaysToStandard(rowDayOfWeekPicker.selectedDays)
+		val daysOfWeek =
+			convertWeekDaysToStandard(
+				rowDayOfWeekPicker.selectedDays
+			)
 		val reminderText = binding.reminder.text
 		val hourOfDay = reminderText.split(":")[0].toInt()
 		val minuteOfDay  = reminderText.split(":")[1].toInt()

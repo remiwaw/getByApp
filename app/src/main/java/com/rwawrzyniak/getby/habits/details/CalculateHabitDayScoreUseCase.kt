@@ -1,6 +1,6 @@
 package com.rwawrzyniak.getby.habits.details
 
-import com.rwawrzyniak.getby.core.ext.date.datesBetweenExcludingStartIncludingEnd
+import com.rwawrzyniak.getby.core.ext.datesBetweenExcludingStartIncludingEnd
 import com.rwawrzyniak.getby.core.ext.toInt
 import com.rwawrzyniak.getby.habits.persistance.DayScore
 import com.rwawrzyniak.getby.habits.persistance.Habit
@@ -17,7 +17,10 @@ class CalculateHabitDayScoreUseCase @Inject internal constructor() {
 	): Single<List<DayScore>> =
 		Single.just(habit)
 			.map { habit ->
-				datesBetweenExcludingStartIncludingEnd(startDate, endDate).map { givenDay ->
+				datesBetweenExcludingStartIncludingEnd(
+					startDate,
+					endDate
+				).map { givenDay ->
 					val totalPointsInCycle = habit.getHabitDaysInCycle(givenDay)
 						.sumBy { habitDay -> habitDay.checked.toInt() }
 					val validTotalPoints =

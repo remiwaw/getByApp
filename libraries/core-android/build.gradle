@@ -1,11 +1,19 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-
 dependencies {
-//    implementation Deps.androidx_material
-//
-//    testImplementation Deps.testlib_junit
-//
-//    androidTestImplementation Deps.testandroidx_runner
-//    androidTestImplementation Deps.testandroidx_espressocore
+	api Dependencies.appCompat
+	api Dependencies.ktx
+	api Dependencies.fragmentKtx
+	api Dependencies.activityKtx
+	api Dependencies.lifecycleExt
+	api Dependencies.lifecycleLiveData
+	api Dependencies.lifecycleViewModel
+	api Dependencies.material
+	api Dependencies.constraintLayout
+	api Dependencies.navigationFragmentKtx
+	api Dependencies.navigationUiKtx
+	api Dependencies.androidxLegacySupport
+	api Dependencies.rxAndroid
+	api Dependencies.disposer
+	api Dependencies.timber
+
+	testImplementation project(':libraries:core-android-test')
 }

@@ -18,7 +18,7 @@
 
 <!--	&lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;-->
 
-	<com.rwawrzyniak.getby.customview.DaysHeaderView
+	<com.rwawrzyniak.getby.core.android.customview.DaysHeaderView
 		android:id="@+id/daysHeaderView"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"

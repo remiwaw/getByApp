@@ -1,7 +1,7 @@
 package com.rwawrzyniak.getby.habits.overview
 
 import com.rwawrzyniak.getby.core.DateTimeProvider
-import com.rwawrzyniak.getby.core.ext.date.getLastNDays
+import com.rwawrzyniak.getby.core.ext.getLastNDays
 import com.rwawrzyniak.getby.habits.persistance.HabitDay
 import java.time.LocalDate
 import javax.inject.Inject

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.DiffUtil
 import com.rwawrzyniak.getby.core.AppPreferences
 import com.rwawrzyniak.getby.core.DateTimeProvider
-import com.rwawrzyniak.getby.core.GlobalEvent
+import com.rwawrzyniak.getby.core.android.broadcast.GlobalEvent
 import com.rwawrzyniak.getby.dagger.BusModule.GLOBAL_EVENT_SUBJECT
 import com.rwawrzyniak.getby.habits.persistance.Habit
 import com.rwawrzyniak.getby.habits.persistance.HabitsRepository

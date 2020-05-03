@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.BaseFragment
-import com.rwawrzyniak.getby.core.ChromeConfiguration
-import com.rwawrzyniak.getby.core.SchedulerProvider
+import com.rwawrzyniak.getby.core.android.fragment.ChromeConfiguration
+import com.rwawrzyniak.getby.core.android.rx.SchedulerProvider
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
@@ -51,12 +51,13 @@ class HabitsFragment : BaseFragment() {
 		}
 	}
 
-	override fun getChromeConfig(): ChromeConfiguration = ChromeConfiguration(
-		showActionBar = true,
-		actionBarTitle = getString(R.string.habits_action_bar_title),
-		showActionBarAddButton = true,
-		showBottomNavigationBar = true
-	)
+	override fun getChromeConfig(): ChromeConfiguration =
+		ChromeConfiguration(
+			showActionBar = true,
+			actionBarTitle = getString(R.string.habits_action_bar_title),
+			showActionBarAddButton = true,
+			showBottomNavigationBar = true
+		)
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)

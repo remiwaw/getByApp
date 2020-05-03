@@ -1,5 +1,5 @@
 package com.rwawrzyniak.getby.dagger
-import com.rwawrzyniak.getby.core.GlobalEvent
+import com.rwawrzyniak.getby.core.android.broadcast.GlobalEvent
 import dagger.Module
 import dagger.Provides
 import io.reactivex.subjects.PublishSubject

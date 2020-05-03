@@ -1,8 +1,8 @@
 package com.rwawrzyniak.getby.dagger
 
-import com.rwawrzyniak.getby.core.DefaultSchedulerProvider
-import com.rwawrzyniak.getby.core.SchedulerProvider
-import com.rwawrzyniak.getby.core.TestSchedulerProvider
+import com.rwawrzyniak.getby.core.android.rx.DefaultSchedulerProvider
+import com.rwawrzyniak.getby.core.android.rx.SchedulerProvider
+import com.rwawrzyniak.getby.core.android.rx.TestSchedulerProvider
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
@@ -15,7 +15,8 @@ object SchedulerModule {
 
     @Provides
     @Named(SCHEDULER_PROVIDER)
-    fun provideSchedulerProvider(): SchedulerProvider = DefaultSchedulerProvider
+    fun provideSchedulerProvider(): SchedulerProvider =
+		DefaultSchedulerProvider
 
     @Provides
     @Named(TEST_SCHEDULER_PROVIDER)

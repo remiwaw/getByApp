@@ -13,9 +13,10 @@ object Versions {
 	// Build dependencies
 	const val detekt = "1.5.1"
 	const val ktlint = "9.2.1"
-	const val gradle = "3.6.0"
-	const val kotlin = "1.3.50"
+	const val gradle = "3.6.3"
+	const val kotlin = "1.3.72"
 	const val navigation = "2.1.0"
+	const val gradleVersionsPlugin = "0.28.0"
 
 	// Google
 	const val room = "2.2.5"
@@ -62,17 +63,20 @@ object Versions {
 	const val hamcrest = "1.3"
 }
 
+object BuildDependencies {
+	val toolsDetekt = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${Versions.detekt}"
+	val toolsKtlint = "org.jlleitschuh.gradle:ktlint-gradle:${Versions.ktlint}"
+	val toolsGradle = "com.android.tools.build:gradle:${Versions.gradle}"
+	val toolsKotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
+	val toolsGoogleServices = "com.google.gms:google-services:${Versions.googleServices}"
+	val navigationSafeArgs =  "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.navigation}"
+	val gradleVersionsPlugin =  "com.github.ben-manes:gradle-versions-plugin:${Versions.gradleVersionsPlugin}"
+}
+
 object Dependencies {
 
-	// Tools
-	const val toolsDetekt = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${Versions.detekt}"
-	const val toolsKtlint = "org.jlleitschuh.gradle:ktlint-gradle:${Versions.ktlint}"
-	const val toolsGradle = "com.android.tools.build:gradle:${Versions.gradle}"
-	const val toolsKotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
-
 	// Google
-	const val toolsGoogleServices = "com.google.gms:google-services:${Versions.googleServices}"
-	const val kotlinStdLibJdk7 ="org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"
+	const val kotlin ="org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"
 	const val appCompat = "androidx.appcompat:appcompat:${Versions.appCompat}"
 	const val ktx = "androidx.core:core-ktx:${Versions.ktx}"
 	const val fragmentKtx = "androidx.fragment:fragment-ktx:${Versions.fragment}"
@@ -84,7 +88,6 @@ object Dependencies {
 	const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}"
 	const val navigationFragmentKtx = "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
 	const val navigationUiKtx = "androidx.navigation:navigation-ui-ktx:${Versions.navigation}"
-	const val navigationSafeArgs =  "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.navigation}"
 
 	// 3rd party
 	const val progressButton = "com.github.razir.progressbutton:progressbutton:${Versions.progressButton}"

@@ -2,9 +2,9 @@ package com.rwawrzyniak.getby.dagger
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.rwawrzyniak.getby.core.GlobalEvent
+import com.rwawrzyniak.getby.core.android.broadcast.GlobalEvent
 import com.rwawrzyniak.getby.core.PreferencesHelper
-import com.rwawrzyniak.getby.core.SchedulerProvider
+import com.rwawrzyniak.getby.core.android.rx.SchedulerProvider
 import com.rwawrzyniak.getby.habits.overview.HabitsViewModelImpl
 import com.rwawrzyniak.getby.habits.createupdate.HabitsCreateUpdateViewModelImpl
 import com.rwawrzyniak.getby.habits.details.HabitDetailsViewModelImpl

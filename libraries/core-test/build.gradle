@@ -1,13 +1,6 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-android'
-
-androidExtensions {
-    experimental = true
-}
-
 dependencies {
-//    implementation Deps.androidx_core
-//
-//    testImplementation Deps.testlib_junit
+	testImplementation Dependencies.testJunit
+	testImplementation Dependencies.testMockitoInline
+	testImplementation (Dependencies.testMockitoKotlin) { exclude group: 'org.mockito' }
+	testImplementation Dependencies.testHamcrest
 }

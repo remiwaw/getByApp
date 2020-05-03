@@ -23,10 +23,10 @@ import com.github.mikephil.charting.listener.OnChartGestureListener
 import com.github.mikephil.charting.utils.ViewPortHandler
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.BaseFragment
-import com.rwawrzyniak.getby.core.ChromeConfiguration
-import com.rwawrzyniak.getby.core.SchedulerProvider
-import com.rwawrzyniak.getby.core.ext.date.toShortForm
-import com.rwawrzyniak.getby.core.ext.date.toddMM
+import com.rwawrzyniak.getby.core.android.fragment.ChromeConfiguration
+import com.rwawrzyniak.getby.core.android.rx.SchedulerProvider
+import com.rwawrzyniak.getby.core.ext.toShortForm
+import com.rwawrzyniak.getby.core.ext.toddMM
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitDetailsBinding

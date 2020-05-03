@@ -1,11 +1,3 @@
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'androidx.navigation.safeargs.kotlin'
-apply plugin: 'kotlin-kapt'
-
 apply from: 'https://raw.githubusercontent.com/JakeWharton/SdkSearch/master/gradle/projectDependencyGraph.gradle'
 
 android {
@@ -23,24 +15,6 @@ android {
 }
 
 dependencies {
-	// Google
-	implementation Dependencies.kotlinStdLibJdk7
-	implementation Dependencies.appCompat
-	implementation Dependencies.ktx
-	implementation Dependencies.fragmentKtx
-	implementation Dependencies.activityKtx
-
-	implementation Dependencies.lifecycleExt
-	implementation Dependencies.lifecycleLiveData
-	implementation Dependencies.lifecycleViewModel
-	implementation Dependencies.material
-
-	implementation Dependencies.constraintLayout
-
-	implementation Dependencies.navigationFragmentKtx
-	implementation Dependencies.navigationUiKtx
-	implementation Dependencies.androidxLegacySupport
-
 	// 3rd party
 	implementation Dependencies.firebaseAuthRxKotlin
 	implementation Dependencies.firebaseAuthRx
@@ -50,15 +24,8 @@ dependencies {
 	implementation Dependencies.room
 	kapt Dependencies.roomKapt
 	implementation Dependencies.roomRxJava
-	implementation Dependencies.dagger
-	kapt Dependencies.daggerKapt
 	implementation Dependencies.swipeDecorator
 	implementation Dependencies.gson
-	implementation Dependencies.timber
-	implementation Dependencies.rxJava
-	implementation Dependencies.rxKotlin
-	implementation Dependencies.rxAndroid
-	implementation Dependencies.disposer
 	implementation Dependencies.materialDateTimePicker
 	implementation Dependencies.materialDateRowPicker
 	implementation Dependencies.MPAndroidChart
@@ -66,15 +33,6 @@ dependencies {
 	implementation Dependencies.carousel
 	implementation Dependencies.progressButton
 
-	//	Testing
-	testImplementation Dependencies.testJunit
-	testImplementation Dependencies.testMockitoInline
-	testImplementation Dependencies.testMockiktoAndroid
-	testImplementation (Dependencies.testMockitoKotlin) { exclude group: 'org.mockito' }
-	testImplementation Dependencies.testHamcrest
-	testImplementation Dependencies.testRoom
-
-	androidTestImplementation Dependencies.testAndroixRunner
-	androidTestImplementation Dependencies.testAndroidxRules
-	androidTestImplementation Dependencies.testEspressoCore
+	implementation project(':libraries:core')
+	implementation project(':libraries:core-android')
 }

@@ -6,7 +6,7 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.DateTimeProvider
-import com.rwawrzyniak.getby.core.ext.date.toLocalDate
+import modularization.core.getby.toLocalDate
 import com.rwawrzyniak.getby.habits.persistance.Habit
 import com.rwawrzyniak.getby.habits.persistance.HabitDay
 import com.rwawrzyniak.getby.habits.persistance.HabitsRepository

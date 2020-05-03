@@ -73,7 +73,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/frequencyLabel"
             app:layout_constraintStart_toEndOf="@+id/frequencyLabel" />
 
-		<com.rwawrzyniak.getby.customview.CustomFrequencyView
+		<com.rwawrzyniak.getby.core.android.ext.customview.CustomFrequencyView
 			android:id="@+id/customFrequencyView"
 			android:visibility="gone"
 			android:layout_width="wrap_content"

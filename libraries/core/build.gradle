@@ -1,13 +1,10 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-android'
-
-androidExtensions {
-    experimental = true
-}
-
 dependencies {
-//    implementation Deps.androidx_core
-//
-//    testImplementation Deps.testlib_junit
+	implementation Dependencies.kotlin
+	implementation Dependencies.rxJava
+	implementation Dependencies.rxKotlin
+
+	implementation Dependencies.dagger
+	kapt Dependencies.daggerKapt
+
+	testImplementation project(':libraries:core-test')
 }

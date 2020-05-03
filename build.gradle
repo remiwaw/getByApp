@@ -11,14 +11,14 @@ buildscript {
 	}
 
 	dependencies {
-		classpath Dependencies.toolsDetekt
-		classpath Dependencies.toolsKtlint
-		classpath Dependencies.toolsGradle
-		classpath Dependencies.toolsKotlin
-		classpath Dependencies.navigationSafeArgs // TODO should it be here?
-		classpath Dependencies.toolsGoogleServices
+		classpath BuildDependencies.toolsDetekt
+		classpath BuildDependencies.toolsKtlint
+		classpath BuildDependencies.toolsGradle
+		classpath BuildDependencies.toolsKotlin
+		classpath BuildDependencies.navigationSafeArgs // TODO should it be here?
+		classpath BuildDependencies.toolsGoogleServices
+		classpath BuildDependencies.gradleVersionsPlugin
 	}
-
 }
 
 allprojects {
@@ -29,47 +29,24 @@ allprojects {
     }
 }
 
-subprojects {
-	afterEvaluate { project ->
-		if (project.hasProperty('android')) {
-//			apply plugin: "com.github.ben-manes.versions"
+subprojects { project ->
+		def isAndroidModule = project.file('src/main/AndroidManifest.xml').exists()
 
-			android {
-				buildToolsVersion Config.buildTools
-				compileSdkVersion Config.compileSdk
+		if (isAndroidModule)
+			apply from: rootProject.file('moduleAndroid.gradle')
+		else
+			apply from: rootProject.file('moduleJava.gradle')
 
-				defaultConfig {
-					minSdkVersion Config.minSdk
-					targetSdkVersion Config.targetSdk
-					testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-				}
+		apply plugin: 'kotlin-kapt'
 
-				compileOptions {
-					sourceCompatibility Config.javaVersion
-					targetCompatibility Config.javaVersion
-				}
-
-				dataBinding {
-					enabled true
-				}
-				kotlinOptions {
-					jvmTarget = "1.8"
-				}
-
-				packagingOptions {
-					exclude 'META-INF/DEPENDENCIES'
-					exclude 'META-INF/LICENSE'
-					exclude 'META-INF/LICENSE.txt'
-					exclude 'META-INF/license.txt'
-					exclude 'META-INF/NOTICE'
-					exclude 'META-INF/NOTICE.txt'
-					exclude 'META-INF/notice.txt'
-					exclude 'META-INF/ASL2.0'
-					exclude("META-INF/*.kotlin_module")
-				}
-			}
+		kapt {
+			correctErrorTypes = true
 		}
-	}
+}
+
+
+task clean(type: Delete) {
+	delete rootProject.buildDir
 }
 
 detekt {
@@ -85,14 +62,10 @@ detekt {
     }
 }
 
-// TODO activate detekt
+// TODO activate detekt and ktlint
 //tasks {
 //    withType<Detekt> {
 //        // Target version of the generated JVM bytecode. It is used for type resolution.
 //        this.jvmTarget = "1.8"
 //    }
 //}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}

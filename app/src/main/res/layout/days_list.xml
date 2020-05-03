@@ -5,7 +5,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.rwawrzyniak.getby.customview.DayHeaderView
+    <com.rwawrzyniak.getby.habits.customview.DayHeaderView
         android:id="@+id/label_a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
         app:dayName="Mon"
         app:dayNumber="15"/>
 
-    <com.rwawrzyniak.getby.customview.DayHeaderView
+    <com.rwawrzyniak.getby.habits.customview.DayHeaderView
         android:id="@+id/label_b"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
         app:dayName="Tue"
         app:dayNumber="16"/>
 
-    <com.rwawrzyniak.getby.customview.DayHeaderView
+    <com.rwawrzyniak.getby.habits.customview.DayHeaderView
         android:id="@+id/label_c"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
         app:dayName="Wed"
         app:dayNumber="17"/>
 
-    <com.rwawrzyniak.getby.customview.DayHeaderView
+    <com.rwawrzyniak.getby.habits.customview.DayHeaderView
         android:id="@+id/label_d"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -14,7 +14,8 @@ object ApplicationModule {
 	fun provideResources(context: Context): Resources = context.resources
 
 	@JvmStatic @Provides
-	fun provideDateTimeProvider() = DateTimeProvider()
+	fun provideDateTimeProvider() =
+		DateTimeProvider()
 
 	@Provides
 	@Singleton

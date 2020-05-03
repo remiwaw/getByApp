@@ -8,6 +8,8 @@ import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.rwawrzyniak.getby.R
+import com.rwawrzyniak.getby.core.android.fragment.ChromeConfiguration
+import com.rwawrzyniak.getby.core.android.fragment.ChromeExtensionsProvider
 import kotlinx.android.synthetic.main.activity_main.*
 
 abstract class BaseFragment : Fragment() {
@@ -18,9 +20,10 @@ abstract class BaseFragment : Fragment() {
         (activity as ChromeExtensionsProvider).getBottomNavigation()
     }
 
-    open fun getChromeConfig(): ChromeConfiguration = ChromeConfiguration(
-        showActionBarAddButton = true
-    )
+    open fun getChromeConfig(): ChromeConfiguration =
+		ChromeConfiguration(
+			showActionBarAddButton = true
+		)
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
