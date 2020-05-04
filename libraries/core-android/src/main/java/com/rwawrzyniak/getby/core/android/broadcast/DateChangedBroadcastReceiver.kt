@@ -1,4 +1,4 @@
-package com.rwawrzyniak.getby.broadcast
+package com.rwawrzyniak.getby.core.android.broadcast
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -9,16 +9,6 @@ class DateChangedBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         Timber.i("Date or timezone was changed")
-        // TODO: This method is called when the BroadcastReceiver is receiving
-        // an Intent broadcast.
-        throw UnsupportedOperationException("Not yet implemented")
-    }
-}
-
-class DateChangedBroadcastReceiver : BroadcastReceiver() {
-
-    override fun onReceive(context: Context, intent: Intent) {
-		Timber.i("Date or timezone was changed")
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
         throw UnsupportedOperationException("Not yet implemented")

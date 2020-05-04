@@ -13,8 +13,8 @@ import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.BaseFragment
 import com.rwawrzyniak.getby.core.android.fragment.ChromeConfiguration
 import com.rwawrzyniak.getby.core.android.rx.SchedulerProvider
-import com.rwawrzyniak.getby.core.ext.convertWeekDaysToMaterial
-import com.rwawrzyniak.getby.core.ext.convertWeekDaysToStandard
+import com.rwawrzyniak.getby.convertWeekDaysToMaterial
+import com.rwawrzyniak.getby.convertWeekDaysToStandard
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentHabitCreateUpdateBinding

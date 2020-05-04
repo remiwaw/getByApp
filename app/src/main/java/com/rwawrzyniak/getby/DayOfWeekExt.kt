@@ -1,4 +1,4 @@
-package com.rwawrzyniak.getby.core.ext
+package com.rwawrzyniak.getby
 
 import ca.antonious.materialdaypicker.MaterialDayPicker
 import java.time.DayOfWeek

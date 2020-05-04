@@ -12,7 +12,7 @@
 		android:roundIcon="@mipmap/ic_launcher_round"
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme">
-		<receiver android:name="com.rwawrzyniak.getby.broadcast.DateChangedBroadcastReceiver" />
+		<receiver android:name="com.rwawrzyniak.getby.core.android.broadcast.DateChangedBroadcastReceiver" />
 		<activity android:name=".app.MainActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
