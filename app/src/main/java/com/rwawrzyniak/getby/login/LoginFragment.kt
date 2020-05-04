@@ -11,14 +11,13 @@ import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.rwawrzyniak.getby.R
-import com.rwawrzyniak.getby.core.BaseFragment
+import com.rwawrzyniak.getby.core.android.fragment.BaseFragment
 import com.rwawrzyniak.getby.core.android.rx.SchedulerProvider
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentLoginBinding
 import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
-import kotlinx.android.synthetic.main.activity_main.*
 
 class LoginFragment : BaseFragment() {
     private lateinit var binding: FragmentLoginBinding
@@ -77,10 +76,10 @@ class LoginFragment : BaseFragment() {
     }
 
     private fun navigateToHabits() {
-        nav_host.findNavController().navigate(R.id.action_loginFragment_to_habitsFragment)
+        findNavController().navigate(R.id.action_loginFragment_to_habitsFragment)
     }
 
     private fun navigateToRegisterFragment() {
-        nav_host.findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+        findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
     }
 }

@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.rwawrzyniak.getby.R
-import com.rwawrzyniak.getby.core.BaseFragment
+import com.rwawrzyniak.getby.core.android.fragment.BaseFragment
 import com.rwawrzyniak.getby.databinding.FragmentOnboardingBinding
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -33,7 +33,7 @@ class OnboardingFragment : BaseFragment() {
         }
 
         binding.skipButton.setOnClickListener {
-            nav_host.findNavController().navigate(R.id.action_onboardingFragment_to_loginFragment)
+            findNavController().navigate(R.id.action_onboardingFragment_to_loginFragment)
         }
 
         return binding.root

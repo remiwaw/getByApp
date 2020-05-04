@@ -8,12 +8,12 @@ dependencies {
 	api Dependencies.lifecycleViewModel
 	api Dependencies.material
 	api Dependencies.constraintLayout
-	api Dependencies.navigationFragmentKtx
-	api Dependencies.navigationUiKtx
 	api Dependencies.androidxLegacySupport
 	api Dependencies.rxAndroid
 	api Dependencies.disposer
 	api Dependencies.timber
 
+	api project(':libraries:common')
+	api project(':libraries:navigation')
 	testImplementation project(':libraries:core-android-test')
 }

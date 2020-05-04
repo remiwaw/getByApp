@@ -1,12 +1,88 @@
 <resources>
-    <string name="app_name">Modularization Example</string>
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
+	<string name="topToolbar_settings">Settings</string>
+	<string name="topToolbar_action_more_vertical">More</string>
+	<string name="topToolbar_hide_archived">Hide archived</string>
+
+	<!--    General-->
+	<string name="app_name">GetBy</string>
+	<string name="loading">Loading</string>
+	<string name="save">save</string>
+	<string name="edit">edit</string>
+
+	<string name="top_action_bar_plus_action">Add</string>
+	<string name="bottom_navigation_card_habits">Habits</string>
+	<string name="bottom_navigation_card_feed">Feed</string>
+	<string name="bottom_navigation_card_friends">Friends</string>
+
+	<!--	Custom frequency picker -->
+	<string name="customFrequencyPickerDefaultTimesValue">1</string>
+	<string name="customFrequenyPickerDaysValue">7</string>
+	<string name="customFrequencyPickerTimesLabel">times in</string>
+	<string name="customFrequencyPickerDaysLabel">days</string>
+	<string name="frequencyIncorrect">Number of times should be lower than number of days</string>
+
+
+	<!--    General error handling-->
+	<string name="empty_field_error">You have to fill this field</string>
+
+	<!--    Tour-->
+	<string name="tour_button_start_the_tour">Start the tour!</string>
+	<string name="tour_logo_text_getby_app">GetBy App</string>
+	<string name="tour_logo_image_description">logo</string>
+
+	<string name="onboarding_button_skip">Skip</string>
+
+	<!--    Login-->
+	<string name="login_user_name_hint">User name</string>
+	<string name="login_password_hint">Password</string>
+	<string name="login_header">Sign in</string>
+	<string name="login_button">Sign in</string>
+	<string name="login_sign_up_hint">Don\'t have an account?</string>
+	<string name="login_sign_up_link"><u>Sign up</u></string>
+
+	<!--    Register-->
+	<string name="register_user_name_hint">john@example.com</string>
+	<string name="register_user_password_hint">Password</string>
+	<string name="register_header">Sign up</string>
+	<string name="register_button">Sign up</string>
+	<string name="register_sign_up_hint">ALready have an account?</string>
+	<string name="register_sign_up_link"><u>Sign up</u></string>
+
+	<!-- Habits -->
+	<string name="habit_search_hint">Filter habits</string>
+	<string name="habits_action_bar_title">Habits</string>
+	<string name="habits_undo_snackbar_title">Undo %1$s</string>
+	<string name="habits_undo_snackbar_button">Undo?</string>
+	<string name="habits_undo_snackbar_change_archive_state_action">change archives state</string>
+	<string name="habits_undo_snackbar_remove_action">remove</string>
+
+
+	<!--    Create new habit-->
+	<string name="define_habit_header">Define habit</string>
+	<string name="habitNameLayoutHint">Name:</string>
+	<string name="habitDescriptionLayoutHint">Description:</string>
+	<string name="habitsCreateTitle">Add</string>
+	<string name="habitsUpdateTitle">Update</string>
+
+	<string name="addFriendsButton">Add friends</string>
+	<string name="repeatLabel">Repeat</string>
+	<string name="reminderlabel">Reminder</string>
+	<string name="habitDetailsToolbarTitle">Details</string>
+	<string name="habitAddToolbarTitle">Create</string>
+	<string name="reminderDefaultValue">Off</string>
+	<string name="reminderAt">Set at: %1$s</string>
+
+	<string-array name="habits_frequency">
+		<item>Every day</item>
+		<item>Once a week</item>
+		<item>2 times per week</item>
+		<item>5 times per week</item>
+		<item>Custom</item>
+	</string-array>
+
+	<!--	Habit detail -->
+	<string name="habitsDetailsTitle">Details</string>
+	<string name="frequencyTextInDetails">%1$d times in %2$d days</string>
+	<string name="noHabitsText">Currently there are no habits. Add one!</string>
+
 </resources>

@@ -26,10 +26,6 @@ dependencies {
 	implementation Dependencies.roomRxJava
 	implementation Dependencies.swipeDecorator
 	implementation Dependencies.gson
-	implementation Dependencies.materialDateTimePicker
-	implementation Dependencies.materialDateRowPicker
-	implementation Dependencies.MPAndroidChart
-	implementation Dependencies.rangePicker
 	implementation Dependencies.carousel
 	implementation Dependencies.progressButton
 

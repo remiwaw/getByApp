@@ -11,7 +11,7 @@ import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.rwawrzyniak.getby.R
-import com.rwawrzyniak.getby.core.BaseFragment
+import com.rwawrzyniak.getby.core.android.fragment.BaseFragment
 import com.rwawrzyniak.getby.core.android.rx.SchedulerProvider
 import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
@@ -75,10 +75,10 @@ class RegisterFragment : BaseFragment() {
     }
 
     private fun navigateToDashboard() {
-        nav_host.findNavController().navigate(R.id.placeholder)
+        findNavController().navigate(R.id.placeholder)
     }
 
     private fun navigateToLoginFragment() {
-        nav_host.findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+        findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
     }
 }
