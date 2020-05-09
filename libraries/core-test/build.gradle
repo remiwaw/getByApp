@@ -1,6 +1,6 @@
 dependencies {
-	testImplementation Dependencies.testJunit
-	testImplementation Dependencies.testMockitoInline
-	testImplementation (Dependencies.testMockitoKotlin) { exclude group: 'org.mockito' }
-	testImplementation Dependencies.testHamcrest
+	api Dependencies.testJunit
+	api Dependencies.testMockitoInline
+	api (Dependencies.testMockitoKotlin) { exclude group: 'org.mockito' }
+	api Dependencies.testHamcrest
 }

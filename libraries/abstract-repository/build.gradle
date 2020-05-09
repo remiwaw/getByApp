@@ -1,0 +1,6 @@
+dependencies {
+	implementation Dependencies.kotlin
+	implementation Dependencies.rxKotlin
+	api project(':libraries:abstract-converter')
+	api project(':libraries:abstract-datasource')
+}

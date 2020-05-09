@@ -56,7 +56,7 @@
     </fragment>
     <fragment
         android:id="@+id/habitsFragment"
-        android:name="com.rwawrzyniak.getby.habits.overview.HabitsFragment"
+        android:name="com.rwawrzyniak.getby.habits.ui.HabitsFragment"
         android:label="HabitsFragmnt" >
 		<action
 			android:id="@+id/action_habitsFragment_to_habitDetailsFragment"
@@ -69,7 +69,7 @@
     <fragment android:id="@+id/placeholder" />
 	<fragment
 		android:id="@+id/habitDetailsFragment"
-		android:name="com.rwawrzyniak.getby.habits.details.HabitDetailsFragment"
+		android:name="com.rwawrzyniak.getby.habits.ui.HabitDetailsFragment"
 		android:label="HabitDetailsFragment" >
 		<argument
 			android:name="habitId"
@@ -80,6 +80,6 @@
 	</fragment>
 	<fragment
 		android:id="@+id/habitCreateUpdateFragment"
-		android:name="com.rwawrzyniak.getby.habits.createupdate.HabitCreateUpdateFragment"
+		android:name="com.rwawrzyniak.getby.habits.ui.HabitCreateUpdateFragment"
 		android:label="HabitCreateUpdateFragment" />
 </navigation>

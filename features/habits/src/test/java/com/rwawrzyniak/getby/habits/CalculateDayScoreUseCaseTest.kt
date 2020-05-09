@@ -1,10 +1,9 @@
 package com.rwawrzyniak.getby.habits
 
-import com.rwawrzyniak.getby.habits.details.CalculateHabitDayScoreUseCase
-import com.rwawrzyniak.getby.habits.persistance.DayScore
-import com.rwawrzyniak.getby.habits.persistance.Frequency
-import com.rwawrzyniak.getby.habits.persistance.Habit
-import com.rwawrzyniak.getby.habits.persistance.HabitDay
+import com.rwawrzyniak.getby.models.DayScore
+import com.rwawrzyniak.getby.models.Frequency
+import com.rwawrzyniak.getby.models.HabitDay
+import com.rwawrzyniak.getby.models.HabitModel
 import org.junit.Before
 import org.junit.Test
 import org.mockito.MockitoAnnotations
@@ -41,21 +40,69 @@ internal class CalculateDayScoreUseCaseTest {
 			times = 3,
 			cycle = 7
 		)
-		val testHabit = Habit(
+		val testHabit = HabitModel(
 			name = "name",
 			description = "description",
 			frequency = frequency,
 			reminder = null,
-			history  = listOf(
-				HabitDay(LocalDate.of(2020, 12, 23), checked = false),
-				HabitDay(LocalDate.of(2020, 12, 22), checked = false),
-				HabitDay(LocalDate.of(2020, 12, 21), checked = true),
-				HabitDay(LocalDate.of(2020, 12, 20), checked = false),
-				HabitDay(LocalDate.of(2020, 12, 19), checked = true),
-				HabitDay(LocalDate.of(2020, 12, 18), checked = false),
-				HabitDay(LocalDate.of(2020, 12, 17), checked = false),
-				HabitDay(LocalDate.of(2020, 12, 16), checked = true)
-		)
+			history = listOf(
+				HabitDay(
+					LocalDate.of(
+						2020,
+						12,
+						23
+					), checked = false
+				),
+				HabitDay(
+					LocalDate.of(
+						2020,
+						12,
+						22
+					), checked = false
+				),
+				HabitDay(
+					LocalDate.of(
+						2020,
+						12,
+						21
+					), checked = true
+				),
+				HabitDay(
+					LocalDate.of(
+						2020,
+						12,
+						20
+					), checked = false
+				),
+				HabitDay(
+					LocalDate.of(
+						2020,
+						12,
+						19
+					), checked = true
+				),
+				HabitDay(
+					LocalDate.of(
+						2020,
+						12,
+						18
+					), checked = false
+				),
+				HabitDay(
+					LocalDate.of(
+						2020,
+						12,
+						17
+					), checked = false
+				),
+				HabitDay(
+					LocalDate.of(
+						2020,
+						12,
+						16
+					), checked = true
+				)
+			)
 		)
 
 		sut().calculateScoreForDayRangeExcludingStart(testHabit, startDate, endDate)
@@ -88,20 +135,68 @@ internal class CalculateDayScoreUseCaseTest {
 			times = 3,
 			cycle = 7
 		)
-		val testHabit = Habit(
+		val testHabit = HabitModel(
 			name = "name",
 			description = "description",
 			frequency = frequency,
 			reminder = null,
 			history = listOf(
-				HabitDay(LocalDate.of(2020, 12, 23), checked = true),
-				HabitDay(LocalDate.of(2020, 12, 22), checked = true),
-				HabitDay(LocalDate.of(2020, 12, 21), checked = true),
-				HabitDay(LocalDate.of(2020, 12, 20), checked = true),
-				HabitDay(LocalDate.of(2020, 12, 19), checked = true),
-				HabitDay(LocalDate.of(2020, 12, 18), checked = true),
-				HabitDay(LocalDate.of(2020, 12, 17), checked = true),
-				HabitDay(LocalDate.of(2020, 12, 16), checked = true)
+				HabitDay(
+					LocalDate.of(
+						2020,
+						12,
+						23
+					), checked = true
+				),
+				HabitDay(
+					LocalDate.of(
+						2020,
+						12,
+						22
+					), checked = true
+				),
+				HabitDay(
+					LocalDate.of(
+						2020,
+						12,
+						21
+					), checked = true
+				),
+				HabitDay(
+					LocalDate.of(
+						2020,
+						12,
+						20
+					), checked = true
+				),
+				HabitDay(
+					LocalDate.of(
+						2020,
+						12,
+						19
+					), checked = true
+				),
+				HabitDay(
+					LocalDate.of(
+						2020,
+						12,
+						18
+					), checked = true
+				),
+				HabitDay(
+					LocalDate.of(
+						2020,
+						12,
+						17
+					), checked = true
+				),
+				HabitDay(
+					LocalDate.of(
+						2020,
+						12,
+						16
+					), checked = true
+				)
 			)
 		)
 

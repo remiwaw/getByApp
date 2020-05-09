@@ -16,19 +16,11 @@ android {
 
 dependencies {
 	// 3rd party
-	implementation Dependencies.firebaseAuthRxKotlin
-	implementation Dependencies.firebaseAuthRx
-	implementation Dependencies.firebaseAuth
-	implementation Dependencies.firebaseCoreRx
-	implementation Dependencies.firebaseCore
-	implementation Dependencies.room
-	kapt Dependencies.roomKapt
-	implementation Dependencies.roomRxJava
 	implementation Dependencies.swipeDecorator
-	implementation Dependencies.gson
 	implementation Dependencies.carousel
 	implementation Dependencies.progressButton
 
+	implementation project(':features:habits-ui')
 	implementation project(':libraries:core')
 	implementation project(':libraries:core-android')
 }

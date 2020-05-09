@@ -1,9 +1,5 @@
 dependencies {
-	implementation Dependencies.materialDateRowPicker
-	implementation Dependencies.materialDateTimePicker
-	implementation Dependencies.MPAndroidChart
-	implementation Dependencies.rangePicker
-
-	implementation project(':libraries:core-android')
-	testImplementation project(':libraries:core-android-test')
+	api project(':libraries:core')
+	api project(':libraries:models')
+	testImplementation project(':libraries:core-test')
 }

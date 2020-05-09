@@ -1,7 +1,7 @@
 package com.rwawrzyniak.getby.register
 
 import com.rwawrzyniak.getby.AuthEmailRepository
-import com.rwawrzyniak.getby.core.FirebaseExceptionMapper
+import com.rwawrzyniak.getby.core.android.database.FirebaseExceptionMapper
 import io.reactivex.Single
 import javax.inject.Inject
 

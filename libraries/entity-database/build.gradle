@@ -1,0 +1,6 @@
+dependencies {
+	implementation Dependencies.kotlin
+	implementation Dependencies.room
+	implementation Dependencies.roomKapt
+	api project(':libraries:abstract-entity')
+}

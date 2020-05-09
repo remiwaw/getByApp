@@ -1,0 +1,4 @@
+dependencies {
+	implementation Dependencies.kotlin
+	api project(':libraries:abstract-model')
+}

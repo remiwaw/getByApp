@@ -2,13 +2,15 @@ package com.rwawrzyniak.getby.dagger
 
 import android.app.Application
 import com.rwawrzyniak.getby.BuildConfig
+import com.rwawrzyniak.getby.core.android.dagger.CoreComponent
+import com.rwawrzyniak.getby.core.android.dagger.CoreComponentProvider
 import timber.log.Timber
 
-class GetByApp : Application(), DaggerComponentProvider {
-    override val component: ApplicationComponent by lazy {
-        DaggerApplicationComponent
-            .factory()
-            .create(applicationContext)
+class GetByApp : Application(), CoreComponentProvider {
+    override val component: CoreComponent by lazy {
+		DaggerCoreComponent
+			.builder()
+			.build()
     }
 
     override fun onCreate() {

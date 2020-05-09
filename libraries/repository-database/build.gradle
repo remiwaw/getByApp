@@ -1,0 +1,10 @@
+dependencies {
+	implementation Dependencies.kotlin
+	implementation Dependencies.roomRxJava
+	implementation Dependencies.gson
+	implementation project(':libraries:entity-database')
+	implementation project(':libraries:abstract-repository')
+	implementation project(':libraries:models')
+	implementation project(':libraries:datasource-database')
+	implementation project(':libraries:converters')
+}

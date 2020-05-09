@@ -12,15 +12,27 @@ import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.android.broadcast.GlobalEvent
 import com.rwawrzyniak.getby.core.android.ext.observeBroadcasts
 import com.rwawrzyniak.getby.core.android.fragment.ChromeExtensionsProvider
-import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.ActivityMainBinding
+import io.reactivex.subjects.PublishSubject
 import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(),
 	ChromeExtensionsProvider {
-    private val globalEventSubject by lazy { injector.getGlobalEventSubject() }
+
+	@Inject
+	lateinit var globalEventSubject: PublishSubject<GlobalEvent>
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		DataBindingUtil.setContentView<ActivityMainBinding>(this,
+			R.layout.activity_main
+		)
+
+		setSupportActionBar(mainActionBar)
+	}
 
     override fun getAppActionBar(): ActionBar {
         return requireNotNull(supportActionBar)
@@ -41,15 +53,6 @@ class MainActivity : AppCompatActivity(),
             }
 
         super.onStart()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        DataBindingUtil.setContentView<ActivityMainBinding>(this,
-            R.layout.activity_main
-        )
-
-        setSupportActionBar(mainActionBar)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean { // Inflate the menu; this adds items to the action bar if it is present.

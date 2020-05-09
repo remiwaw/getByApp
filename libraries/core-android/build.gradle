@@ -13,7 +13,17 @@ dependencies {
 	api Dependencies.disposer
 	api Dependencies.timber
 
-	api project(':libraries:common')
+	implementation Dependencies.firebaseAuthRxKotlin
+	implementation Dependencies.firebaseAuthRx
+	implementation Dependencies.firebaseAuth
+	implementation Dependencies.firebaseCoreRx
+	implementation Dependencies.firebaseCore
+	implementation Dependencies.room
+	kapt Dependencies.roomKapt
+	implementation Dependencies.roomRxJava
+	implementation Dependencies.gson
+
+
 	api project(':libraries:navigation')
 	testImplementation project(':libraries:core-android-test')
 }

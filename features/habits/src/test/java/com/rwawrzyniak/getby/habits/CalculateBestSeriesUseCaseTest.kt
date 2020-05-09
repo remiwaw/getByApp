@@ -1,10 +1,8 @@
 package com.rwawrzyniak.getby.habits
 
-import com.rwawrzyniak.getby.habits.details.CalculateBestSeriesUseCase
-import com.rwawrzyniak.getby.habits.details.Strike
-import com.rwawrzyniak.getby.habits.persistance.Frequency
-import com.rwawrzyniak.getby.habits.persistance.Habit
-import com.rwawrzyniak.getby.habits.persistance.HabitDay
+import com.rwawrzyniak.getby.models.Frequency
+import com.rwawrzyniak.getby.models.HabitDay
+import com.rwawrzyniak.getby.models.HabitModel
 import org.junit.Before
 import org.junit.Test
 import org.mockito.MockitoAnnotations
@@ -37,14 +35,38 @@ class CalculateBestSeriesUseCaseTest {
 		)
 
 		val history  = listOf(
-			HabitDay(LocalDate.of(2020, 12, 16), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 17), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 18), checked = false),
-			HabitDay(LocalDate.of(2020, 12, 19), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 20), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 21), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 22), checked = false),
-			HabitDay(LocalDate.of(2020, 12, 23), checked = true)
+			HabitDay(
+				LocalDate.of(2020, 12, 16),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 17),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 18),
+				checked = false
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 19),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 20),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 21),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 22),
+				checked = false
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 23),
+				checked = true
+			)
 		)
 
 		val testHabit = testHabit(history)
@@ -60,9 +82,18 @@ class CalculateBestSeriesUseCaseTest {
 	@Test
 	fun shouldCalculateStrikeIfAndReturnEmptyListIfNoStrikes() {
 		val history  = listOf(
-			HabitDay(LocalDate.of(2020, 12, 16), checked = false),
-			HabitDay(LocalDate.of(2020, 12, 17), checked = false),
-			HabitDay(LocalDate.of(2020, 12, 18), checked = false)
+			HabitDay(
+				LocalDate.of(2020, 12, 16),
+				checked = false
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 17),
+				checked = false
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 18),
+				checked = false
+			)
 		)
 
 		val testHabit = testHabit(history)
@@ -87,9 +118,18 @@ class CalculateBestSeriesUseCaseTest {
 		)
 
 		val history  = listOf(
-			HabitDay(LocalDate.of(2020, 12, 16), checked = false),
-			HabitDay(LocalDate.of(2020, 12, 17), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 18), checked = false)
+			HabitDay(
+				LocalDate.of(2020, 12, 16),
+				checked = false
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 17),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 18),
+				checked = false
+			)
 		)
 
 		val testHabit = testHabit(history)
@@ -104,11 +144,26 @@ class CalculateBestSeriesUseCaseTest {
 	@Test
 	fun shouldCalculateStrikeNoneIfOnlySingleDays() {
 		val history  = listOf(
-			HabitDay(LocalDate.of(2020, 12, 16), checked = false),
-			HabitDay(LocalDate.of(2020, 12, 17), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 18), checked = false),
-			HabitDay(LocalDate.of(2020, 12, 19), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 20), checked = false)
+			HabitDay(
+				LocalDate.of(2020, 12, 16),
+				checked = false
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 17),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 18),
+				checked = false
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 19),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 20),
+				checked = false
+			)
 		)
 
 		val testHabit = testHabit(history)
@@ -140,13 +195,34 @@ class CalculateBestSeriesUseCaseTest {
 		)
 
 		val history  = listOf(
-			HabitDay(LocalDate.of(2020, 12, 16), checked = false),
-			HabitDay(LocalDate.of(2020, 12, 17), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 18), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 19), checked = false),
-			HabitDay(LocalDate.of(2020, 12, 20), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 21), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 22), checked = true)
+			HabitDay(
+				LocalDate.of(2020, 12, 16),
+				checked = false
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 17),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 18),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 19),
+				checked = false
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 20),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 21),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 22),
+				checked = true
+			)
 		)
 
 		val testHabit = testHabit(history)
@@ -186,16 +262,46 @@ class CalculateBestSeriesUseCaseTest {
 		)
 
 		val history  = listOf(
-			HabitDay(LocalDate.of(2020, 12, 2), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 3), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 4), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 10), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 11), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 14), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 15), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 16), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 17), checked = true),
-			HabitDay(LocalDate.of(2020, 12, 18), checked = true)
+			HabitDay(
+				LocalDate.of(2020, 12, 2),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 3),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 4),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 10),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 11),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 14),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 15),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 16),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 17),
+				checked = true
+			),
+			HabitDay(
+				LocalDate.of(2020, 12, 18),
+				checked = true
+			)
 		)
 
 		val testHabit = testHabit(history)
@@ -209,13 +315,17 @@ class CalculateBestSeriesUseCaseTest {
 			}
 	}
 
-	private fun testHabit(history: List<HabitDay>): Habit = Habit(
-		name = "name",
-		description = "description",
-		frequency = Frequency(times = 3, cycle = 7),
-		reminder = null,
-		history = history
-	)
+	private fun testHabit(history: List<HabitDay>): HabitModel =
+		HabitModel(
+			name = "name",
+			description = "description",
+			frequency = Frequency(
+				times = 3,
+				cycle = 7
+			),
+			reminder = null,
+			history = history
+		)
 
 	private fun sut() =
 		CalculateBestSeriesUseCase()

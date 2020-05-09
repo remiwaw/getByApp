@@ -1,9 +1,9 @@
 dependencies {
-	implementation Dependencies.kotlin
-	implementation Dependencies.rxJava
-	implementation Dependencies.rxKotlin
+	api Dependencies.kotlin
+	api Dependencies.rxJava
+	api Dependencies.rxKotlin
 
-	implementation Dependencies.dagger
+	api Dependencies.dagger
 	kapt Dependencies.daggerKapt
 
 	testImplementation project(':libraries:core-test')

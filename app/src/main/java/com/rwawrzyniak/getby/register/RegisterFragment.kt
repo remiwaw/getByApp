@@ -13,12 +13,11 @@ import com.github.razir.progressbutton.showProgress
 import com.rwawrzyniak.getby.R
 import com.rwawrzyniak.getby.core.android.fragment.BaseFragment
 import com.rwawrzyniak.getby.core.android.rx.SchedulerProvider
-import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
+import com.rwawrzyniak.getby.core.android.ext.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentRegisterBinding
 import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
-import kotlinx.android.synthetic.main.activity_main.*
 
 class RegisterFragment : BaseFragment() {
     private lateinit var binding: FragmentRegisterBinding

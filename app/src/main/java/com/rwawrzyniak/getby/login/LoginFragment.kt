@@ -5,18 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideProgress
 import com.github.razir.progressbutton.showProgress
 import com.rwawrzyniak.getby.R
+import com.rwawrzyniak.getby.core.android.ext.fragmentScopedViewModel
 import com.rwawrzyniak.getby.core.android.fragment.BaseFragment
 import com.rwawrzyniak.getby.core.android.rx.SchedulerProvider
-import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
 import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.databinding.FragmentLoginBinding
-import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
 
 class LoginFragment : BaseFragment() {
