@@ -4,6 +4,7 @@ dependencies {
 	implementation Dependencies.MPAndroidChart
 	implementation Dependencies.rangePicker
 
+	implementation project(':libraries:repository-database')
 	implementation project(':features:habits')
 	implementation project(':libraries:core-android')
 	testImplementation project(':libraries:core-android-test')

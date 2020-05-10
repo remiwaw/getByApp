@@ -3,6 +3,6 @@ import com.rwawrzyniak.getby.abstractentities.AbstractEntity
 import com.rwawrzyniak.getby.abstractmodel.AbstractModel
 
 interface AbstractConverter<AM: AbstractModel, AE: AbstractEntity>{
-	fun toModel(entity: AE) : AM
-	fun toEntity(model: AM): AE
+	fun toModel(entity: AbstractEntity) : AM
+	fun toEntity(model: AbstractModel): AE
 }

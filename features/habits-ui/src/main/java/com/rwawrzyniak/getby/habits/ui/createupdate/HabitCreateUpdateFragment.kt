@@ -18,13 +18,11 @@ import com.rwawrzyniak.getby.habits.R
 import com.rwawrzyniak.getby.habits.databinding.FragmentHabitCreateUpdateBinding
 import com.rwawrzyniak.getby.habits.ui.ext.convertWeekDaysToMaterial
 import com.rwawrzyniak.getby.habits.ui.ext.convertWeekDaysToStandard
-import com.rwawrzyniak.getby.entities.Frequency
-import com.rwawrzyniak.getby.entities.Habit
-import com.rwawrzyniak.getby.entities.HourMinute
-import com.rwawrzyniak.getby.entities.Reminder
+import com.rwawrzyniak.getby.models.*
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
 import io.reactivex.Completable
 import io.reactivex.rxkotlin.subscribeBy
+import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
 import kotlinx.android.synthetic.main.fragment_habit_create_update.*
 import timber.log.Timber
@@ -116,12 +114,12 @@ class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedList
 		}
 	}
 
-	private fun renderTextFields(backingHabit: com.rwawrzyniak.getby.entities.Habit) {
+	private fun renderTextFields(backingHabit: HabitModel) {
 		binding.habitName.setText(backingHabit.name)
 		binding.habitDescription.setText(backingHabit.description)
 	}
 
-	private fun renderFrequency(backingHabit: com.rwawrzyniak.getby.entities.Habit) {
+	private fun renderFrequency(backingHabit: HabitModel) {
 		if (shouldDisplayCustomFrequency(backingHabit.frequency)) {
 			binding.customFrequencyView.setTimes(backingHabit.frequency.times)
 			binding.customFrequencyView.setDays(backingHabit.frequency.cycle)
@@ -133,7 +131,7 @@ class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedList
 	}
 
 	private fun renderReminder(
-		backingHabit: com.rwawrzyniak.getby.entities.Habit
+		backingHabit: HabitModel
 	) {
 		backingHabit.reminder?.let {
 			binding.rowDayOfWeekPicker.setSelectedDays(
@@ -156,7 +154,7 @@ class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedList
 		}
 	}
 
-	private fun shouldDisplayCustomFrequency(frequency: com.rwawrzyniak.getby.entities.Frequency) =
+	private fun shouldDisplayCustomFrequency(frequency: Frequency) =
 		getFrequencySpinnerIndex(frequency) == CUSTOM_FREQUENCY_USED
 
 	private fun showFieldsError(effect: HabitDetailsViewEffect.ConfigureFields) {
@@ -268,7 +266,7 @@ class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedList
 		subscribeTo(
 			viewModel.onAction(
 				HabitCreateUpdateViewAction.OnSaveHabitClicked(
-					com.rwawrzyniak.getby.entities.Habit(
+					HabitModel(
 						name = binding.habitName.text.toString(),
 						description = binding.habitDescription.text.toString(),
 						frequency = getFrequencyValue(),
@@ -287,7 +285,7 @@ class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedList
 
 	override fun onNothingSelected(parent: AdapterView<*>) {}
 
-	private fun getReminder(): com.rwawrzyniak.getby.entities.Reminder? {
+	private fun getReminder(): com.rwawrzyniak.getby.models.Reminder? {
 		if(binding.reminder.text == resources.getString(R.string.reminderDefaultValue)){
 			return null
 		}
@@ -298,8 +296,8 @@ class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedList
 		val reminderText = binding.reminder.text
 		val hourOfDay = reminderText.split(":")[0].toInt()
 		val minuteOfDay  = reminderText.split(":")[1].toInt()
-		return com.rwawrzyniak.getby.entities.Reminder(
-			com.rwawrzyniak.getby.entities.HourMinute(
+		return com.rwawrzyniak.getby.models.Reminder(
+			com.rwawrzyniak.getby.models.HourMinute(
 				hourOfDay,
 				minuteOfDay
 			),
@@ -307,22 +305,22 @@ class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedList
 		)
 	}
 
-	private fun getFrequencyValue(): com.rwawrzyniak.getby.entities.Frequency = when (binding.frequencyPicker.selectedItemPosition) {
-		0 -> com.rwawrzyniak.getby.entities.Frequency(7, 7)
-		1 -> com.rwawrzyniak.getby.entities.Frequency(1, 7)
-		2 -> com.rwawrzyniak.getby.entities.Frequency(2, 7)
-		3 -> com.rwawrzyniak.getby.entities.Frequency(5, 7)
-		else -> com.rwawrzyniak.getby.entities.Frequency(
+	private fun getFrequencyValue(): Frequency = when (binding.frequencyPicker.selectedItemPosition) {
+		0 -> Frequency(7, 7)
+		1 -> Frequency(1, 7)
+		2 -> Frequency(2, 7)
+		3 -> Frequency(5, 7)
+		else -> Frequency(
 			binding.customFrequencyView.getTimes(),
 			binding.customFrequencyView.getDays()
 		)
 	}
 
-	private fun getFrequencySpinnerIndex(frequency: com.rwawrzyniak.getby.entities.Frequency): Int = when (frequency) {
-		com.rwawrzyniak.getby.entities.Frequency(7, 7) -> 0
-		com.rwawrzyniak.getby.entities.Frequency(1, 7) -> 1
-		com.rwawrzyniak.getby.entities.Frequency(2, 7) -> 2
-		com.rwawrzyniak.getby.entities.Frequency(5, 7) -> 3
+	private fun getFrequencySpinnerIndex(frequency: Frequency): Int = when (frequency) {
+		Frequency(7, 7) -> 0
+		Frequency(1, 7) -> 1
+		Frequency(2, 7) -> 2
+		Frequency(5, 7) -> 3
 		else -> CUSTOM_FREQUENCY_USED
 	}
 

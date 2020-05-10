@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import com.rwawrzyniak.getby.core.android.dagger.BusModule
 import com.rwawrzyniak.getby.core.android.broadcast.MenuItemClickedEvent
 import com.rwawrzyniak.getby.habits.R
-import com.rwawrzyniak.getby.entities.Frequency
-import com.rwawrzyniak.getby.entities.Habit
-import com.rwawrzyniak.getby.repository.HabitsRepository
+import com.rwawrzyniak.getby.models.Frequency
+import com.rwawrzyniak.getby.models.HabitModel
+import com.rwawrzyniak.getby.repository.database.HabitsRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -26,7 +26,7 @@ abstract class HabitsCreateUpdateViewModel : ViewModel() {
 
 
 class HabitsCreateUpdateViewModelImpl @Inject constructor(
-	private val habitsRepository: com.rwawrzyniak.getby.repository.HabitsRepository,
+	private val habitsRepository: HabitsRepository,
 	private val resources: Resources,
 	@Named(BusModule.MENU_ITEM_CLICKED_SUBJECT) private val globalEventSubject: PublishSubject<MenuItemClickedEvent>
 ) : HabitsCreateUpdateViewModel() {
@@ -63,7 +63,7 @@ class HabitsCreateUpdateViewModelImpl @Inject constructor(
 	}
 
 	private fun loadHabit(habitId: String): Completable {
-		return habitsRepository.getSingle(habitId).flatMapCompletable {
+		return habitsRepository.getById(habitId).flatMapCompletable {
 			Completable.fromAction { state.onNext(
 				HabitCreateUpdateViewState(
 					true,
@@ -87,7 +87,7 @@ class HabitsCreateUpdateViewModelImpl @Inject constructor(
 			)
 		}
 
-	private fun validateAndSaveHabit(habit: com.rwawrzyniak.getby.entities.Habit): Completable {
+	private fun validateAndSaveHabit(habit: HabitModel): Completable {
 
 		val effect =
 			HabitDetailsViewEffect.ConfigureFields(
@@ -115,7 +115,7 @@ class HabitsCreateUpdateViewModelImpl @Inject constructor(
 			InputFieldState()
 		}
 
-	private fun checkFrequencyState(frequency: com.rwawrzyniak.getby.entities.Frequency): InputFieldState =
+	private fun checkFrequencyState(frequency: Frequency): InputFieldState =
 		if (frequency.times > frequency.cycle) {
 			InputFieldState(
 				isEnabled = true,

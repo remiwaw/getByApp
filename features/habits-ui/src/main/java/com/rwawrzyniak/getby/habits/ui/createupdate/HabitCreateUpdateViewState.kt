@@ -1,9 +1,9 @@
 package com.rwawrzyniak.getby.habits.ui.createupdate
 
-import com.rwawrzyniak.getby.entities.Habit
+import com.rwawrzyniak.getby.models.HabitModel
 
 data class HabitCreateUpdateViewState(
 	val isUpdateMode: Boolean = false,
-	val backingHabit: com.rwawrzyniak.getby.entities.Habit? = null
+	val backingHabit: HabitModel? = null
 )
 
