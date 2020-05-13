@@ -8,10 +8,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 
 // TODO Make abstract repository independent of Entity
-abstract class AbstractRepository<
-	T: AbstractModel,
-	ADS : AbstractDataSource<out AbstractEntity>,
-	AC: AbstractConverter<out AbstractModel, out AbstractEntity>>(
+abstract class AbstractRepository<ADS: AbstractDataSource<AbstractEntity>, AC: AbstractConverter<AbstractModel, AbstractEntity>>(
 	private val abstractDataSource: ADS,
 	private val abstractConverter: AC
 ){
@@ -22,9 +19,9 @@ abstract class AbstractRepository<
 	fun getAll(): Single<MutableList<AbstractModel>> =
 		abstractDataSource.getAll().flattenAsObservable {it}.map { abstractConverter.toModel(it) }.toList()
 
-	fun insert(model: T): Completable = abstractDataSource.insert(abstractConverter.toEntity(model))
+	fun insert(model: AbstractModel): Completable = abstractDataSource.insert(abstractConverter.toEntity(model))
 
-	fun delete(model: T): Completable = abstractDataSource.delete(abstractConverter.toEntity(model))
+	fun delete(model: AbstractModel): Completable = abstractDataSource.delete(abstractConverter.toEntity(model))
 
-	fun update(model: T): Completable = abstractDataSource.update(abstractConverter.toEntity(model))
+	fun update(model: AbstractModel): Completable = abstractDataSource.update(abstractConverter.toEntity(model))
 }

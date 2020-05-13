@@ -1,5 +1,5 @@
 dependencies {
-	implementation Dependencies.kotlin
+	implementation project(':libraries:core')
 	implementation project(':libraries:models')
 	implementation project(':libraries:entity-database')
 	api project(':libraries:abstract-converter')

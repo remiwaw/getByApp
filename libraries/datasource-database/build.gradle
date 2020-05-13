@@ -1,7 +1,5 @@
 dependencies {
-	implementation Dependencies.kotlin
-	implementation Dependencies.roomKapt
-	implementation Dependencies.roomRxJava
+	implementation project(':libraries:core')
 	api Dependencies.room
 	api project(':libraries:entity-database')
 	api project(':libraries:abstract-datasource')

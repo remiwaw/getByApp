@@ -67,7 +67,7 @@ class HabitsCreateUpdateViewModelImpl @Inject constructor(
 			Completable.fromAction { state.onNext(
 				HabitCreateUpdateViewState(
 					true,
-					it
+					it as HabitModel
 				)
 			) }
 		}
@@ -99,7 +99,7 @@ class HabitsCreateUpdateViewModelImpl @Inject constructor(
 		return if(effect.habitNameInput.isError || effect.habitDescriptionInput.isError || effect.frequencyInput.isError){
 			Completable.fromAction {  effects.onNext(effect) }
 		} else {
-			habitsRepository.saveHabit(habit)
+			habitsRepository.update(habit)
 				.andThen { effects.onNext(HabitDetailsViewEffect.GoBack) }
 		}
 	}

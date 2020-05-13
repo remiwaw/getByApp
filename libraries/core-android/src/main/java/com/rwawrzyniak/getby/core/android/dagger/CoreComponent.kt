@@ -13,7 +13,7 @@ import javax.inject.Singleton
 	SchedulerModule::class,
 	BusModule::class,
 	RepositoryModule::class,
-	DatabaseModule::class])
+	com.rwawrzyniak.getby.repository.database.DatabaseModule::class])
 @Singleton
 interface CoreComponent {
     fun getExpensiveObject(): ExpensiveObject

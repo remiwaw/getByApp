@@ -285,7 +285,7 @@ class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedList
 
 	override fun onNothingSelected(parent: AdapterView<*>) {}
 
-	private fun getReminder(): com.rwawrzyniak.getby.models.Reminder? {
+	private fun getReminder(): Reminder? {
 		if(binding.reminder.text == resources.getString(R.string.reminderDefaultValue)){
 			return null
 		}
@@ -296,8 +296,8 @@ class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedList
 		val reminderText = binding.reminder.text
 		val hourOfDay = reminderText.split(":")[0].toInt()
 		val minuteOfDay  = reminderText.split(":")[1].toInt()
-		return com.rwawrzyniak.getby.models.Reminder(
-			com.rwawrzyniak.getby.models.HourMinute(
+		return Reminder(
+			HourMinute(
 				hourOfDay,
 				minuteOfDay
 			),
