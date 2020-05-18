@@ -5,9 +5,8 @@ import com.rwawrzyniak.getby.abstractentities.AbstractEntity
 import com.rwawrzyniak.getby.entities.Habit
 import io.reactivex.Completable
 import io.reactivex.Single
-import javax.inject.Inject
 
-class HabitDatabaseSource @Inject @VisibleForTesting constructor(private val habitDao: HabitDao) : HabitDao {
+class HabitDatabaseSource @VisibleForTesting constructor(private val habitDao: HabitDao) : HabitDao {
 
 	override fun getById(id: String): Single<Habit> = habitDao.getById(id)
 

@@ -3,13 +3,12 @@ package com.rwawrzyniak.getby.habits
 import com.rwawrzyniak.getby.models.HabitModel
 import io.reactivex.Single
 import java.time.LocalDate
-import javax.inject.Inject
 import kotlin.collections.first
 import kotlin.collections.sortedByDescending
 import kotlin.collections.toList
 import kotlin.ranges.until
 
-class CalculateBestSeriesUseCase @Inject internal constructor() {
+class CalculateBestSeriesUseCase {
 
 	fun calculateStrike(
 		habit: HabitModel

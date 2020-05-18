@@ -1,5 +1,5 @@
 dependencies {
-	implementation project(':libraries:core')
+	api project(':libraries:core-android')
 	api Dependencies.room
 	api project(':libraries:entity-database')
 	api project(':libraries:abstract-datasource')

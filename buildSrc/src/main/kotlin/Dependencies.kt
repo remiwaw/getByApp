@@ -42,7 +42,7 @@ object Versions {
 	const val rxAndroid = "2.1.1"
 
 	// 3rd party dependencies
-	const val dagger = "2.25.4"
+	const val koin = "2.1.5"
 	const val gson = "2.8.0"
 	const val progressButton = "2.0.0"
 	const val carousel = "0.1.5"
@@ -113,9 +113,12 @@ object Dependencies {
 	const val roomRxJava = "androidx.room:room-rxjava2:${Versions.room}"
 	const val testRoom = "androidx.room:room-testing:${Versions.room}"
 
-	const val dagger = "com.google.dagger:dagger:${Versions.dagger}"
+	const val koin =  "org.koin:koin-core:${Versions.koin}"
+	const val koinAndroid =  "org.koin:koin-android:${Versions.koin}"
+	const val koinAndroidScope = "org.koin:koin-android-scope:${Versions.koin}"
+	const val koinAndroidViewModel = "org.koin:koin-android-viewmodel:${Versions.koin}"
+
 	const val androidxLegacySupport = "androidx.legacy:legacy-support-v4:${Versions.legacySupport}"
-	const val daggerKapt = "com.google.dagger:dagger-compiler:${Versions.dagger}"
 
 	const val rxJava = "io.reactivex.rxjava2:rxjava:${Versions.rxJava}"
 	const val rxKotlin = "io.reactivex.rxjava2:rxkotlin:${Versions.rxKotlin}"

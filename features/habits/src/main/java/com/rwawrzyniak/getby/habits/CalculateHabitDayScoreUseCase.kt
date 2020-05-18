@@ -7,9 +7,8 @@ import com.rwawrzyniak.getby.models.HabitModel
 import com.rwawrzyniak.getby.models.getHabitDaysInCycle
 import io.reactivex.Single
 import java.time.LocalDate
-import javax.inject.Inject
 
-class CalculateHabitDayScoreUseCase @Inject internal constructor() {
+class CalculateHabitDayScoreUseCase {
 	fun calculateScoreForDayRangeExcludingStart(
 		habit: HabitModel,
 		startDate: LocalDate,

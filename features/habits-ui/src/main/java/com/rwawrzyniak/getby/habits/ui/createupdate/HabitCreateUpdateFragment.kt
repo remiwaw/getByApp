@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
-import com.rwawrzyniak.getby.core.android.ext.fragmentScopedViewModel
 import com.rwawrzyniak.getby.core.android.ext.markRequired
 import com.rwawrzyniak.getby.core.android.fragment.BaseFragment
 import com.rwawrzyniak.getby.core.android.fragment.ChromeConfiguration
@@ -25,12 +24,14 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
 import kotlinx.android.synthetic.main.fragment_habit_create_update.*
+import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class HabitCreateUpdateFragment : BaseFragment(), AdapterView.OnItemSelectedListener {
     private lateinit var binding: FragmentHabitCreateUpdateBinding
-    private val viewModel by fragmentScopedViewModel { injector.habitsCreateUpdateViewModel }
-	private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
+    private val viewModel: HabitsCreateUpdateViewModelImpl by viewModel()
+	private val schedulerProvider: SchedulerProvider by inject()
 	private var isUserInput = true // TODO make it better, change to avoid executing listener on text changed.
 
 	override fun onCreate(savedInstanceState: Bundle?) {

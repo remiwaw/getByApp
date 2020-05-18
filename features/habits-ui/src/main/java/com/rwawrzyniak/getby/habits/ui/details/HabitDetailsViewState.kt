@@ -2,7 +2,7 @@ package com.rwawrzyniak.getby.habits.ui.details
 
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
-import com.rwawrzyniak.getby.entities.Habit
+import com.rwawrzyniak.getby.models.HabitModel
 import java.util.Date
 
 data class HabitDetailsViewState(
@@ -12,7 +12,7 @@ data class HabitDetailsViewState(
 	val habitName: String = "",
 	val frequencyText: String = "",
 	val habitAlarmText: String = "",
-	val habit: com.rwawrzyniak.getby.entities.Habit? = null
+	val habit: HabitModel? = null
 )
 
 data class HistoryCalendarState(

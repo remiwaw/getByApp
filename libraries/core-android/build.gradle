@@ -23,6 +23,9 @@ dependencies {
 	implementation Dependencies.roomRxJava
 	implementation Dependencies.gson
 
+	api Dependencies.koinAndroid
+	api Dependencies.koinAndroidScope
+	api Dependencies.koinAndroidViewModel
 
 	api project(':libraries:navigation')
 	testImplementation project(':libraries:core-android-test')

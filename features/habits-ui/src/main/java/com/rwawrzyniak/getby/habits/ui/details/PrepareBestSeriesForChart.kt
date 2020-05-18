@@ -1,19 +1,18 @@
 package com.rwawrzyniak.getby.habits.ui.details
 
 import com.github.mikephil.charting.data.BarEntry
-import com.rwawrzyniak.getby.entities.Habit
 import com.rwawrzyniak.getby.habits.Strike
+import com.rwawrzyniak.getby.models.HabitModel
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.zipWith
-import javax.inject.Inject
 
-class PrepareBestSeriesForChart @Inject internal constructor(private val calculateBestSeriesUseCase: com.rwawrzyniak.getby.habits.CalculateBestSeriesUseCase) {
+class PrepareBestSeriesForChart (private val calculateBestSeriesUseCase: com.rwawrzyniak.getby.habits.CalculateBestSeriesUseCase) {
 
 	fun mapStrikesToBarEntry(
-		habit: com.rwawrzyniak.getby.entities.Habit
+		habitModel: HabitModel
 	): Single<MutableList<BarEntry>> =
-		calculateBestSeriesUseCase.calculateStrike(habit)
+		calculateBestSeriesUseCase.calculateStrike(habitModel)
 			.flattenAsObservable{ it }
 			.take(MAX_BEST_STRIKES_TO_BE_DISPLAYED)
 			.zipWith(Observable.range(0, Integer.MAX_VALUE))

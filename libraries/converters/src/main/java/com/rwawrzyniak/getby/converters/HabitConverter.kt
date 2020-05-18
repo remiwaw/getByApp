@@ -28,7 +28,7 @@ class HabitConverter : AbstractConverter<HabitModel, Habit> {
 			model.description,
 			frequency = model.frequencyToEntity(),
 			reminder = model.reminderToEntity(),
-			history = model.historyTEntity(),
+			history = model.historyToEntity(),
 			isArchived = model.isArchived
 		)
 	}
@@ -53,7 +53,7 @@ class HabitConverter : AbstractConverter<HabitModel, Habit> {
 			null
 		}
 	}
-	private fun HabitModel.historyTEntity(): List<HabitDay> {
+	private fun HabitModel.historyToEntity(): List<HabitDay> {
 		return history.map { HabitDay(it.day, it.checked) }.toList()
 	}
 

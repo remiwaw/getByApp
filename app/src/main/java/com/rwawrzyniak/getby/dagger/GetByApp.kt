@@ -1,24 +1,25 @@
 package com.rwawrzyniak.getby.dagger
 
 import android.app.Application
-import com.rwawrzyniak.getby.BuildConfig
-import com.rwawrzyniak.getby.core.android.dagger.CoreComponent
-import com.rwawrzyniak.getby.core.android.dagger.CoreComponentProvider
-import timber.log.Timber
+import com.rwawrzyniak.getby.habits.ui.di.habitsModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
-class GetByApp : Application(), CoreComponentProvider {
-    override val component: CoreComponent by lazy {
-		DaggerCoreComponent
-			.builder()
-			.build()
-    }
+class GetByApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        setupTimber()
-    }
+		startKoin {
+			androidLogger()
+			androidContext(this@GetByApp)
+			// declare modules
+			modules(listOf(habitsModule))
+		}
+	}
 
-    private fun setupTimber() {
-        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
-    }
+
+//    private fun setupTimber() {
+//        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
+//    }
 }

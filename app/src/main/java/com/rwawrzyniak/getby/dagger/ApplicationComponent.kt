@@ -3,7 +3,7 @@ package com.rwawrzyniak.getby.dagger
 import android.content.Context
 import android.content.SharedPreferences
 import com.rwawrzyniak.getby.core.android.preferences.PreferencesHelper
-import com.rwawrzyniak.getby.core.android.dagger.CoreComponent
+import com.rwawrzyniak.getby.core.android.di.CoreComponent
 import com.rwawrzyniak.getby.login.LoginViewModel
 import com.rwawrzyniak.getby.register.RegisterViewModel
 import dagger.BindsInstance

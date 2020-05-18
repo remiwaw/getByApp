@@ -2,7 +2,6 @@ package com.rwawrzyniak.getby.habits.ui.createupdate
 
 import android.content.res.Resources
 import androidx.lifecycle.ViewModel
-import com.rwawrzyniak.getby.core.android.dagger.BusModule
 import com.rwawrzyniak.getby.core.android.broadcast.MenuItemClickedEvent
 import com.rwawrzyniak.getby.habits.R
 import com.rwawrzyniak.getby.models.Frequency
@@ -14,8 +13,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import javax.inject.Inject
-import javax.inject.Named
 
 // TODO add error handling
 abstract class HabitsCreateUpdateViewModel : ViewModel() {
@@ -25,10 +22,10 @@ abstract class HabitsCreateUpdateViewModel : ViewModel() {
 }
 
 
-class HabitsCreateUpdateViewModelImpl @Inject constructor(
+class HabitsCreateUpdateViewModelImpl constructor(
 	private val habitsRepository: HabitsRepository,
 	private val resources: Resources,
-	@Named(BusModule.MENU_ITEM_CLICKED_SUBJECT) private val globalEventSubject: PublishSubject<MenuItemClickedEvent>
+	private val globalEventSubject: PublishSubject<MenuItemClickedEvent>
 ) : HabitsCreateUpdateViewModel() {
 	private val compositeDisposable = CompositeDisposable()
 	private val effects: Subject<HabitDetailsViewEffect> = PublishSubject.create<HabitDetailsViewEffect>()

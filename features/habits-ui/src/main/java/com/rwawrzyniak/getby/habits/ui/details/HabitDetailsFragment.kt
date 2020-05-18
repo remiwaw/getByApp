@@ -25,8 +25,6 @@ import com.rwawrzyniak.getby.core.android.fragment.ChromeConfiguration
 import com.rwawrzyniak.getby.core.android.rx.SchedulerProvider
 import com.rwawrzyniak.getby.core.ext.toShortForm
 import com.rwawrzyniak.getby.core.ext.toddMM
-import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
-import com.rwawrzyniak.getby.dagger.injector
 import com.rwawrzyniak.getby.habits.R
 import com.rwawrzyniak.getby.habits.Strike
 import com.rwawrzyniak.getby.habits.databinding.FragmentHabitDetailsBinding
@@ -38,6 +36,8 @@ import io.reactivex.subjects.PublishSubject
 import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
 import kotlinx.android.synthetic.main.fragment_habit_details.*
+import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -49,8 +49,8 @@ import java.util.concurrent.TimeUnit
 
 class HabitDetailsFragment : BaseFragment(), OnChartGestureListener {
 	private lateinit var binding: FragmentHabitDetailsBinding
-	private val viewModel by fragmentScopedViewModel { injector.habitDetailsViewModel }
-	private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
+	private val viewModel: HabitDetailsViewModel by viewModel()
+	private val schedulerProvider: SchedulerProvider by inject()
 	private lateinit var habitId: String
 	private var isDragInProgressSubject = PublishSubject.create<Boolean>()
 	private var noMoreDataToDisplaySubject = PublishSubject.create<Boolean>()

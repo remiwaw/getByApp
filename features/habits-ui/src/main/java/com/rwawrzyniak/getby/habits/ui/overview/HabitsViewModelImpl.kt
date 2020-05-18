@@ -4,10 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.DiffUtil
 import com.rwawrzyniak.getby.core.android.preferences.AppPreferences
 import com.rwawrzyniak.getby.core.DateTimeProvider
-import com.rwawrzyniak.getby.core.android.dagger.BusModule.GLOBAL_EVENT_SUBJECT
 import com.rwawrzyniak.getby.core.android.broadcast.GlobalEvent
-import com.rwawrzyniak.getby.entities.Habit
-import com.rwawrzyniak.getby.repository.HabitsRepository
+import com.rwawrzyniak.getby.repository.database.HabitsRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -15,8 +13,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
-import javax.inject.Inject
-import javax.inject.Named
 
 // TODO check if it possible to simply filter method / init methods
 abstract class HabitsViewModel: ViewModel() {
@@ -24,17 +20,17 @@ abstract class HabitsViewModel: ViewModel() {
 	abstract fun onAction(action: HabitsViewAction): Completable
 }
 
-class HabitsViewModelImpl @Inject internal constructor(
-    @Named(GLOBAL_EVENT_SUBJECT) private val globalEventSubject: PublishSubject<GlobalEvent>,
-    private val habitsRepository: com.rwawrzyniak.getby.repository.HabitsRepository,
+class HabitsViewModelImpl internal constructor(
+    private val globalEventSubject: PublishSubject<GlobalEvent>,
+    private val habitsRepository: HabitsRepository,
 	private val dateTimeProvider: DateTimeProvider,
 	private val preferences: AppPreferences
 ) : HabitsViewModel() {
     private val compositeDisposable = CompositeDisposable()
 	private val state = BehaviorSubject.create<HabitsViewState>()
 
-	private val filteredHabits: MutableList<com.rwawrzyniak.getby.entities.Habit> = arrayListOf()
-	private val oldFilteredHabits: MutableList<com.rwawrzyniak.getby.entities.Habit> = arrayListOf()
+	private val filteredHabits: MutableList<HabitsViewModel> = arrayListOf()
+	private val oldFilteredHabits: MutableList<HabitsViewModel> = arrayListOf()
 
 	override fun observeState(): Observable<HabitsViewState> = state.hide()
 
@@ -54,10 +50,10 @@ class HabitsViewModelImpl @Inject internal constructor(
 		val callback = Completable.fromAction { preferences.setHideArchivedHabits(hideArchived) }
 		return updateHabitState(callback)
 	}
-	private fun onRemoveHabit(habit: com.rwawrzyniak.getby.entities.Habit) = updateHabitState(removeHabit(habit))
-	private fun switchArchiveState(habit: com.rwawrzyniak.getby.entities.Habit) = updateHabitState(updateHabit(habit.copy(isArchived = habit.isArchived.not())))
+	private fun onRemoveHabit(habit: HabitsViewModel) = updateHabitState(removeHabit(habit))
+	private fun switchArchiveState(habit: HabitsViewModel) = updateHabitState(updateHabit(habit.copy(isArchived = habit.isArchived.not())))
 
-	private fun onUpdateHabit(habit: com.rwawrzyniak.getby.entities.Habit) = habitsRepository.updateHabit(habit) // no need to refresh view
+	private fun onUpdateHabit(habit: HabitsViewModel) = habitsRepository.update(habit) // no need to refresh view
 
 	private fun updateHabitState(
 		callback: Completable = Completable.complete(),
@@ -100,7 +96,7 @@ class HabitsViewModelImpl @Inject internal constructor(
 			.map {  dateTimeProvider.getCurrentDate() }
 
 	private fun initHabits(hideArchived: Boolean): Observable<UpdatedHabitsInfo> =
-		habitsRepository.loadHabits()
+		habitsRepository.getAll()
 			.flattenAsObservable { it }
 			.filter { if (hideArchived) !it.isArchived else true  }
 			.toList()
@@ -138,11 +134,11 @@ class HabitsViewModelImpl @Inject internal constructor(
 				)
 			})
 
-	private fun removeHabit(habit: com.rwawrzyniak.getby.entities.Habit): Completable = habitsRepository.removeHabit(habit)
-	private fun updateHabit(habit: com.rwawrzyniak.getby.entities.Habit): Completable = habitsRepository.updateHabit(habit)
+	private fun removeHabit(habit: HabitsViewModel): Completable = habitsRepository.delete(habit)
+	private fun updateHabit(habit: HabitsViewModel): Completable = habitsRepository.update(habit)
 
 	private fun filter(query: String, hideArchived: Boolean): Completable {
-		return habitsRepository.loadHabits()
+		return habitsRepository.getAll()
 			.flattenAsObservable { it }
 			.filter { habit -> habit.name.contains(query) && if (hideArchived) !habit.isArchived else true  }
 			.toList()

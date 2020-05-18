@@ -1,17 +1,17 @@
 package com.rwawrzyniak.getby.habits.ui.details
 
 import android.content.res.Resources
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.rwawrzyniak.getby.core.DateTimeProvider
 import com.rwawrzyniak.getby.core.android.broadcast.MenuItemClickedEvent
-import com.rwawrzyniak.getby.core.android.dagger.BusModule
 import com.rwawrzyniak.getby.core.ext.toLocalDate
 import com.rwawrzyniak.getby.habits.R
-import com.rwawrzyniak.getby.entities.Habit
-import com.rwawrzyniak.getby.entities.HabitDay
-import com.rwawrzyniak.getby.repository.HabitsRepository
+import com.rwawrzyniak.getby.models.HabitDay
+import com.rwawrzyniak.getby.models.HabitModel
+import com.rwawrzyniak.getby.repository.database.HabitsRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -22,8 +22,6 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import java.time.LocalDate
 import java.util.Date
-import javax.inject.Inject
-import javax.inject.Named
 
 // TODO add error handling
 abstract class HabitDetailsViewModel: ViewModel() {
@@ -33,14 +31,14 @@ abstract class HabitDetailsViewModel: ViewModel() {
 }
 
 
-class HabitDetailsViewModelImpl @Inject constructor(
+class HabitDetailsViewModelImpl @VisibleForTesting constructor(
 	private val resources: Resources,
 	private val dateTimeProvider: DateTimeProvider,
 	private val calculateHabitDayScoreUseCase: com.rwawrzyniak.getby.habits.CalculateHabitDayScoreUseCase,
-	private val habitsRepository: com.rwawrzyniak.getby.repository.HabitsRepository,
+	private val habitsRepository: HabitsRepository,
 	private val calculateHistoryCalendarState: CalculateHistoryCalendarState,
 	private val prepareBestSeriesForChart: PrepareBestSeriesForChart,
-	@Named(BusModule.MENU_ITEM_CLICKED_SUBJECT) private val globalEventSubject: PublishSubject<MenuItemClickedEvent>
+	private val globalEventSubject: PublishSubject<MenuItemClickedEvent>
 ) : HabitDetailsViewModel() {
 	private val compositeDisposable = CompositeDisposable()
 	private val effects: Subject<HabitDetailsViewEffect> = PublishSubject.create<HabitDetailsViewEffect>()
@@ -70,14 +68,14 @@ class HabitDetailsViewModelImpl @Inject constructor(
 
 	private fun saveNewDaysAndUpdateView(selectedDates: List<Date>): Completable = state.take(1)
 		.flatMapCompletable {
-			val newHistory: List<com.rwawrzyniak.getby.entities.HabitDay> = selectedDates.map { date ->
-				com.rwawrzyniak.getby.entities.HabitDay(
+			val newHistory: List<HabitDay> = selectedDates.map { date ->
+				HabitDay(
 					date.toLocalDate(),
 					checked = true
 				)
 			}
 			val updatedHabit = requireNotNull(it.habit).copy(history = newHistory)
-			habitsRepository.saveHabit(updatedHabit)
+			habitsRepository.update(updatedHabit)
 				.andThen(initializeView(it.habit.id))
 		}
 
@@ -102,9 +100,14 @@ class HabitDetailsViewModelImpl @Inject constructor(
 		habitId: String,
 		fromDate: LocalDate = dateTimeProvider.getCurrentDate()
 	): Completable =
-		habitsRepository.getSingle(habitId)
+		habitsRepository.getById(habitId)
 			.flatMapCompletable { habit ->
-				Singles.zip(calculateLinearChartEntries(habit, fromDate), calculateHistoryCalendarState.calculate(habit), calculateBestStrikeChartEntries(habit)){
+				val habitModel = habit as HabitModel
+				Singles.zip(
+					calculateLinearChartEntries(habitModel, fromDate),
+					calculateHistoryCalendarState.calculate(habitModel),
+					calculateBestStrikeChartEntries(habitModel)
+				){
 					linearChartEntries,calendarEntries, bestStrikeEntries ->
 					ChartInfos(
 						linearChartEntries,
@@ -114,14 +117,14 @@ class HabitDetailsViewModelImpl @Inject constructor(
 				}
 					.flatMapCompletable { chartInfos ->
 						Completable.fromAction {
-							publishInitState(chartInfos, habit)
+							publishInitState(chartInfos, habitModel)
 						}
 					}
 		}
 
 	private fun publishInitState(
 		chartInfos: ChartInfos,
-		habit: com.rwawrzyniak.getby.entities.Habit
+		habit: HabitModel
 	) {
 		state.onNext(
 			HabitDetailsViewState(
@@ -136,20 +139,20 @@ class HabitDetailsViewModelImpl @Inject constructor(
 		)
 	}
 
-	private fun frequencyText(habit: com.rwawrzyniak.getby.entities.Habit): String = resources.getString(
+	private fun frequencyText(habit: HabitModel): String = resources.getString(
 		R.string.frequencyTextInDetails,
 		habit.frequency.times,
 		habit.frequency.cycle
 	)
 
-	private fun reminderText(habit: com.rwawrzyniak.getby.entities.Habit) =
+	private fun reminderText(habit: HabitModel) =
 		if (habit.reminder == null) resources.getString(R.string.reminderDefaultValue) else habit.reminder.toString()
 
-	private fun calculateBestStrikeChartEntries(habit: com.rwawrzyniak.getby.entities.Habit): Single<MutableList<BarEntry>> =
+	private fun calculateBestStrikeChartEntries(habit: HabitModel): Single<MutableList<BarEntry>> =
 		prepareBestSeriesForChart.mapStrikesToBarEntry(habit)
 
 	private fun calculateLinearChartEntries(
-		habit: com.rwawrzyniak.getby.entities.Habit,
+		habit: HabitModel,
 		dateStart: LocalDate,
 		daysToLoad: Long = PAST_DAYS_TO_LOAD
 	): Single<List<Entry>> {

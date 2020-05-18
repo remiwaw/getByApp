@@ -3,8 +3,7 @@ dependencies {
 	api Dependencies.rxJava
 	api Dependencies.rxKotlin
 
-	api Dependencies.dagger
-	kapt Dependencies.daggerKapt
+	api Dependencies.koin
 
 	api Dependencies.gson
 
