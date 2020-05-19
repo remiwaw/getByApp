@@ -12,9 +12,13 @@ class HabitDatabaseSource @VisibleForTesting constructor(private val habitDao: H
 
 	override fun getAll(): Single<List<Habit>> = habitDao.getAll()
 
-	override fun insert(entity: Habit): Completable = habitDao.insert(entity)
+	override fun insert(entity: AbstractEntity): Completable = habitDao.insert(entity)
 
-	override fun delete(habit: Habit): Completable = habitDao.delete(habit)
+	override fun delete(habit: AbstractEntity): Completable = habitDao.delete(
+		habit
+	)
 
-	override fun update(habit: Habit): Completable = habitDao.update(habit)
+	override fun update(habit: AbstractEntity): Completable = habitDao.update(
+		habit
+	)
 }

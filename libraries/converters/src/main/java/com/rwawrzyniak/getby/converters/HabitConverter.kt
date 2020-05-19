@@ -11,7 +11,7 @@ import com.rwawrzyniak.getby.models.HourMinute
 import com.rwawrzyniak.getby.models.Reminder
 
 class HabitConverter : AbstractConverter<HabitModel, Habit> {
-	override fun toModel(entity: Habit): HabitModel {
+	override fun toModel(entity: AbstractEntity): HabitModel {
 		return HabitModel(
 			entity.id,
 			entity.name,
@@ -23,7 +23,7 @@ class HabitConverter : AbstractConverter<HabitModel, Habit> {
 		)
 	}
 
-	override fun toEntity(model: HabitModel): Habit {
+	override fun toEntity(model: AbstractModel): Habit {
 		return Habit(
 			model.id,
 			model.name,
