@@ -8,7 +8,8 @@ import io.reactivex.Completable
 import io.reactivex.Single
 
 // TODO Make abstract repository independent of Entity
-abstract class AbstractRepository<ADS: AbstractDataSource<AbstractEntity>, AC: AbstractConverter<AbstractModel, AbstractEntity>>(
+abstract class AbstractRepository<out ADS: AbstractDataSource<out AbstractEntity>,
+	AC: AbstractConverter<AbstractModel, AbstractEntity>>(
 	private val abstractDataSource: ADS,
 	private val abstractConverter: AC
 ){

@@ -22,11 +22,11 @@ interface HabitDao : AbstractDataSource<Habit>{
 	override fun getAll(): Single<List<Habit>>
 
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	override fun insert(entity: AbstractEntity): Completable
+	override fun insert(entity: Habit): Completable
 
 	@Delete
-	override fun delete(habit: AbstractEntity) : Completable
+	override fun delete(habit: Habit) : Completable
 
 	@Update
-	override fun update(habit: AbstractEntity): Completable
+	override fun update(habit: Habit): Completable
 }
