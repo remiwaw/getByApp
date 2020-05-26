@@ -1,6 +1,8 @@
 package com.rwawrzyniak.getby.converters
 
 import com.rwawrzyniak.getby.abstractconverter.AbstractConverter
+import com.rwawrzyniak.getby.abstractconverter.AbstractConverterToEntity
+import com.rwawrzyniak.getby.abstractconverter.AbstractConverterToModel
 import com.rwawrzyniak.getby.abstractentities.AbstractEntity
 import com.rwawrzyniak.getby.abstractmodel.AbstractModel
 import com.rwawrzyniak.getby.entities.Habit
@@ -11,7 +13,7 @@ import com.rwawrzyniak.getby.models.HourMinute
 import com.rwawrzyniak.getby.models.Reminder
 
 class HabitConverter : AbstractConverter<HabitModel, Habit> {
-	override fun toModel(entity: AbstractEntity): HabitModel {
+	override fun toModel(entity: Habit): HabitModel {
 		return HabitModel(
 			entity.id,
 			entity.name,
@@ -23,7 +25,7 @@ class HabitConverter : AbstractConverter<HabitModel, Habit> {
 		)
 	}
 
-	override fun toEntity(model: AbstractModel): Habit {
+	override fun toEntity(model: HabitModel): Habit {
 		return Habit(
 			model.id,
 			model.name,

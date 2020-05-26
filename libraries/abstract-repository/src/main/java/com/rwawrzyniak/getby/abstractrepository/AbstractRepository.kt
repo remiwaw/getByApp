@@ -8,21 +8,18 @@ import io.reactivex.Completable
 import io.reactivex.Single
 
 // TODO Make abstract repository independent of Entity
-abstract class AbstractRepository<out ADS: AbstractDataSource<out AbstractEntity>,
-	AC: AbstractConverter<out AbstractModel, out AbstractEntity>>(
-	private val abstractDataSource: ADS,
-	private val abstractConverter: AC
-){
-	fun getById(id: String): Single<AbstractModel> {
-		return abstractDataSource.getById(id).map { abstractConverter.toModel(it) }
-	}
+abstract class AbstractRepository<AE: AbstractEntity, AM: AbstractModel>(
+	private val abstractDataSource : AbstractDataSource<AE>,
+	private val abstractConverter: AbstractConverter<AM, AE>
+) : AbstractRepositoryRead<AM>, AbstractRepositoryWrite<AM> {
 
-	fun getAll(): Single<MutableList<AbstractModel>> =
-		abstractDataSource.getAll().flattenAsObservable {it}.map { abstractConverter.toModel(it) }.toList()
+	override fun getById(id: String): Single<AM> = abstractDataSource.getById(id).map { abstractConverter.toModel(it) }
 
-	fun insert(model: AbstractModel): Completable = abstractDataSource.insert(abstractConverter.toEntity(model))
+	override fun getAll(): Single<MutableList<AM>> = abstractDataSource.getAll().flattenAsObservable {it}.map { abstractConverter.toModel(it) }.toList()
 
-	fun delete(model: AbstractModel): Completable = abstractDataSource.delete(abstractConverter.toEntity(model))
+	override fun insert(model: AM): Completable = abstractDataSource.insert(abstractConverter.toEntity(model))
 
-	fun update(model: AbstractModel): Completable = abstractDataSource.update(abstractConverter.toEntity(model))
+	override fun delete(model: AM): Completable = abstractDataSource.delete(abstractConverter.toEntity(model))
+
+	override fun update(model: AM): Completable = abstractDataSource.update(abstractConverter.toEntity(model))
 }

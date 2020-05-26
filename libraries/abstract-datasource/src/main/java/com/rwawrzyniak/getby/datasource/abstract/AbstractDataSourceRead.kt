@@ -1,8 +1,9 @@
 package com.rwawrzyniak.getby.datasource.abstract
 
+import com.rwawrzyniak.getby.abstractentities.AbstractEntity
 import io.reactivex.Single
 
-interface AbstractDataSourceRead<AbstractEntity> {
-	fun getById(id: String): Single<AbstractEntity>
-	fun getAll(): Single<List<AbstractEntity>>
+interface AbstractDataSourceRead<AE: AbstractEntity> {
+	fun getById(id: String): Single<AE>
+	fun getAll(): Single<List<AE>>
 }
