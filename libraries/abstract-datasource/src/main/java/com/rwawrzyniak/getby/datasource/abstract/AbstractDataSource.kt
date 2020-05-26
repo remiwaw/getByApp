@@ -1,5 +1,13 @@
 package com.rwawrzyniak.getby.datasource.abstract
 
 import com.rwawrzyniak.getby.abstractentities.AbstractEntity
+import io.reactivex.Completable
+import io.reactivex.Single
 
-interface AbstractDataSource<T: AbstractEntity> : AbstractDataSourceRead<T>, AbstractDataSourceWrite<T>
+interface AbstractDataSource<AE : AbstractEntity> {
+	fun getById(id: String): Single<AE>
+	fun getAll(): Single<List<AE>>
+	fun insert(entity: AE): Completable
+	fun delete(entity: AE): Completable
+	fun update(entity: AE): Completable
+}

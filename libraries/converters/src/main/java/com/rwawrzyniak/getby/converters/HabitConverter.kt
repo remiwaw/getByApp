@@ -1,10 +1,6 @@
 package com.rwawrzyniak.getby.converters
 
 import com.rwawrzyniak.getby.abstractconverter.AbstractConverter
-import com.rwawrzyniak.getby.abstractconverter.AbstractConverterToEntity
-import com.rwawrzyniak.getby.abstractconverter.AbstractConverterToModel
-import com.rwawrzyniak.getby.abstractentities.AbstractEntity
-import com.rwawrzyniak.getby.abstractmodel.AbstractModel
 import com.rwawrzyniak.getby.entities.Habit
 import com.rwawrzyniak.getby.entities.HabitDay
 import com.rwawrzyniak.getby.models.Frequency

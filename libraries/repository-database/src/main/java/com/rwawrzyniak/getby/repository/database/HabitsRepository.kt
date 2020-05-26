@@ -6,7 +6,6 @@ import com.rwawrzyniak.getby.database.HabitDatabaseSource
 import com.rwawrzyniak.getby.entities.Habit
 import com.rwawrzyniak.getby.models.HabitModel
 
-// TODO Fix casting problems here
 class HabitsRepository(habitDatabaseSource: HabitDatabaseSource, habitConverter: HabitConverter) :
 	AbstractRepository<Habit, HabitModel>(
 		habitDatabaseSource,
