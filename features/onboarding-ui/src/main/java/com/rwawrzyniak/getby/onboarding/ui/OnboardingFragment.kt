@@ -5,10 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.rwawrzyniak.getby.R
+import com.rwawrzyniak.getby.authorization.onboarding.ui.R
+import com.rwawrzyniak.getby.authorization.onboarding.ui.databinding.FragmentOnboardingBinding
 import com.rwawrzyniak.getby.core.android.fragment.BaseFragment
-import com.rwawrzyniak.getby.databinding.FragmentOnboardingBinding
-import kotlinx.android.synthetic.main.activity_main.*
 
 class OnboardingFragment : BaseFragment() {
 

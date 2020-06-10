@@ -2,7 +2,7 @@ dependencies {
 	implementation project(':libraries:core')
 
 	implementation project(':libraries:entity-database')
-	implementation project(':libraries:abstract-repository')
+	api project(':libraries:abstract-repository')
 	implementation project(':libraries:models')
 	implementation project(':libraries:datasource-database')
 	implementation project(':libraries:converters')

@@ -7,19 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.github.razir.progressbutton.bindProgressButton
+import com.github.razir.progressbutton.hideProgress
+import com.github.razir.progressbutton.showProgress
 import com.rwawrzyniak.getby.authorization.RegisterResult
 import com.rwawrzyniak.getby.authorization.ui.R
+import com.rwawrzyniak.getby.authorization.ui.databinding.FragmentRegisterBinding
 import com.rwawrzyniak.getby.core.android.fragment.BaseFragment
 import com.rwawrzyniak.getby.core.android.rx.SchedulerProvider
-import com.rwawrzyniak.getby.core.android.ext.fragmentScopedViewModel
-import com.rwawrzyniak.getby.databinding.FragmentRegisterBinding
+import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
+import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class RegisterFragment : BaseFragment() {
     private lateinit var binding: FragmentRegisterBinding
 
-    private val viewModel by fragmentScopedViewModel { injector.registerViewModel }
-    private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
+    private val viewModel: RegisterViewModel by viewModel()
+	private val schedulerProvider: SchedulerProvider by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,13 +58,13 @@ class RegisterFragment : BaseFragment() {
     }
 
     private fun handleRegisterResult() {
-        viewModel.registerResultLiveData.observe(viewLifecycleOwner) { registerResult ->
-            when (registerResult) {
-                is RegisterResult.Success -> navigateToDashboard()
-                is RegisterResult.Fail -> handleFailRegistration(registerResult)
-            }
-            binding.registerSignUpButton.hideProgress(R.string.register_button)
-        }
+//        viewModel.registerResultLiveData.observe(viewLifecycleOwner) { registerResult ->
+//            when (registerResult) {
+//                is RegisterResult.Success -> navigateToDashboard()
+//                is RegisterResult.Fail -> handleFailRegistration(registerResult)
+//            }
+//            binding.registerSignUpButton.hideProgress(R.string.register_button)
+//        }
     }
 
     private fun handleFailRegistration(registerResult: RegisterResult.Fail) {

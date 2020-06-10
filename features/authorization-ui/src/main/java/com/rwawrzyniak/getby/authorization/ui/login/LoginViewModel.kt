@@ -5,9 +5,8 @@ import androidx.lifecycle.ViewModel
 import com.rwawrzyniak.getby.authorization.LoginResult
 import com.rwawrzyniak.getby.authorization.LoginUseCase
 import io.reactivex.Completable
-import javax.inject.Inject
 
-class LoginViewModel @Inject internal constructor(
+class LoginViewModel internal constructor(
     private val loginUseCase: LoginUseCase
 ) : ViewModel() {
     val loginResultLiveData: MutableLiveData<LoginResult> = MutableLiveData(

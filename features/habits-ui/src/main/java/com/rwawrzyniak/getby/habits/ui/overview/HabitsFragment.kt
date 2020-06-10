@@ -1,5 +1,6 @@
 package com.rwawrzyniak.getby.habits.ui.overview
 
+import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.os.Bundle
 import android.text.Editable
@@ -13,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.rwawrzyniak.getby.core.android.fragment.BaseFragment
 import com.rwawrzyniak.getby.core.android.fragment.ChromeConfiguration
@@ -154,6 +156,8 @@ class HabitsFragment : BaseFragment() {
 			SwipedAction.CHANGE_ARCHIVE_STATE -> resources.getString(R.string.habits_undo_snackbar_change_archive_state_action)
 			SwipedAction.REMOVE -> resources.getString(R.string.habits_undo_snackbar_remove_action)
 		}
+
+		@SuppressLint("WrongConstant")
 		val snackbar = Snackbar.make(
 			requireView(),
 			resources.getString(

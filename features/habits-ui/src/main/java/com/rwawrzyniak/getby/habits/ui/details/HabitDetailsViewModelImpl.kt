@@ -41,7 +41,7 @@ class HabitDetailsViewModelImpl @VisibleForTesting constructor(
 	private val globalEventSubject: PublishSubject<MenuItemClickedEvent>
 ) : HabitDetailsViewModel() {
 	private val compositeDisposable = CompositeDisposable()
-	private val effects: Subject<HabitDetailsViewEffect> = PublishSubject.create<HabitDetailsViewEffect>()
+	private val effects: Subject<HabitDetailsViewEffect> = PublishSubject.create()
 	private val state = BehaviorSubject.createDefault(createDefaultState())
 
 	private fun createDefaultState(): HabitDetailsViewState =
@@ -75,6 +75,8 @@ class HabitDetailsViewModelImpl @VisibleForTesting constructor(
 				)
 			}
 			val updatedHabit = requireNotNull(it.habit).copy(history = newHistory)
+
+			habitsRepository.test()
 			habitsRepository.update(updatedHabit)
 				.andThen(initializeView(it.habit.id))
 		}
