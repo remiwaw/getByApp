@@ -17,12 +17,10 @@ import io.reactivex.subjects.PublishSubject
 import io.sellmair.disposer.disposeBy
 import io.sellmair.disposer.onStop
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(),
 	ChromeExtensionsProvider {
 
-	@Inject
 	lateinit var globalEventSubject: PublishSubject<GlobalEvent>
 
 	override fun onCreate(savedInstanceState: Bundle?) {

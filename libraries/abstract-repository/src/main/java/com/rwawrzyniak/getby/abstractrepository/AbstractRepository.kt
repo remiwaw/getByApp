@@ -12,13 +12,13 @@ abstract class AbstractRepository<AE: AbstractEntity, AM: AbstractModel>(
 	private val abstractConverter: AbstractConverter<AM, AE>
 ) {
 
-	fun getById(id: String): Single<AM> = abstractDataSource.getById(id).map { abstractConverter.toModel(it) }
+	open fun getById(id: String): Single<AM> = abstractDataSource.getById(id).map { abstractConverter.toModel(it) }
 
-	fun getAll(): Single<MutableList<AM>> = abstractDataSource.getAll().flattenAsObservable {it}.map { abstractConverter.toModel(it) }.toList()
+	open fun getAll(): Single<MutableList<AM>> = abstractDataSource.getAll().flattenAsObservable {it}.map { abstractConverter.toModel(it) }.toList()
 
-	fun insert(model: AM): Completable = abstractDataSource.insert(abstractConverter.toEntity(model))
+	open fun insert(model: AM): Completable = abstractDataSource.insert(abstractConverter.toEntity(model))
 
-	fun delete(model: AM): Completable = abstractDataSource.delete(abstractConverter.toEntity(model))
+	open fun delete(model: AM): Completable = abstractDataSource.delete(abstractConverter.toEntity(model))
 
-	fun update(model: AM): Completable = abstractDataSource.update(abstractConverter.toEntity(model))
+	open fun update(model: AM): Completable = abstractDataSource.update(abstractConverter.toEntity(model))
 }
