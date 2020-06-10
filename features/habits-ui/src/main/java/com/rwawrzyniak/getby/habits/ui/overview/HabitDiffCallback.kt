@@ -1,11 +1,11 @@
 package com.rwawrzyniak.getby.habits.ui.overview
 
 import androidx.recyclerview.widget.DiffUtil
-import com.rwawrzyniak.getby.entities.Habit
+import com.rwawrzyniak.getby.models.HabitModel
 
 class HabitDiffCallback(
-	private val oldList: List<com.rwawrzyniak.getby.entities.Habit>,
-	private val newList: List<com.rwawrzyniak.getby.entities.Habit>
+	private val oldList: List<HabitModel>,
+	private val newList: List<HabitModel>
 ) : DiffUtil.Callback() {
 
 	override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

@@ -1,8 +1,6 @@
 package com.rwawrzyniak.getby.core.android.preferences
 
-import javax.inject.Inject
-
-class AppPreferences @Inject internal constructor(private val preferencesHelper: com.rwawrzyniak.getby.core.android.preferences.PreferencesHelper){
+class AppPreferences internal constructor(private val preferencesHelper: PreferencesHelper){
 
 	fun setHideArchivedHabits(isHideArchived: Boolean){
 		preferencesHelper.putBoolean(HIDE_ARCHIVED_HABITS, isHideArchived)

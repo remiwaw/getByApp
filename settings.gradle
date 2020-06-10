@@ -20,3 +20,6 @@ include ':libraries:abstract-model'
 
 include ':features:habits'
 include ':features:habits-ui'
+include ':features:authorization'
+include ':features:authorization-ui'
+include ':features:onboarding-ui'

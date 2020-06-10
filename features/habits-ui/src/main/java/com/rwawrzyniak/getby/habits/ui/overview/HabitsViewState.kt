@@ -1,7 +1,7 @@
 package com.rwawrzyniak.getby.habits.ui.overview
 
 import androidx.recyclerview.widget.DiffUtil
-import com.rwawrzyniak.getby.entities.Habit
+import com.rwawrzyniak.getby.models.HabitModel
 import java.time.LocalDate
 
 data class HabitsViewState(
@@ -11,6 +11,6 @@ data class HabitsViewState(
 	val firstHabitDayHeader: LocalDate
 )
 
-data class UpdatedHabitsInfo(val updatedList: List<com.rwawrzyniak.getby.entities.Habit>, val habitsDiffResult: DiffUtil.DiffResult)
+data class UpdatedHabitsInfo(val updatedList: List<HabitModel>, val habitsDiffResult: DiffUtil.DiffResult)
 
 

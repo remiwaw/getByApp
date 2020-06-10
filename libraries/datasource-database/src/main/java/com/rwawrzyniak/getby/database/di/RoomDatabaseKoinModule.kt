@@ -17,5 +17,4 @@ val dataSourceDatabaseModule =
 
 		// Expose UserDao directly
 		single { get<AppDatabase>().habitDao() }
-
 	}

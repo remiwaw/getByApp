@@ -8,8 +8,8 @@ import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.rwawrzyniak.getby.core.DateTimeProvider
 import com.rwawrzyniak.getby.habits.R
-import com.rwawrzyniak.getby.entities.Habit
-import com.rwawrzyniak.getby.entities.HabitDay
+import com.rwawrzyniak.getby.models.HabitDay
+import com.rwawrzyniak.getby.models.HabitModel
 
 // TODO change findVieweBy id to binding, check if it works with changing Days
 class HabitHolder(view: View, private val listener: HabitListener)
@@ -19,14 +19,14 @@ class HabitHolder(view: View, private val listener: HabitListener)
 		HabitHolderHelper(
 			DateTimeProvider()
 		)
-	private lateinit var limitedHabitHistory: List<com.rwawrzyniak.getby.entities.HabitDay>
+	private lateinit var limitedHabitHistory: List<HabitDay>
 
 	interface HabitListener {
-		fun onRowClicked(habit: com.rwawrzyniak.getby.entities.Habit)
-		fun onCheckboxClicked(habit: com.rwawrzyniak.getby.entities.Habit)
+		fun onRowClicked(habit: HabitModel)
+		fun onCheckboxClicked(habit: HabitModel)
 	}
 
-	private lateinit var habit: com.rwawrzyniak.getby.entities.Habit
+	private lateinit var habit: HabitModel
 
 	private val habitDayLayout: ConstraintLayout = itemView.findViewById(R.id.habitItemLayout)
 	private val habitNameView: TextView = itemView.findViewById(R.id.habitName)
@@ -37,7 +37,7 @@ class HabitHolder(view: View, private val listener: HabitListener)
 		checkBoxList.forEach{ it.setOnClickListener(this) }
 	}
 
-	fun bind(habit: com.rwawrzyniak.getby.entities.Habit) {
+	fun bind(habit: HabitModel) {
 		this.habit = habit
 		habitNameView.text = this.habit.name
 

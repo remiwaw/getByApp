@@ -3,7 +3,7 @@ package com.rwawrzyniak.getby.habits.ui.customview
 import android.content.Context
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.rwawrzyniak.getby.R
+import com.rwawrzyniak.getby.habits.R
 
 class DayHeaderView : ConstraintLayout {
 

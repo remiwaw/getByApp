@@ -3,7 +3,7 @@ package com.rwawrzyniak.getby.abstractrepository
 import com.rwawrzyniak.getby.abstractconverter.AbstractConverter
 import com.rwawrzyniak.getby.abstractentities.AbstractEntity
 import com.rwawrzyniak.getby.abstractmodel.AbstractModel
-import com.rwawrzyniak.getby.datasource.abstract.AbstractDataSource
+import com.rwawrzyniak.getby.datasource.AbstractDataSource
 import io.reactivex.Completable
 import io.reactivex.Single
 

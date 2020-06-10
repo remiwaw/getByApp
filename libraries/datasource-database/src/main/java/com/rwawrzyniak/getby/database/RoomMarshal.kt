@@ -69,7 +69,7 @@ class RoomMarshal {
 
 	// List sting converters
 	@TypeConverter
-	open fun fromString(value: String): List<String> {
+	fun fromString(value: String): List<String> {
 		val listType: Type = object : TypeToken<List<String>>() {}.type
 		return Gson().fromJson(value, listType)
 	}

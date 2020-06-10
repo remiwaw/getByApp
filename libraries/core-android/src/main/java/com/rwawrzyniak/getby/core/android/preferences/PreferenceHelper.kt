@@ -1,11 +1,8 @@
 package com.rwawrzyniak.getby.core.android.preferences
 
 import android.content.SharedPreferences
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class PreferencesHelper @Inject internal constructor(private val preferences: SharedPreferences) {
+class PreferencesHelper internal constructor(private val preferences: SharedPreferences) {
 	fun putString( key: String,  value: String?) {
 		preferences.edit().putString(key, value).apply()
 	}

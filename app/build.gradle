@@ -16,11 +16,8 @@ android {
 
 dependencies {
 	// 3rd party
-	implementation Dependencies.swipeDecorator
-	implementation Dependencies.carousel
-	implementation Dependencies.progressButton
-
 	implementation project(':features:habits-ui')
+	implementation project(':features:authorization')
 	implementation project(':libraries:core')
 	implementation project(':libraries:core-android')
 }

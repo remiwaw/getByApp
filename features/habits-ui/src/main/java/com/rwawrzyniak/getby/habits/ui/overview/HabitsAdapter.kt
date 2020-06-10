@@ -4,20 +4,20 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rwawrzyniak.getby.R
-import com.rwawrzyniak.getby.entities.Habit
+import com.rwawrzyniak.getby.habits.R
+import com.rwawrzyniak.getby.models.HabitModel
 
 // TODO move logic from adapter somwhere
 class HabitsAdapter(
-	private var habits: MutableList<com.rwawrzyniak.getby.entities.Habit> = mutableListOf(),
+	private var habits: MutableList<HabitModel> = mutableListOf(),
 	private val onHabitListener: HabitHolder.HabitListener
 )
 	: RecyclerView.Adapter<HabitHolder>() {
 
 	private var recentlySwipedItemPosition: Int = -1
-	private lateinit var recentlySwipedItem: com.rwawrzyniak.getby.entities.Habit
+	private lateinit var recentlySwipedItem: HabitModel
 
-	fun setData(data: List<com.rwawrzyniak.getby.entities.Habit>){
+	fun setData(data: List<HabitModel>){
 		habits = data.toMutableList()
 	}
 
@@ -45,7 +45,7 @@ class HabitsAdapter(
 	override fun getItemViewType(position: Int): Int =
 		if(habits[position].isArchived) ARCHIVED_HABIT else ACTIVE_HABIT
 
-	fun processSwipedItem(position: Int): com.rwawrzyniak.getby.entities.Habit {
+	fun processSwipedItem(position: Int): HabitModel {
 		recentlySwipedItem = habits[position]
 		recentlySwipedItemPosition = position
 		habits.remove(recentlySwipedItem)

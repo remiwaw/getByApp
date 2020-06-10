@@ -1,13 +1,7 @@
 package com.rwawrzyniak.getby.database
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
-import com.rwawrzyniak.getby.abstractentities.AbstractEntity
-import com.rwawrzyniak.getby.datasource.abstract.AbstractDataSource
+import androidx.room.*
+import com.rwawrzyniak.getby.datasource.AbstractDataSource
 import com.rwawrzyniak.getby.entities.Habit
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -25,8 +19,8 @@ interface HabitDao : AbstractDataSource<Habit>{
 	override fun insert(entity: Habit): Completable
 
 	@Delete
-	override fun delete(habit: Habit) : Completable
+	override fun delete(entity: Habit) : Completable
 
 	@Update
-	override fun update(habit: Habit): Completable
+	override fun update(entity: Habit): Completable
 }

@@ -12,16 +12,19 @@ dependencies {
 	api Dependencies.rxAndroid
 	api Dependencies.disposer
 	api Dependencies.timber
+	api Dependencies.progressButton
 
-	implementation Dependencies.firebaseAuthRxKotlin
-	implementation Dependencies.firebaseAuthRx
-	implementation Dependencies.firebaseAuth
+	api Dependencies.swipeDecorator
+	api Dependencies.carousel
+	api Dependencies.progressButton
+
 	implementation Dependencies.firebaseCoreRx
 	implementation Dependencies.firebaseCore
 	implementation Dependencies.room
+
 	kapt Dependencies.roomKapt
 	implementation Dependencies.roomRxJava
-	implementation Dependencies.gson
+	api Dependencies.gson
 
 	api Dependencies.koinAndroid
 	api Dependencies.koinAndroidScope

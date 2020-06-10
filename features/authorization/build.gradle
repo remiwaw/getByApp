@@ -1,0 +1,8 @@
+dependencies {
+	api project(':libraries:core')
+	api project(':libraries:models')
+	api Dependencies.firebaseAuthRxKotlin
+	api Dependencies.firebaseAuthRx
+	api Dependencies.firebaseAuth
+	testImplementation project(':libraries:core-test')
+}

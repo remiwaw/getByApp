@@ -1,6 +1,5 @@
 package com.rwawrzyniak.getby.core.android.di
 
-import com.google.firebase.auth.FirebaseAuth
 import com.rwawrzyniak.getby.core.android.broadcast.GlobalEvent
 import com.rwawrzyniak.getby.core.android.broadcast.MenuItemClickedEvent
 import com.rwawrzyniak.getby.core.android.rx.DefaultSchedulerProvider
@@ -11,9 +10,9 @@ import org.koin.dsl.module
 
 val dataSourceDatabaseModule =
 	module {
-		single{
-			FirebaseAuth.getInstance()
-		}
+//		single{
+//			FirebaseAuth.getInstance()
+//		}
 		single(named(GLOBAL_EVENT_SUBJECT)) {
 			PublishSubject.create<GlobalEvent>()
 		}

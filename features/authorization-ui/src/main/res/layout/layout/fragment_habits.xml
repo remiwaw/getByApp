@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".habits.overview.HabitsFragment">
+
+	<EditText
+		android:id="@+id/habitSearch"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/habit_search_hint"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toTopOf="@+id/daysHeaderView" />
+
+<!--	&lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;-->
+
+	<com.rwawrzyniak.getby.core.android.customview.DaysHeaderView
+		android:id="@+id/daysHeaderView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintHorizontal_bias="0.0"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/habitSearch" />
+
+	<TextView
+		android:id="@+id/noHabits"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center"
+		android:text="@string/noHabitsText"
+		android:textAppearance="?android:textAppearanceMedium"
+		android:visibility="invisible" />
+
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/daysListView"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/daysHeaderView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

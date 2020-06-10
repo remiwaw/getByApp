@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.rwawrzyniak.getby.core.android.preferences.AppPreferences
 import com.rwawrzyniak.getby.core.DateTimeProvider
 import com.rwawrzyniak.getby.core.android.broadcast.GlobalEvent
+import com.rwawrzyniak.getby.models.HabitModel
 import com.rwawrzyniak.getby.repository.database.HabitsRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -29,8 +30,8 @@ class HabitsViewModelImpl internal constructor(
     private val compositeDisposable = CompositeDisposable()
 	private val state = BehaviorSubject.create<HabitsViewState>()
 
-	private val filteredHabits: MutableList<HabitsViewModel> = arrayListOf()
-	private val oldFilteredHabits: MutableList<HabitsViewModel> = arrayListOf()
+	private val filteredHabits: MutableList<HabitModel> = arrayListOf()
+	private val oldFilteredHabits: MutableList<HabitModel> = arrayListOf()
 
 	override fun observeState(): Observable<HabitsViewState> = state.hide()
 
@@ -50,10 +51,10 @@ class HabitsViewModelImpl internal constructor(
 		val callback = Completable.fromAction { preferences.setHideArchivedHabits(hideArchived) }
 		return updateHabitState(callback)
 	}
-	private fun onRemoveHabit(habit: HabitsViewModel) = updateHabitState(removeHabit(habit))
-	private fun switchArchiveState(habit: HabitsViewModel) = updateHabitState(updateHabit(habit.copy(isArchived = habit.isArchived.not())))
+	private fun onRemoveHabit(habit: HabitModel) = updateHabitState(removeHabit(habit))
+	private fun switchArchiveState(habit: HabitModel) = updateHabitState(updateHabit(habit.copy(isArchived = habit.isArchived.not())))
 
-	private fun onUpdateHabit(habit: HabitsViewModel) = habitsRepository.update(habit) // no need to refresh view
+	private fun onUpdateHabit(habit: HabitModel) = habitsRepository.update(habit) // no need to refresh view
 
 	private fun updateHabitState(
 		callback: Completable = Completable.complete(),
@@ -134,8 +135,8 @@ class HabitsViewModelImpl internal constructor(
 				)
 			})
 
-	private fun removeHabit(habit: HabitsViewModel): Completable = habitsRepository.delete(habit)
-	private fun updateHabit(habit: HabitsViewModel): Completable = habitsRepository.update(habit)
+	private fun removeHabit(habit: HabitModel): Completable = habitsRepository.delete(habit)
+	private fun updateHabit(habit: HabitModel): Completable = habitsRepository.update(habit)
 
 	private fun filter(query: String, hideArchived: Boolean): Completable {
 		return habitsRepository.getAll()

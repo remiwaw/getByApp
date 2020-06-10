@@ -9,40 +9,43 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.rwawrzyniak.getby.R
-import com.rwawrzyniak.getby.core.BaseFragment
+import com.rwawrzyniak.getby.core.android.fragment.BaseFragment
 import com.rwawrzyniak.getby.core.android.fragment.ChromeConfiguration
 import com.rwawrzyniak.getby.core.android.rx.SchedulerProvider
-import com.rwawrzyniak.getby.dagger.fragmentScopedViewModel
-import com.rwawrzyniak.getby.dagger.injector
-import com.rwawrzyniak.getby.databinding.FragmentHabitsBinding
 import com.rwawrzyniak.getby.habits.ui.details.HabitDetailsFragment.Companion.ARG_HABIT_ID
-import com.rwawrzyniak.getby.entities.Habit
+import com.rwawrzyniak.getby.habits.R
+import com.rwawrzyniak.getby.habits.databinding.FragmentHabitsBinding
+import com.rwawrzyniak.getby.models.HabitModel
 import io.reactivex.Completable
 import io.reactivex.rxkotlin.subscribeBy
 import io.sellmair.disposer.disposeBy
+import io.sellmair.disposer.onStop
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+import kotlinx.android.synthetic.main.fragment_habits.*
+import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.Locale
 
 class HabitsFragment : BaseFragment() {
 	private lateinit var binding: FragmentHabitsBinding
-	private val viewModel by fragmentScopedViewModel { injector.habitsViewModelImpl }
-	private val schedulerProvider: SchedulerProvider by lazy { injector.provideSchedulerProvider() }
+	private val viewModel: HabitsViewModelImpl by viewModel()
+	private val schedulerProvider: SchedulerProvider by inject()
 
 	private val onHabitListener = object:
 		HabitHolder.HabitListener {
-		override fun onRowClicked(habit: com.rwawrzyniak.getby.entities.Habit) {
+		override fun onRowClicked(habit: HabitModel) {
 			findNavController().navigate(
 				R.id.action_habitsFragment_to_habitDetailsFragment,
 				Bundle().apply { putString(ARG_HABIT_ID, habit.id) }
 			)
 		}
 
-		override fun onCheckboxClicked(habit: com.rwawrzyniak.getby.entities.Habit) {
+		override fun onCheckboxClicked(habit: HabitModel) {
 			simplySubscribe( viewModel.onAction(
 				HabitsViewAction.OnUpdateHabit(
 					habit
@@ -146,7 +149,7 @@ class HabitsFragment : BaseFragment() {
 		findNavController().navigate(R.id.action_habitsFragment_to_habitCreateUpdateFragment)
 	}
 
-	private fun showUndoSnackbar(swipedHabit: com.rwawrzyniak.getby.entities.Habit, swipedAction: SwipedAction) {
+	private fun showUndoSnackbar(swipedHabit: HabitModel, swipedAction: SwipedAction) {
 		val actionName = when(swipedAction){
 			SwipedAction.CHANGE_ARCHIVE_STATE -> resources.getString(R.string.habits_undo_snackbar_change_archive_state_action)
 			SwipedAction.REMOVE -> resources.getString(R.string.habits_undo_snackbar_remove_action)
